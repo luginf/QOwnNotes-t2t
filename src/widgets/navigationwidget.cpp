@@ -190,6 +190,12 @@ QVector<Node> NavigationWidget::parseDocument(const QTextDocument *const documen
         // Trim the heading text, in case there are trailing carriage return characters leaking in
         // Windows
         QString text = block.text().remove(re).trimmed();
+        // Strip txt2tags heading markers: "= Title =" → "Title"
+        static const QRegularExpression txt2tagsRe(QStringLiteral("^=+ +(.+?) +=+\\s*$"));
+        const QRegularExpressionMatch t2tMatch = txt2tagsRe.match(text);
+        if (t2tMatch.hasMatch()) {
+            text = t2tMatch.captured(1);
+        }
 
         if (text.isEmpty()) {
             continue;

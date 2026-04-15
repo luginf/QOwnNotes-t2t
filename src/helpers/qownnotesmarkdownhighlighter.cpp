@@ -173,8 +173,10 @@ void QOwnNotesMarkdownHighlighter::highlightScriptingRules(
         }
 
         // Find and format all occurrences
+        bool anyMatch = false;
         while (iterator.hasNext()) {
             QRegularExpressionMatch match = iterator.next();
+            anyMatch = true;
 
             // If there is a capturingGroup set then first highlight
             // everything as MaskedSyntax and highlight capturingGroup
@@ -192,6 +194,22 @@ void QOwnNotesMarkdownHighlighter::highlightScriptingRules(
 
             setFormat(match.capturedStart(capturingGroup), match.capturedLength(capturingGroup),
                       format);
+        }
+
+        // For heading-state rules, also set the block state so the navigation
+        // panel (parseDocument) can detect scripting-defined headings.
+        // Guard against overriding code-block continuation states.
+        if (anyMatch && rule.state >= MarkdownHighlighter::H1 &&
+            rule.state <= MarkdownHighlighter::H6) {
+            const int prev = previousBlockState();
+            const bool inCodeBlock =
+                (prev == HighlighterState::CodeBlock) ||
+                (prev == HighlighterState::CodeBlockTilde) ||
+                (prev >= HighlighterState::CodeBlockIndented &&
+                 prev <= HighlighterState::CodeBlockEnd);
+            if (!inCodeBlock) {
+                setCurrentBlockState(rule.state);
+            }
         }
     }
 }
