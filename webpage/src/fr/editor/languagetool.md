@@ -1,54 +1,54 @@
 # LanguageTool
 
-QOwnNotes can use a local or remote [LanguageTool](https://languagetool.org/) service for
-optional **grammar and style checking** in the note editor.
+QOwnNotes peut utiliser un service [LanguageTool](https://languagetool.org/) local ou distant pour
+une **vérification optionnelle de la grammaire et du style** dans l’éditeur de notes.
 
-It complements the existing [spellchecking](spellchecking.md) support instead of replacing it.
+Il vient en complément du support actuel de [vérification orthographique](spellchecking.md) au lieu de le remplacer.
 
-## Features
+## Fonctionnalités
 
-- Colored underlines for detected grammar, style, punctuation, and typography issues
-- Context-menu suggestions for replacements
-- `More info...` links for rules that provide extra documentation
-- `Ignore this rule` actions for rules you do not want to see again
-- A quick toggle in the **Spelling** menu with `Check grammar with LanguageTool`
+- Soulignage coloré des erreurs de grammaire, de style, de ponctuation et de typographie détectées
+- Suggestion de remplacements dans un menu contextuel
+- Lien `Plus d’informations…` pour chaque règle, permettant d’accéder à de la documentation supplémentaire
+- Option `Ignorer cette règle` pour les règles que vous ne souhaitez plus voir
+- Un simple bouton d’activation/désactivation `Vérifier la grammaire avec LanguageTool` dans le menu **Édition**
 
-## Setup
+## Configuration
 
-Open `Settings -> Editor` and configure the **LanguageTool** section.
+Allez dans `Préférences -> Éditeur` et configurez les éléments de la section **LanguageTool**.
 
-- Turn on `Enable grammar and style checking with LanguageTool`
-- Set the `Server URL`
-  - Local servers can use something like `http://localhost:8081`
-  - QOwnNotes automatically uses the `/v2/check` endpoint on that server
-- Choose the `Language`
-  - `Auto-detect` is available
-  - You can also enter a custom language code if needed
-- Add an optional `API key` if your LanguageTool service requires one
-- Adjust the `Check delay` to control how long QOwnNotes waits after typing before sending a request
-- Select which categories should be checked
-  - `Spelling`
-  - `Grammar`
+- Cochez la case `Activer les vérifications grammaticale et stylistique avec LanguageTool`
+- Configurez l’`URL du serveur`
+  - Les serveurs locaux utilisent une URL telle que `http://localhost:8081`
+  - QOwnNotes utilise automatiquement l’endpoint `/v2/check` sur ce serveur
+- Choisissez la `Langue`
+  - La sélection automatique (`Auto-détecter`) est disponible
+  - Vous pouvez également entrer un code de langue personnalisé si besoin
+- Ajoutez une `clé d’API` optionnelle si votre service LanguageTool en a besoin
+- Ajustez le `Délai de vérification` pour contrôler combien de temps QOwnNotes attend entre le dernier caractère tapé et l’envoi de la requête
+- Sélectionnez les catégories que vous souhaitez activer
+  - `Orthographe`
+  - `Grammaire`
   - `Style`
-  - `Punctuation`
-  - `Typography`
+  - `Ponctuation`
+  - `Typographie`
 
-Use `Test Connection` to verify that the configured service is reachable.
+Utilisez `Tester la connexion` pour vérifier que le service configuré est joignable.
 
-## How It Works
+## Comment ça marche
 
-- QOwnNotes checks visible editor blocks instead of the whole document at once
-- Empty lines, headings, and code blocks are skipped
-- Requests are debounced so the service is not queried on every keystroke
-- Results are shown inline in the Markdown editor
+- QOwnNotes ne vérifie que les blocs d’éditeur visible au lieu du document entier
+- Les lignes vides, les titres de sections et les blocs de code sont sautés
+- Les requêtes sont délayées afin que le service ne soit pas interrogé à chaque touche frappée
+- Les résultats sont affichés en-ligne dans l’éditeur Markdown
 
 ## Notes
 
-- LanguageTool support is optional and depends on the feature being enabled in your build
-- If the service cannot be reached, QOwnNotes shows a warning and stops checking until it is available again
-- You can use it with a local self-hosted LanguageTool server or another compatible LanguageTool endpoint
+- Le support LanguageTool est optionnel et dépend de si la fonctionnalité est activée dans votre version
+- Si le service n’est pas joignable, QOwnNotes affiche un warning et arrête la vérification jusqu’à ce qu’il soit joignable à nouveau
+- Vous pouvez l’utiliser avec un serveur LanguageTool auto-hébergé local ou un autre endpoint compatible avec LanguageTool
 
-## Related
+## Voir aussi
 
-- [Spellchecking](spellchecking.md)
+- [Vérification orthographique](spellchecking.md)
 - [Concept](../getting-started/concept.md)

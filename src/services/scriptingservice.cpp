@@ -50,6 +50,18 @@ QT_WARNING_DISABLE_GCC("-Wmismatched-new-delete")
 #include "widgets/qownnotesmarkdowntextedit.h"
 #endif
 
+namespace {
+void callDeprecatedWorkspaceSwitchedHook(const ScriptComponent &scriptComponent,
+                                         const QString &oldUuid, const QString &newUuid,
+                                         QObject *object) {
+    qWarning() << "Warning: workspaceSwitchedHook(oldUuid, newUuid) is deprecated, please use "
+                  "layoutSwitchedHook(oldUuid, newUuid) in"
+               << scriptComponent.script.getName();
+    QMetaObject::invokeMethod(object, "workspaceSwitchedHook", Q_ARG(QVariant, oldUuid),
+                              Q_ARG(QVariant, newUuid));
+}
+}    // namespace
+
 ScriptingService::ScriptingService(QObject *parent) : QObject(parent) {
     _engine = new QQmlEngine(this);
     addBundledImportPaths(_engine);
@@ -460,25 +472,38 @@ QString ScriptingService::callInsertAttachmentHook(QFile *file, QString markdown
 }
 
 /**
- * Calls the workspaceSwitchedHook function for all script components
- * This function is called when workspaces are switched
+ * Calls the layoutSwitchedHook function for all script components
+ * This function is called when layouts are switched
  *
- * @param oldUuid old uuid of workspace
- * @param newUuid new uuid of workspace
+ * @param oldUuid old uuid of layout
+ * @param newUuid new uuid of layout
  */
-void ScriptingService::callWorkspaceSwitchedHook(const QString &oldUuid, const QString &newUuid) {
+void ScriptingService::callLayoutSwitchedHook(const QString &oldUuid, const QString &newUuid) {
     QMapIterator<int, ScriptComponent> i(_scriptComponents);
 
     while (i.hasNext()) {
         i.next();
         ScriptComponent scriptComponent = i.value();
+        QObject *object = scriptComponent.object;
 
-        if (methodExistsForObject(scriptComponent.object,
+        if (methodExistsForObject(object,
+                                  QStringLiteral("layoutSwitchedHook(QVariant,QVariant)"))) {
+            QMetaObject::invokeMethod(object, "layoutSwitchedHook", Q_ARG(QVariant, oldUuid),
+                                      Q_ARG(QVariant, newUuid));
+            continue;
+        }
+
+        if (methodExistsForObject(object,
                                   QStringLiteral("workspaceSwitchedHook(QVariant,QVariant)"))) {
-            QMetaObject::invokeMethod(scriptComponent.object, "workspaceSwitchedHook",
-                                      Q_ARG(QVariant, oldUuid), Q_ARG(QVariant, newUuid));
+            callDeprecatedWorkspaceSwitchedHook(scriptComponent, oldUuid, newUuid, object);
         }
     }
+}
+
+void ScriptingService::callWorkspaceSwitchedHook(const QString &oldUuid, const QString &newUuid) {
+    qWarning() << "Warning: ScriptingService::callWorkspaceSwitchedHook() is deprecated, please "
+                  "use ScriptingService::callLayoutSwitchedHook() instead.";
+    callLayoutSwitchedHook(oldUuid, newUuid);
 }
 
 /**

@@ -1110,8 +1110,8 @@ QMargins QOwnNotesMarkdownTextEdit::viewportMargins() {
 }
 
 void QOwnNotesMarkdownTextEdit::setText(const QString &text) {
-    // set a search delay of 250ms for text with more than 200k characters
-    setSearchWidgetDebounceDelay(text.size() > 200000 ? 250 : 0);
+    // Set a search delay of 300ms for text with more than 20k characters
+    setSearchWidgetDebounceDelay(text.size() > 20000 ? 300 : 0);
     _foldingStateRestorePending = !_currentNoteReference.isEmpty();
     _foldingStateRestoreAttempts = 0;
 
@@ -2795,6 +2795,15 @@ void QOwnNotesMarkdownTextEdit::keyPressEvent(QKeyEvent *e) {
 
     if (e->text() == QStringLiteral("[") &&
         (e->modifiers() == Qt::NoModifier || e->modifiers() == Qt::ShiftModifier)) {
+        // Only trigger automatic note filename selection if the setting is enabled
+        const bool autoSelect =
+            SettingsService()
+                .value(QStringLiteral("Editor/wikiLinkFileNameAutoSelect"), false)
+                .toBool();
+        if (!autoSelect) {
+            return;
+        }
+
         WikiLinkCompletionContext context;
         if (currentWikiLinkCompletionContext(this, context)) {
             QTimer::singleShot(0, this, &QOwnNotesMarkdownTextEdit::onAutoCompleteRequested);

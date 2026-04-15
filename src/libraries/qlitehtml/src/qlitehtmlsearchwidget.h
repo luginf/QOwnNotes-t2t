@@ -15,6 +15,7 @@
 #pragma once
 
 #include <QEvent>
+#include <QTimer>
 #include <QWidget>
 
 class QLiteHtmlWidget;
@@ -37,6 +38,7 @@ public:
 
 private:
     Ui::QLiteHtmlSearchWidget *ui;
+    QTimer _debounceTimer;
 
 protected:
     QLiteHtmlWidget *_liteHtmlWidget;

@@ -1225,13 +1225,13 @@
 </message>
 <message>
 <source>Delete linked files</source>
-<translation type="unfinished">Delete linked files</translation>
+<translation>Supprimer les fichiers liés</translation>
 </message>
 <message numerus="yes">
 <source>Delete &lt;strong&gt;%n&lt;/strong&gt; selected linked file(s)? You can also remove their links from &lt;strong&gt;%1&lt;/strong&gt; note file(s) afterwards.</source>
-<translation type="unfinished">
-<numerusform>Delete &lt;strong&gt;%n&lt;/strong&gt; selected linked file(s)? You can also remove their links from &lt;strong&gt;%1&lt;/strong&gt; note file(s) afterwards.</numerusform>
-<numerusform>Delete &lt;strong&gt;%n&lt;/strong&gt; selected linked file(s)? You can also remove their links from &lt;strong&gt;%1&lt;/strong&gt; note file(s) afterwards.</numerusform>
+<translation>
+<numerusform>Supprimer &lt;strong&gt;%n&lt;/strong&gt; fichier lié sélectionné ? Vous pourrez aussi retirer ses liens de &lt;strong&gt;%1&lt;/strong&gt; fichier(s) de note.</numerusform>
+<numerusform>Supprimer &lt;strong&gt;%n&lt;/strong&gt; fichiers liés sélectionnés ? Vous pourrez aussi retirer leurs liens de &lt;strong&gt;%1&lt;/strong&gt; fichier(s) de note.</numerusform>
 </translation>
 </message>
 <message>
@@ -1240,9 +1240,9 @@
 </message>
 <message numerus="yes">
 <source>Deleting &lt;strong&gt;%n&lt;/strong&gt; linked file(s) failed!</source>
-<translation type="unfinished">
-<numerusform>Deleting &lt;strong&gt;%n&lt;/strong&gt; linked file(s) failed!</numerusform>
-<numerusform>Deleting &lt;strong&gt;%n&lt;/strong&gt; linked file(s) failed!</numerusform>
+<translation>
+<numerusform>La suppression de &lt;strong&gt;%n&lt;/strong&gt; fichier lié a échoué !</numerusform>
+<numerusform>La suppression de &lt;strong&gt;%n&lt;/strong&gt; fichiers liés a échoué !</numerusform>
 </translation>
 </message>
 <message>
@@ -1251,7 +1251,7 @@
 </message>
 <message>
 <source>Remove linked file references</source>
-<translation type="unfinished">Remove linked file references</translation>
+<translation>Supprimer les références vers le fichier lié</translation>
 </message>
 <message numerus="yes">
 <source>The deleted file(s) are used in &lt;strong&gt;%n&lt;/strong&gt; note file(s). Would you like to remove those media and attachment links everywhere? This will update &lt;strong&gt;%n&lt;/strong&gt; note file(s).</source>
@@ -1568,8 +1568,16 @@
 <translation>Copier</translation>
 </message>
 <message>
+<source>Copy image file path</source>
+<translation>Copier de chemin du fichier d’image</translation>
+</message>
+<message>
+<source>Copy image to clipboard</source>
+<translation>Copier l’image dans le presse-papiers</translation>
+</message>
+<message>
 <source>Copy link location</source>
-<translation>Copier l'emplacement du lien</translation>
+<translation>Copier l’emplacement du lien</translation>
 </message>
 <message>
 <source>Export generated raw HTML</source>
@@ -2036,7 +2044,7 @@
 </message>
 <message>
 <source>Find navigation item</source>
-<translation>Trouver l'élément de navigation</translation>
+<translation>Trouver un élément de navigation</translation>
 </message>
 <message>
 <source>Headings</source>
@@ -2488,6 +2496,10 @@
 <translation>Ouvrez le canal IRC #qownnotes (Kiwi), vous devez rester en ligne pour obtenir une réponse</translation>
 </message>
 <message>
+<source>Use softwrap in note editor</source>
+<translation>Revenir à la ligne dans l’éditeur</translation>
+</message>
+<message>
 <source>Cycle text case</source>
 <translation>Changer la casse</translation>
 </message>
@@ -2849,10 +2861,6 @@
 <translation>Insérer le titre à partir du nom de fichier de la note</translation>
 </message>
 <message>
-<source>Use softwrap in note editor and preview</source>
-<translation>Utiliser le retour à la ligne automatique dans l'éditeur et l'aperçu</translation>
-</message>
-<message>
 <source>Show status bar</source>
 <translation>Afficher la barre de statut</translation>
 </message>
@@ -3078,7 +3086,7 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir re
 </message>
 <message>
 <source>Note filename '%1' was copied to the clipboard</source>
-<translation>Le nom de fichier de la note ‘%1’ a été copié dans le presse-papiers</translation>
+<translation>Le nom de fichier de la note « %1 » a été copié dans le presse-papiers</translation>
 </message>
 <message>
 <source>Clipboard sent successfully</source>
@@ -3107,7 +3115,7 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir re
 <message>
 <source>Reset font size to %1 pt</source>
 <comment>Will be shown after the font size is reset by 'Reset note text size'</comment>
-<translation>Réinitialiser la taille de police à %1 pt</translation>
+<translation>Taille de police réinitialisée à %1 pt</translation>
 </message>
 <message>
 <source>The scripting engine was reloaded</source>
@@ -3268,7 +3276,7 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir re
 </message>
 <message>
 <source>Note tags</source>
-<translation>Tags des notes</translation>
+<translation>Tags de la note</translation>
 </message>
 <message>
 <source>Note preview</source>
@@ -3300,7 +3308,7 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir re
 </message>
 <message>
 <source>AI toolbar</source>
-<translation>Barre d’outils d’IA</translation>
+<translation>barre d’outils d’IA</translation>
 </message>
 <message>
 <source>window toolbar</source>
@@ -3368,6 +3376,13 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir re
 <message>
 <source>Failed to start Markdown LSP server: %1</source>
 <translation>Échec du démarrage du serveur LSP Markdown : %1</translation>
+</message>
+</context>
+<context>
+<name>McpService</name>
+<message>
+<source>MCP server listening on port %1</source>
+<translation>Le serveur MCP écoute sur le port %1</translation>
 </message>
 </context>
 <context>
@@ -3571,6 +3586,10 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir re
 <translation>Rechercher ou créer une carte</translation>
 </message>
 <message>
+<source>Select the board and stack to work with</source>
+<translation>Sélectionner le tableau et la pile avec lesquels travailler</translation>
+</message>
+<message>
 <source>Create card and insert link into current note</source>
 <translation>Créer une carte et insérer son lien dans la note courante</translation>
 </message>
@@ -3615,8 +3634,12 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir re
 <translation>Recharger depuis le serveur</translation>
 </message>
 <message>
-<source>Reload cards from server</source>
-<translation>Recharger les cartes depuis le serveur</translation>
+<source>Reload boards, stacks and cards from server</source>
+<translation>Recharger les tableaux, piles et cartes depuis le serveur</translation>
+</message>
+<message>
+<source>%1 / %2</source>
+<translation>%1 / %2</translation>
 </message>
 <message>
 <source>No due date</source>
@@ -4128,7 +4151,7 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir le
 <name>NotePreviewWidget</name>
 <message>
 <source>Copy image file path</source>
-<translation>Copier le chemin d'accès des fichiers image</translation>
+<translation>Copier de chemin du fichier d’image</translation>
 </message>
 <message>
 <source>Copy image to clipboard</source>
@@ -4307,7 +4330,7 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir le
 </message>
 <message>
 <source>&amp;Tag selected notes with…</source>
-<translation>&amp;Ajouter le tag aux notes sélectionnées…</translation>
+<translation>&amp;Ajouter un tag aux notes sélectionnées…</translation>
 </message>
 <message>
 <source>&amp;Remove tag from selected notes…</source>
@@ -4452,7 +4475,7 @@ Si la corbeille est activée sur votre serveur ownCloud, vous devriez pouvoir le
 </message>
 <message>
 <source>ownCloud server connection error</source>
-<translation>erreur de connexion avec le serveur ownCloud</translation>
+<translation>Erreur de connexion avec le serveur ownCloud</translation>
 </message>
 <message>
 <source>ownCloud server error: &lt;strong&gt;%1&lt;/strong&gt;&lt;br /&gt;Please check your ownCloud configuration.</source>
@@ -4798,15 +4821,15 @@ Cliquez sur « Annuler » pour ignorer vos changements et garder la version ex
 <message numerus="yes">
 <source>%n note(s) are using this attachment. Would you also like to rename those attachments in the note(s)?</source>
 <translation>
-<numerusform>Une note utilise cette pièce jointe. Souhaitez-vous également renommer ces pièces jointes dans les notes?</numerusform>
-<numerusform>%n notes utilisent cette pièce jointe. Souhaitez-vous également renommer ces pièces jointes dans les notes?</numerusform>
+<numerusform>Une note utilise cette pièce jointe. Souhaitez-vous également renommer ces pièces jointes dans cette note ?</numerusform>
+<numerusform>%n notes utilisent cette pièce jointe. Souhaitez-vous également renommer ces pièces jointes dans ces notes ?</numerusform>
 </translation>
 </message>
 <message numerus="yes">
 <source>%n note(s) are using this image. Would you also like to rename those images in the note(s)?</source>
 <translation>
-<numerusform>Une note utilise cette image. Souhaitez-vous également renommer ces images dans la note?</numerusform>
-<numerusform>%n notes utilisent cette image. Souhaitez-vous également renommer ces images dans les notes?</numerusform>
+<numerusform>Une note utilise cette image. Souhaitez-vous également renommer ces images dans la note ?</numerusform>
+<numerusform>%n notes utilisent cette image. Souhaitez-vous également renommer ces images dans les notes ?</numerusform>
 </translation>
 </message>
 <message>
@@ -4979,7 +5002,7 @@ Cliquez sur « Annuler » pour ignorer vos changements et garder la version ex
 </message>
 <message>
 <source>Code actions</source>
-<translation type="unfinished">Code actions</translation>
+<translation>Actions sur le code</translation>
 </message>
 <message>
 <source>Add table column left</source>
@@ -4995,7 +5018,7 @@ Cliquez sur « Annuler » pour ignorer vos changements et garder la version ex
 </message>
 <message>
 <source>Add table row below</source>
-<translation>Ajouter une colonne de tableau en-dessous</translation>
+<translation>Ajouter une colonne de tableau en dessous</translation>
 </message>
 <message>
 <source>Print</source>
@@ -5067,7 +5090,7 @@ Cliquez sur « Annuler » pour ignorer vos changements et garder la version ex
 </message>
 <message>
 <source>Filter completions</source>
-<translation type="unfinished">Filter completions</translation>
+<translation>Filtrer les complétions</translation>
 </message>
 </context>
 <context>
@@ -5951,6 +5974,10 @@ Vous pouvez tester vous-même. Si vous avez des conflits de synchronisation, vou
 <translation>Modes de couleur</translation>
 </message>
 <message>
+<source>MCP server</source>
+<translation>Serveur MCP</translation>
+</message>
+<message>
 <source>Be aware that the ownCloud notes app doesn't support subfolders!</source>
 <translation>Attention, l'application ownCloud ne supporte pas les sous-dossiers !</translation>
 </message>
@@ -5965,10 +5992,6 @@ Vous pouvez tester vous-même. Si vous avez des conflits de synchronisation, vou
 <message>
 <source>Login to Nextcloud to grant access</source>
 <translation>Connectez-vous à Nextcloud pour donner accès</translation>
-</message>
-<message>
-<source>Stack:</source>
-<translation>Pile :</translation>
 </message>
 <message>
 <source>Todo settings</source>
@@ -6107,8 +6130,12 @@ Vous pouvez tester vous-même. Si vous avez des conflits de synchronisation, vou
 <translation>Punjabi</translation>
 </message>
 <message>
+<source>Open newly created notes in a new tab</source>
+<translation>Ouvrir les notes nouvellement crées dans de nouveaux onglets</translation>
+</message>
+<message>
 <source>Ignored:</source>
-<translation type="unfinished">Ignored:</translation>
+<translation>Règles et mots ignorés :</translation>
 </message>
 <message>
 <source>Reset all ignored LanguageTool rules so they are checked again</source>
@@ -6125,6 +6152,18 @@ Vous pouvez tester vous-même. Si vous avez des conflits de synchronisation, vou
 <message>
 <source>Reset ignored words</source>
 <translation>Réinitialiser les mots ignorés</translation>
+</message>
+<message>
+<source>Enable MCP server for AI agent access to notes</source>
+<translation>Activer le serveur MCP pour permettre aux agents d’IA d’accéder aux notes</translation>
+</message>
+<message>
+<source>Server port:</source>
+<translation>Port du serveur :</translation>
+</message>
+<message>
+<source>Reset the MCP server port</source>
+<translation>Réinitialiser le port du serveur MCP</translation>
 </message>
 <message>
 <source>Persian</source>
@@ -6589,7 +6628,7 @@ Vous pouvez tester vous-même. Si vous avez des conflits de synchronisation, vou
 </message>
 <message>
 <source>Language:</source>
-<translation type="unfinished">Language:</translation>
+<translation>Langue :</translation>
 </message>
 <message>
 <source>API key:</source>
@@ -6641,7 +6680,7 @@ Vous pouvez tester vous-même. Si vous avez des conflits de synchronisation, vou
 </message>
 <message>
 <source>Show line numbers and bookmark markers (1-9)</source>
-<translation>Afficher les numéros de ligne et de marque-page (1-9)</translation>
+<translation>Afficher les numéros de ligne et de signets (1-9)</translation>
 </message>
 <message>
 <source>Show small Markdown preview images in the editor, if there is no text after the image</source>
@@ -6750,7 +6789,7 @@ Vous pouvez tester vous-même. Si vous avez des conflits de synchronisation, vou
 </message>
 <message>
 <source>Time the application will wait for a response from the server before timing out and returning an error message.</source>
-<translation>Le temps que l’application attendra une réponse du serveur avant de renvoyer un message d’erreur.</translation>
+<translation>Temps d’attente d’une réponse du serveur avant de renvoyer un message d’erreur.</translation>
 </message>
 <message>
 <source>sec</source>
@@ -6867,19 +6906,19 @@ Vous pouvez tester vous-même. Si vous avez des conflits de synchronisation, vou
 </message>
 <message>
 <source>Bookmark suggestion API</source>
-<translation type="unfinished">Bookmark suggestion API</translation>
+<translation>API de suggestion de signets</translation>
 </message>
 <message>
 <source>Enable Homepage-compatible bookmark suggestions API</source>
-<translation type="unfinished">Enable Homepage-compatible bookmark suggestions API</translation>
+<translation>Activer l’API de suggestion de signets compatibles avec Homepage</translation>
 </message>
 <message>
 <source>Suggestion API port:</source>
-<translation type="unfinished">Suggestion API port:</translation>
+<translation>Port de l’API de suggestion :</translation>
 </message>
 <message>
 <source>Reset the suggestion API port</source>
-<translation type="unfinished">Reset the suggestion API port</translation>
+<translation>Réinitialiser le port de l’API de suggestion</translation>
 </message>
 <message>
 <source>If this is empty when saved, a new security token will be generated automatically.</source>
@@ -7015,7 +7054,7 @@ Vous pouvez tester vous-même. Si vous avez des conflits de synchronisation, vou
 </message>
 <message>
 <source>Reset the socket server port</source>
-<translation>Réinitialisez le port du serveur socket</translation>
+<translation>Réinitialiser le port du serveur socket</translation>
 </message>
 <message>
 <source>Show security token</source>
@@ -7715,14 +7754,6 @@ Le message d'erreur de connexion est : </translation>
 <translation>L'intégrité de la base de données sur le disque n'est pas valide !</translation>
 </message>
 <message>
-<source>Board Id: %1</source>
-<translation>Identifiant de tableau : %1</translation>
-</message>
-<message>
-<source>Stack Id: %1</source>
-<translation>Identifiant de pile : %1</translation>
-</message>
-<message>
 <source>API test result for %1 (%2)</source>
 <translation>Résultat de test d’API pour %1 (%2)</translation>
 </message>
@@ -8139,7 +8170,7 @@ Vos notes resteront intactes!</translation>
 </message>
 <message>
 <source>Open the attachments folder</source>
-<translation>Ouvrez le dossier des pièces jointes</translation>
+<translation>Ouvrir le dossier des pièces jointes</translation>
 </message>
 <message>
 <source>Open &amp;folder</source>
@@ -8590,7 +8621,7 @@ Vos notes resteront intactes!</translation>
 </message>
 <message>
 <source>Tag this</source>
-<translation type="unfinished">Tag this</translation>
+<translation>Tag précédent</translation>
 </message>
 <message>
 <source>Cannot move tag '%1' to this tag</source>
@@ -8620,13 +8651,13 @@ Vos notes resteront intactes!</translation>
 </message>
 <message>
 <source>Remove tag from selected notes</source>
-<translation>Enlever le tag des notes sélectionnées</translation>
+<translation>Retirer le tag des notes sélectionnées</translation>
 </message>
 <message numerus="yes">
 <source>Remove tag &lt;strong&gt;%1&lt;/strong&gt; from %n selected note(s)?</source>
 <translation>
-<numerusform>Enlever le tag &lt;strong&gt;%1&lt;/strong&gt; de %n note sélectionnée ?</numerusform>
-<numerusform>Enlever le tag &lt;strong&gt;%1&lt;/strong&gt; de %n notes sélectionnées ?</numerusform>
+<numerusform>Retirer le tag &lt;strong&gt;%1&lt;/strong&gt; de %n note sélectionnée ?</numerusform>
+<numerusform>Retirer le tag &lt;strong&gt;%1&lt;/strong&gt; de %n notes sélectionnées ?</numerusform>
 </translation>
 </message>
 <message>
@@ -8647,8 +8678,8 @@ Vos notes resteront intactes!</translation>
 <message numerus="yes">
 <source>Remove &lt;strong&gt;%n&lt;/strong&gt; selected tag(s)? No notes will be removed in this process.</source>
 <translation>
-<numerusform>Enlever &lt;strong&gt;%n&lt;/strong&gt; tag sélectionné ? Aucune note ne sera supprimée ce faisant.</numerusform>
-<numerusform>Enlever &lt;strong&gt;%n&lt;/strong&gt; tags sélectionnés ? Aucune note ne sera supprimée ce faisant.</numerusform>
+<numerusform>Supprimer &lt;strong&gt;%n&lt;/strong&gt; tag sélectionné ? Aucune note ne sera supprimée ce faisant.</numerusform>
+<numerusform>Supprimer &lt;strong&gt;%n&lt;/strong&gt; tags sélectionnés ? Aucune note ne sera supprimée ce faisant.</numerusform>
 </translation>
 </message>
 </context>
@@ -9238,7 +9269,7 @@ Cela ne peut être annuler !</translation>
 </message>
 <message>
 <source>Could not start bookmark suggestion API on port %1!</source>
-<translation type="unfinished">Could not start bookmark suggestion API on port %1!</translation>
+<translation>Impossible de démarrer l’API de suggestion de signets sur le port %1 !</translation>
 </message>
 <message>
 <source>Please check if the port is already in use.</source>
@@ -9246,19 +9277,19 @@ Cela ne peut être annuler !</translation>
 </message>
 <message>
 <source>Bookmark suggestion API listening on port %1</source>
-<translation type="unfinished">Bookmark suggestion API listening on port %1</translation>
+<translation>L’API de suggestion de signets écoute sur le port %1</translation>
 </message>
 <message>
 <source>Bookmark suggestion API received malformed HTTP request line.</source>
-<translation type="unfinished">Bookmark suggestion API received malformed HTTP request line.</translation>
+<translation>L’API de suggestion de signets a reçu une ligne de requête HTTP mal formée.</translation>
 </message>
 <message>
 <source>Bookmark suggestion API request from %1:%2</source>
-<translation type="unfinished">Bookmark suggestion API request from %1:%2</translation>
+<translation>Requête de l’API de suggestion de signets depuis %1 : %2</translation>
 </message>
 <message>
 <source>Bookmark suggestion API couldn't load suggestions because no main window instance is available.</source>
-<translation type="unfinished">Bookmark suggestion API couldn't load suggestions because no main window instance is available.</translation>
+<translation>L’API de suggestion de signets n’a pas pu charger les suggestions car aucune instance de la fenêtre principale n’est disponible.</translation>
 </message>
 <message>
 <source>%1 connected to QOwnNotes server!</source>

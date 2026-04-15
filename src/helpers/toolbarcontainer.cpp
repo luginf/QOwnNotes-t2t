@@ -77,14 +77,14 @@ void ToolbarContainer::updateToolbar() {
         } else {
             // TODO(pbek): we will enable that again later
             if (false) {
-                //            if (item == "actionWorkspaceComboBox") {
-                qDebug() << __func__ << " - 'actionWorkspaceComboBox': " << item;
+                //            if (item == "actionLayoutComboBox") {
+                qDebug() << __func__ << " - 'actionLayoutComboBox': " << item;
 
                 // TODO(pbek): for some reason we can't find the combobox
-                auto *workspaceComboBox =
-                    mainWindow->findChild<QComboBox *>(QStringLiteral("workspaceComboBox"));
+                auto *layoutComboBox =
+                    mainWindow->findChild<QComboBox *>(QStringLiteral("layoutComboBox"));
 
-                qDebug() << __func__ << " - 'workspaceComboBox': " << workspaceComboBox;
+                qDebug() << __func__ << " - 'layoutComboBox': " << layoutComboBox;
 
                 auto *widgetAction = mainWindow->findChild<QWidgetAction *>(item);
 
@@ -92,11 +92,11 @@ void ToolbarContainer::updateToolbar() {
 
                 if (widgetAction == nullptr) {
                     widgetAction = new QWidgetAction(mainWindow);
-                    widgetAction->setObjectName(QStringLiteral("actionWorkspaceComboBox"));
-                    widgetAction->setText(QObject::tr("Workspace selector"));
+                    widgetAction->setObjectName(QStringLiteral("actionLayoutComboBox"));
+                    widgetAction->setText(QObject::tr("Layout selector"));
                 }
 
-                widgetAction->setDefaultWidget(workspaceComboBox);
+                widgetAction->setDefaultWidget(layoutComboBox);
                 toolbar->addAction(widgetAction);
             } else {
                 auto *action = mainWindow->findChild<QAction *>(item);

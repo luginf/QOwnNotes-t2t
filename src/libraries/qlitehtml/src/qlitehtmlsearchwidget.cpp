@@ -18,9 +18,71 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QScrollBar>
+#include <QTextBoundaryFinder>
 
 #include "qlitehtmlwidget.h"
 #include "ui_qlitehtmlsearchwidget.h"
+
+namespace {
+bool isEmojiCodePoint(unsigned int codePoint)
+{
+    return codePoint == 0x20E3 || codePoint == 0x00A9 || codePoint == 0x00AE || codePoint == 0x203C
+           || codePoint == 0x2049 || codePoint == 0x2122 || codePoint == 0x2139
+           || (codePoint >= 0x2194 && codePoint <= 0x21AA)
+           || (codePoint >= 0x231A && codePoint <= 0x2328) || codePoint == 0x23CF
+           || (codePoint >= 0x23E9 && codePoint <= 0x23FA) || codePoint == 0x24C2
+           || (codePoint >= 0x25AA && codePoint <= 0x25AB) || codePoint == 0x25B6
+           || codePoint == 0x25C0 || (codePoint >= 0x25FB && codePoint <= 0x25FE)
+           || (codePoint >= 0x2600 && codePoint <= 0x27BF)
+           || (codePoint >= 0x2934 && codePoint <= 0x2935)
+           || (codePoint >= 0x2B05 && codePoint <= 0x2B55) || codePoint == 0x3030
+           || codePoint == 0x303D || codePoint == 0x3297 || codePoint == 0x3299
+           || (codePoint >= 0x1F000 && codePoint <= 0x1FAFF);
+}
+
+int graphemeCount(const QString &text, int maxCount)
+{
+    if (text.isEmpty()) {
+        return 0;
+    }
+
+    QTextBoundaryFinder finder(QTextBoundaryFinder::Grapheme, text);
+    finder.toStart();
+
+    int count = 0;
+    while (finder.toNextBoundary() != -1) {
+        ++count;
+
+        if (count >= maxCount) {
+            break;
+        }
+    }
+
+    return count;
+}
+
+bool shouldStartSearch(const QString &text)
+{
+    const int minimumSearchLength = 2;
+    const int count = graphemeCount(text, minimumSearchLength);
+    if (count >= minimumSearchLength) {
+        return true;
+    }
+
+    if (count != 1) {
+        return false;
+    }
+
+    const auto codePoints = text.toUcs4();
+    for (unsigned int codePoint : codePoints) {
+        if (isEmojiCodePoint(codePoint)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+} // namespace
 
 QLiteHtmlSearchWidget::QLiteHtmlSearchWidget(QLiteHtmlWidget *parent)
     : QWidget(parent)
@@ -37,6 +99,12 @@ QLiteHtmlSearchWidget::QLiteHtmlSearchWidget(QLiteHtmlWidget *parent)
                      SLOT(searchLineEditTextChanged(QString)));
     QObject::connect(ui->searchDownButton, SIGNAL(clicked()), this, SLOT(doSearchDown()));
     QObject::connect(ui->searchUpButton, SIGNAL(clicked()), this, SLOT(doSearchUp()));
+
+    // Set up debounce timer so the search is delayed while the user is still
+    // typing
+    _debounceTimer.setSingleShot(true);
+    _debounceTimer.setInterval(300);
+    QObject::connect(&_debounceTimer, &QTimer::timeout, this, &QLiteHtmlSearchWidget::doSearchDown);
 
     installEventFilter(this);
     ui->searchLineEdit->installEventFilter(this);
@@ -130,8 +198,16 @@ bool QLiteHtmlSearchWidget::eventFilter(QObject *obj, QEvent *event)
 
 void QLiteHtmlSearchWidget::searchLineEditTextChanged(const QString &arg1)
 {
-    Q_UNUSED(arg1);
-    doSearchDown();
+    // If the search term is too short, just clear the style without jumping to
+    // the top of the document
+    if (!shouldStartSearch(arg1)) {
+        _debounceTimer.stop();
+        ui->searchLineEdit->setStyleSheet(QString());
+        return;
+    }
+
+    // Debounce: delay the search while the user is still typing
+    _debounceTimer.start();
 }
 
 void QLiteHtmlSearchWidget::doSearchUp()
@@ -152,7 +228,7 @@ bool QLiteHtmlSearchWidget::doSearch(bool searchDown, bool allowRestartAtTop)
 {
     QString text = ui->searchLineEdit->text();
 
-    if (text.isEmpty()) {
+    if (!shouldStartSearch(text)) {
         ui->searchLineEdit->setStyleSheet(QString());
         return false;
     }

@@ -47,18 +47,15 @@ make
 
 ## nix로 빌드
 
-[Nix 패키지 관리자](https://nixos.org/download/)을 사용할 수 있다면 위에서 설명한 것처럼 소스 코드를 git-복제하고 빌드하기만 하면 됩니다:
+[Nix 패키지 관리자](https://nixos.org/download/) 및 [Devenv](https://devenv.sh/getting-started/)이 설치되어 있다면 위에서 설명한 것처럼 저장소를 git-복제하고 빌드하기만 하면 됩니다:
 
 ```bash
-# 아직 개발되지 않은 경우 개발 환경 보호
-nix-shell -p devenv
-
 # 필요한 모든 도구로 셸 열기
 devenv shell
 
 # 응용 프로그램 빌드
 just nix-build
 
-# 빌드된 응용 프로그램실행
+# 빌드된 응용 프로그램 실행
 just nix-run
 ```

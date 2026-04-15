@@ -8,7 +8,7 @@
 - <kbd>Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>N</kbd> creates a new note in a new tab
 - <kbd>Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>F</kbd> lets you search for notes (in the name of the note and its content)
 - <kbd>Alt</kbd> + <kbd>F</kbd> lets you search for notes in all tags / subfolders
-- <kbd>Alt</kbd> + <kbd>⇧ Shift</kbd> + <kbd>P</kbd> switches to the previous workspace
+- <kbd>Alt</kbd> + <kbd>⇧ Shift</kbd> + <kbd>P</kbd> switches to the previous layout
 - <kbd>Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>E</kbd> edits an encrypted note
 - <kbd>Alt</kbd> + <kbd>R</kbd> removes the current note
 - <kbd>Alt</kbd> + <kbd>⇧ Shift</kbd> + <kbd>U</kbd> checks for updates
@@ -127,7 +127,7 @@
 - <kbd>⌘ Cmd</kbd> + <kbd>⇧ Shift</kbd> + <kbd>N</kbd> creates a new note in a new tab
 - <kbd>⌘ Cmd</kbd> + <kbd>⇧ Shift</kbd> + <kbd>F</kbd> lets you search for notes (in the name of the note and its content)
 - <kbd>⌃ Ctrl</kbd> + <kbd>F</kbd> lets you search for notes in all tags / subfolders
-- <kbd>⌃ Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>P</kbd> switches to the previous workspace
+- <kbd>⌃ Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>P</kbd> switches to the previous layout
 - <kbd>⌘ Cmd</kbd> + <kbd>⇧ Shift</kbd> + <kbd>E</kbd> edits an encrypted note
 - <kbd>⌃ Ctrl</kbd> + <kbd>R</kbd> removes the current note
 - <kbd>⌃ Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>U</kbd> checks for updates

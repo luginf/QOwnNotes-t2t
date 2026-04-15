@@ -230,14 +230,14 @@ SOURCES += main.cpp\
     widgets/notefolderlistwidget.cpp \
     widgets/notetreewidgetitem.cpp \
     widgets/todoitemtreewidget.cpp \
-    widgets/layoutwidget.cpp \
+    widgets/layoutpresetwidget.cpp \
     widgets/htmlpreviewwidget.cpp \
     widgets/colormodesettingswidget.cpp \
     dialogs/serverbookmarksimportdialog.cpp \
     dialogs/websockettokendialog.cpp \
     dialogs/imagedialog.cpp \
     dialogs/commandbar.cpp \
-    dialogs/workspacedialog.cpp \
+    dialogs/layoutdialog.cpp \
     models/commandmodel.cpp \
     libraries/fuzzy/kfuzzymatcher.cpp \
     libraries/qr-code-generator/QrCode.cpp \
@@ -250,7 +250,7 @@ SOURCES += main.cpp\
     managers/distractionfreemanager.cpp \
     managers/notetabmanager.cpp \
     managers/aitoolbarmanager.cpp \
-    managers/workspacemanager.cpp \
+    managers/layoutmanager.cpp \
     managers/tagmanager.cpp \
     managers/noteoperationsmanager.cpp \
     managers/noteindexmanager.cpp \
@@ -373,14 +373,14 @@ HEADERS  += mainwindow.h \
     widgets/notefolderlistwidget.h \
     widgets/notetreewidgetitem.h \
     widgets/todoitemtreewidget.h \
-    widgets/layoutwidget.h \
+    widgets/layoutpresetwidget.h \
     widgets/htmlpreviewwidget.h \
     widgets/colormodesettingswidget.h \
     dialogs/serverbookmarksimportdialog.h \
     dialogs/websockettokendialog.h \
     dialogs/imagedialog.h \
     dialogs/commandbar.h \
-    dialogs/workspacedialog.h \
+    dialogs/layoutdialog.h \
     models/commandmodel.h \
     libraries/fuzzy/kfuzzymatcher.h \
     libraries/qr-code-generator/QrCode.hpp \
@@ -394,7 +394,7 @@ HEADERS  += mainwindow.h \
     managers/distractionfreemanager.h \
     managers/notetabmanager.h \
     managers/aitoolbarmanager.h \
-    managers/workspacemanager.h \
+    managers/layoutmanager.h \
     managers/tagmanager.h \
     managers/noteoperationsmanager.h \
     managers/noteindexmanager.h \
@@ -437,11 +437,11 @@ FORMS    += mainwindow.ui \
     widgets/qtexteditsearchwidget.ui \
     widgets/scriptsettingwidget.ui \
     widgets/notetreewidgetitem.ui \
-    widgets/layoutwidget.ui \
+    widgets/layoutpresetwidget.ui \
     widgets/colormodesettingswidget.ui \
     dialogs/serverbookmarksimportdialog.ui \
     dialogs/websockettokendialog.ui \
-    dialogs/workspacedialog.ui
+    dialogs/layoutdialog.ui
 
 RESOURCES += \
     images.qrc \

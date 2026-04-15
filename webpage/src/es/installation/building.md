@@ -47,18 +47,15 @@ Los archivos fuente serán accesibles de esta forma:
 
 ## Construir con Nix
 
-Si tiene el [gestos de paquetes de Nix](https://nixos.org/download/) disponible puede simplemente clonar el código fuente con git-clone, como se explicó anteriormente, y construirlo con:
+If you have the [Nix package manager](https://nixos.org/download/) and [Devenv](https://devenv.sh/getting-started/) installed you can just git-clone the repository, like explained above and build with:
 
 ```bash
-# Obtener devenv si aún no lo tiene
-nix-shell -p devenv
-
-# Abrir una consola con todas las herramientas que necesita
+# Open a shell with all the tools you need
 devenv shell
 
-# Construir la aplicación
+# Build the application
 just nix-build
 
-# Ejecutar la aplicación construida
+# Run the built application
 just nix-run
 ```

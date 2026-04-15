@@ -27,10 +27,6 @@ else()
 endif()
 
 find_package(
-  QT 5.11 NAMES Qt6 Qt5
-  COMPONENTS Widgets
-  REQUIRED)
-find_package(
   Qt${QT_VERSION_MAJOR}
   COMPONENTS Widgets
   REQUIRED)

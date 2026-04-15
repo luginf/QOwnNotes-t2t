@@ -107,6 +107,7 @@
 #include "dialogs/aboutdialog.h"
 #include "dialogs/commandbar.h"
 #include "dialogs/issueassistantdialog.h"
+#include "dialogs/layoutdialog.h"
 #include "dialogs/linkdialog.h"
 #include "dialogs/notediffdialog.h"
 #include "dialogs/passworddialog.h"
@@ -115,7 +116,6 @@
 #include "dialogs/storedimagesdialog.h"
 #include "dialogs/tododialog.h"
 #include "dialogs/versiondialog.h"
-#include "dialogs/workspacedialog.h"
 #include "entities/calendaritem.h"
 #include "helpers/qownnotesmarkdownhighlighter.h"
 #include "libraries/fakevim/fakevim/fakevimactions.h"
@@ -147,6 +147,7 @@
 #include "managers/aitoolbarmanager.h"
 #include "managers/distractionfreemanager.h"
 #include "managers/exportprintmanager.h"
+#include "managers/layoutmanager.h"
 #include "managers/mediainsertionmanager.h"
 #include "managers/navigationmanager.h"
 #include "managers/noteencryptionmanager.h"
@@ -158,7 +159,6 @@
 #include "managers/spellcheckmanager.h"
 #include "managers/systemtraymanager.h"
 #include "managers/tagmanager.h"
-#include "managers/workspacemanager.h"
 
 static MainWindow *s_self = nullptr;
 
@@ -203,7 +203,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     _searchFilterManager = new SearchFilterManager(this, ui, this);
     _mediaInsertionManager = new MediaInsertionManager(this, ui, this);
     _navigationManager = new NavigationManager(this, ui, this);
-    _workspaceManager = new WorkspaceManager(this, ui, this);
+    _layoutManager = new LayoutManager(this, ui, this);
     SettingsService settings;
 
     // Disable note editing if the user has set the start in read-only mode
@@ -234,8 +234,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     setWindowIcon(getSystemTrayIcon());
 
-    // initialize the workspace combo box
-    _workspaceManager->initWorkspaceComboBox();
+    // initialize the layout combo box
+    _layoutManager->initLayoutComboBox();
 
 #ifdef Q_OS_MAC
     // set another shortcut for delete line under macOS
@@ -352,9 +352,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     // used in toolbars
     restoreToolbars();
 
-    // update the workspace menu and combobox entries again after
-    // restoreToolbars() to fill the workspace combo box again
-    _workspaceManager->updateWorkspaceLists();
+    QTimer::singleShot(isMaximized() || isFullScreen() ? 600 : 0, this,
+                       [this]() { checkAiToolbarConfiguration(false); });
+
+    // update the layout menu and combobox entries again after
+    // restoreToolbars() to fill the layout combo box again
+    _layoutManager->updateLayoutLists();
 
     // Instantiate the system tray manager
     _systemTrayManager = new SystemTrayManager(this, ui, showSystemTray, this);
@@ -420,15 +423,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     // expire trashed items
     TrashItem::expireItems();
 
-    // we need to restore the current workspace a little later when
+    // we need to restore the current layout a little later when
     // application window is maximized or in full-screen mode
     if (isMaximized() || isFullScreen()) {
         // if it is in distraction mode we restore it immediately
         // otherwise it can result in mixed state
         if (isInDistractionFreeMode()) {
-            _workspaceManager->restoreCurrentWorkspace();
+            _layoutManager->restoreCurrentLayout();
         } else {
-            QTimer::singleShot(500, this, SLOT(restoreCurrentWorkspace()));
+            QTimer::singleShot(500, this, SLOT(restoreCurrentLayout()));
         }
     }
 
@@ -460,8 +463,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     for (QToolBar *toolbar : toolbars) {
         connect(toolbar, &QToolBar::visibilityChanged, this, &MainWindow::toolbarVisibilityChanged);
 
-        // Store the current workspace when a toolbar is moved (docked/undocked)
-        connect(toolbar, &QToolBar::topLevelChanged, this, [this]() { storeCurrentWorkspace(); });
+        // Store the current layout when a toolbar is moved (docked/undocked)
+        connect(toolbar, &QToolBar::topLevelChanged, this, [this]() { storeCurrentLayout(); });
     }
 
     // set the action group for the width selector of the distraction free mode
@@ -941,7 +944,7 @@ MainWindow::~MainWindow() {
     }
 
     // Checks will be done in the method
-    storeCurrentWorkspace();
+    storeCurrentLayout();
 
     MetricsService::instance()->sendVisitIfEnabled(QStringLiteral("app/end"),
                                                    QStringLiteral("app end"));
@@ -962,9 +965,9 @@ MainWindow::~MainWindow() {
  */
 
 /**
- * Initializes the workspace combo box
+ * Initializes the layout combo box
  */
-void MainWindow::initWorkspaceComboBox() { _workspaceManager->initWorkspaceComboBox(); }
+void MainWindow::initLayoutComboBox() { _layoutManager->initLayoutComboBox(); }
 
 /**
  * Initializes the dock widgets
@@ -1118,14 +1121,14 @@ void MainWindow::initDockWidgets() {
     setCentralWidget(_noteEditIsCentralWidget ? ui->noteEditTabWidget : nullptr);
     updateNoteEditFrameShape();
 
-    // restore the current workspace
-    restoreCurrentWorkspace();
+    // restore the current layout
+    restoreCurrentLayout();
 
     // lock the dock widgets
     on_actionUnlock_panels_toggled(false);
 
-    // update the workspace menu and combobox entries
-    updateWorkspaceLists();
+    // update the layout menu and combobox entries
+    updateLayoutLists();
 
     // initialize the panel menu
     initPanelMenu();
@@ -1457,12 +1460,12 @@ void MainWindow::updateWindowToolbar() {
     _windowToolbar->clear();
 
     auto *widgetAction = new QWidgetAction(this);
-    widgetAction->setDefaultWidget(_workspaceManager->workspaceComboBox());
-    widgetAction->setObjectName(QStringLiteral("actionWorkspaceComboBox"));
-    widgetAction->setText(tr("Workspace selector"));
+    widgetAction->setDefaultWidget(_layoutManager->layoutComboBox());
+    widgetAction->setObjectName(QStringLiteral("actionLayoutComboBox"));
+    widgetAction->setText(tr("Layout selector"));
     _windowToolbar->addAction(widgetAction);
-    _windowToolbar->addAction(ui->actionManage_workspaces);
-    _windowToolbar->addAction(ui->actionSwitch_to_previous_workspace);
+    _windowToolbar->addAction(ui->actionManage_layouts);
+    _windowToolbar->addAction(ui->actionSwitch_to_previous_layout);
     _windowToolbar->addAction(ui->actionUnlock_panels);
 
     _windowToolbar->addSeparator();
@@ -1475,11 +1478,9 @@ void MainWindow::updateWindowToolbar() {
 }
 
 /**
- * Updates the workspace menu and combobox entries
+ * Updates the layout menu and combobox entries
  */
-void MainWindow::updateWorkspaceLists(bool rebuild) {
-    _workspaceManager->updateWorkspaceLists(rebuild);
-}
+void MainWindow::updateLayoutLists(bool rebuild) { _layoutManager->updateLayoutLists(rebuild); }
 
 /**
  * Initializes the panel menu
@@ -1641,8 +1642,8 @@ void MainWindow::togglePanelVisibility(const QString &objectName) {
         updateNoteGraphicsView();
     }
 
-    // Store the workspace to persist the panel visibility change
-    storeCurrentWorkspace();
+    // Store the layout to persist the panel visibility change
+    storeCurrentLayout();
 }
 
 /**
@@ -1664,8 +1665,8 @@ void MainWindow::toggleToolbarVisibility(const QString &objectName) {
     const bool newVisibility = toolbar->isHidden();
     toolbar->setVisible(newVisibility);
 
-    // Store the workspace to persist the toolbar visibility change
-    storeCurrentWorkspace();
+    // Store the layout to persist the toolbar visibility change
+    storeCurrentLayout();
 }
 
 /**
@@ -2526,7 +2527,7 @@ void MainWindow::readSettingsFromSettingsDialog(const bool isAppLaunch) {
 
     if (_noteEditIsCentralWidget != noteEditIsCentralWidget) {
         setNoteEditCentralWidgetEnabled(noteEditIsCentralWidget);
-        storeCurrentWorkspace();
+        storeCurrentLayout();
     }
 
     this->notifyAllExternalModifications =
@@ -3129,7 +3130,6 @@ void MainWindow::setCurrentNote(Note note, bool updateNoteText, bool updateSelec
     // highlighter
     qApp->setProperty("currentNoteId", noteId);
 
-    const QString name = note.getName();
     updateWindowTitle();
 
     // update current tab
@@ -3142,15 +3142,21 @@ void MainWindow::setCurrentNote(Note note, bool updateNoteText, bool updateSelec
 
     // find and set the current item
     if (updateSelectedNote) {
-        QList<QTreeWidgetItem *> items = ui->noteTreeWidget->findItems(name, Qt::MatchExactly);
-        if (items.count() > 0) {
+        QTreeWidgetItem *item = findNoteInNoteTreeWidget(note);
+        if (item != nullptr) {
             const QSignalBlocker blocker(ui->noteTreeWidget);
             Q_UNUSED(blocker)
 
             // to avoid that multiple notes will be selected
             ui->noteTreeWidget->clearSelection();
 
-            ui->noteTreeWidget->setCurrentItem(items[0]);
+            for (QTreeWidgetItem *parent = item->parent(); parent != nullptr;
+                 parent = parent->parent()) {
+                parent->setExpanded(true);
+            }
+
+            ui->noteTreeWidget->setCurrentItem(item);
+            ui->noteTreeWidget->scrollToItem(item);
         }
     }
 
@@ -3425,7 +3431,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         // when the window was closed
         // https://github.com/pbek/QOwnNotes/issues/1015
         // Checks will be done in the method
-        storeCurrentWorkspace();
+        storeCurrentLayout();
 
         _closeEventWasFired = true;
 
@@ -3907,6 +3913,7 @@ void MainWindow::openSettingsDialog(int page, bool openScriptRepository) {
     // read all relevant settings, that can be set in the settings dialog,
     // even if the dialog was canceled
     readSettingsFromSettingsDialog();
+    checkAiToolbarConfiguration();
 
     // update the panels sort and order
     updatePanelsSortOrder();
@@ -3934,6 +3941,33 @@ void MainWindow::openSettingsDialog(int page, bool openScriptRepository) {
 
     // force that the preview is regenerated
     forceRegenerateNotePreview();
+}
+
+void MainWindow::checkAiToolbarConfiguration(bool askToShowToolbar) {
+    QToolBar *aiToolbar = _aiToolbarManager->aiToolbar();
+    const bool hasConfiguredAiBackend = OpenAiService::instance()->hasConfiguredBackend();
+    const bool aiToolbarWasHidden = aiToolbar->isHidden();
+
+    if (!hasConfiguredAiBackend) {
+        aiToolbar->hide();
+
+        if (!aiToolbarWasHidden) {
+            storeCurrentLayout();
+        }
+
+        return;
+    }
+
+    if (askToShowToolbar && aiToolbarWasHidden &&
+        Utils::Gui::question(this, tr("AI toolbar disabled"),
+                             tr("An AI backend is configured, but the AI toolbar is currently "
+                                "disabled. Do you want to turn it on?"),
+                             QStringLiteral("enable-ai-toolbar-question"),
+                             QMessageBox::Yes | QMessageBox::No,
+                             QMessageBox::Yes) == QMessageBox::Yes) {
+        aiToolbar->show();
+        storeCurrentLayout();
+    }
 }
 
 void MainWindow::forceRegenerateNotePreview() {
@@ -5388,8 +5422,8 @@ void MainWindow::resetBrokenTagNotesLinkFlag() {
     if (_brokenTagNoteLinksRemoved) _brokenTagNoteLinksRemoved = false;
 }
 
-QString MainWindow::getWorkspaceUuid(const QString &workspaceName) {
-    return _workspaceManager->getWorkspaceUuid(workspaceName);
+QString MainWindow::getLayoutUuid(const QString &layoutName) {
+    return _layoutManager->getLayoutUuid(layoutName);
 }
 
 /**
@@ -6623,42 +6657,40 @@ QString MainWindow::selectedNoteTextEditText() {
  * @param arg1
  */
 void MainWindow::on_actionUnlock_panels_toggled(bool arg1) {
-    _workspaceManager->on_actionUnlock_panels_toggled(arg1);
+    _layoutManager->on_actionUnlock_panels_toggled(arg1);
 }
 
 void MainWindow::handleDockWidgetLocking(QDockWidget *dockWidget) {
-    _workspaceManager->handleDockWidgetLocking(dockWidget);
+    _layoutManager->handleDockWidgetLocking(dockWidget);
 }
 
 /**
- * Creates a new workspace with asking for its name
+ * Creates a new layout with asking for its name
  */
-void MainWindow::on_actionStore_as_new_workspace_triggered() {
-    _workspaceManager->on_actionStore_as_new_workspace_triggered();
+void MainWindow::on_actionStore_as_new_layout_triggered() {
+    _layoutManager->on_actionStore_as_new_layout_triggered();
 }
 
 /**
- * Creates a new workspace with name
+ * Creates a new layout with name
  *
  * @param name
  * @return
  */
-bool MainWindow::createNewWorkspace(QString name) {
-    return _workspaceManager->createNewWorkspace(name);
-}
+bool MainWindow::createNewLayout(QString name) { return _layoutManager->createNewLayout(name); }
 
 /**
- * Returns the uuid of the current workspace
+ * Returns the uuid of the current layout
  *
  * @return
  */
-QString MainWindow::currentWorkspaceUuid() { return _workspaceManager->currentWorkspaceUuid(); }
+QString MainWindow::currentLayoutUuid() { return _layoutManager->currentLayoutUuid(); }
 
 /**
- * Sets the new current workspace when the workspace combo box index has changed
+ * Sets the new current layout when the layout combo box index has changed
  */
-void MainWindow::onWorkspaceComboBoxCurrentIndexChanged(int index) {
-    _workspaceManager->onWorkspaceComboBoxCurrentIndexChanged(index);
+void MainWindow::onLayoutComboBoxCurrentIndexChanged(int index) {
+    _layoutManager->onLayoutComboBoxCurrentIndexChanged(index);
 }
 
 /**
@@ -6699,21 +6731,19 @@ void MainWindow::onAiModelGroupChanged(QAction *action) {
 void MainWindow::generateAiModelComboBox() { _aiToolbarManager->generateAiModelComboBox(); }
 
 /**
- * Sets a new current workspace
+ * Sets a new current layout
  */
-void MainWindow::setCurrentWorkspace(const QString &uuid) {
-    _workspaceManager->setCurrentWorkspace(uuid);
-}
+void MainWindow::setCurrentLayout(const QString &uuid) { _layoutManager->setCurrentLayout(uuid); }
 
 /**
- * Stores the current workspace
+ * Stores the current layout
  */
-void MainWindow::storeCurrentWorkspace() { _workspaceManager->storeCurrentWorkspace(); }
+void MainWindow::storeCurrentLayout() { _layoutManager->storeCurrentLayout(); }
 
 /**
- * Restores the current workspace
+ * Restores the current layout
  */
-void MainWindow::restoreCurrentWorkspace() { _workspaceManager->restoreCurrentWorkspace(); }
+void MainWindow::restoreCurrentLayout() { _layoutManager->restoreCurrentLayout(); }
 
 /**
  * Handles the visibility of the note subfolder panel
@@ -6726,46 +6756,46 @@ void MainWindow::handleNoteSubFolderVisibility() const {
 }
 
 /**
- * Returns the list of workspace uuids
+ * Returns the list of layout uuids
  * @return
  */
-QStringList MainWindow::getWorkspaceUuidList() { return _workspaceManager->getWorkspaceUuidList(); }
+QStringList MainWindow::getLayoutUuidList() { return _layoutManager->getLayoutUuidList(); }
 
 /**
- * Removes the current workspace
+ * Removes the current layout
  */
-void MainWindow::on_actionRemove_current_workspace_triggered() {
-    _workspaceManager->on_actionRemove_current_workspace_triggered();
+void MainWindow::on_actionRemove_current_layout_triggered() {
+    _layoutManager->on_actionRemove_current_layout_triggered();
 }
 
-void MainWindow::on_actionRename_current_workspace_triggered() {
-    _workspaceManager->on_actionRename_current_workspace_triggered();
-}
-
-/**
- * Switch to the previous workspace
- */
-void MainWindow::on_actionSwitch_to_previous_workspace_triggered() {
-    _workspaceManager->on_actionSwitch_to_previous_workspace_triggered();
+void MainWindow::on_actionRename_current_layout_triggered() {
+    _layoutManager->on_actionRename_current_layout_triggered();
 }
 
 /**
- * Opens the workspace management dialog to add, rename, delete and reorder workspaces
+ * Switch to the previous layout
  */
-void MainWindow::on_actionManage_workspaces_triggered() {
-    auto *dialog = new WorkspaceDialog(this);
+void MainWindow::on_actionSwitch_to_previous_layout_triggered() {
+    _layoutManager->on_actionSwitch_to_previous_layout_triggered();
+}
+
+/**
+ * Opens the layout management dialog to add, rename, delete and reorder layouts
+ */
+void MainWindow::on_actionManage_layouts_triggered() {
+    auto *dialog = new LayoutDialog(this);
     dialog->exec();
     delete dialog;
 
-    // Reload workspace lists after the dialog was closed to reflect any changes
-    updateWorkspaceLists();
+    // Reload layout lists after the dialog was closed to reflect any changes
+    updateLayoutLists();
 }
 
 /**
  * Shows all dock widgets
  */
 void MainWindow::on_actionShow_all_panels_triggered() {
-    _workspaceManager->on_actionShow_all_panels_triggered();
+    _layoutManager->on_actionShow_all_panels_triggered();
 }
 
 static void loadAllActions(QMenu *menu, QVector<QPair<QString, QAction *>> &outActions) {
@@ -7767,7 +7797,7 @@ bool MainWindow::nextCloudDeckCheck() {
 
 void MainWindow::on_actionInsert_Nextcloud_Deck_card_triggered() { openNextcloudDeckDialog(); }
 
-void MainWindow::openNextcloudDeckDialog(int cardId) {
+void MainWindow::openNextcloudDeckDialog(int cardId, int boardId) {
     if (!nextCloudDeckCheck()) {
         return;
     }
@@ -7779,7 +7809,7 @@ void MainWindow::openNextcloudDeckDialog(int cardId) {
     qDebug() << __func__ << "cardId: " << cardId;
 
     if (cardId > 0) {
-        dialog->setCardId(cardId);
+        dialog->setCardId(cardId, boardId);
     } else {
         QOwnNotesMarkdownTextEdit *textEdit = activeNoteTextEdit();
         QString selectedText = textEdit->textCursor().selectedText();
@@ -7848,7 +7878,7 @@ void MainWindow::enableOpenAiActivitySpinner(bool enable) {
  * Reattaches all floating panels in case they can't be reattached manually anymore
  */
 void MainWindow::on_actionReattach_panels_triggered() {
-    _workspaceManager->on_actionReattach_panels_triggered();
+    _layoutManager->on_actionReattach_panels_triggered();
 }
 
 void MainWindow::on_actionManage_Nextcloud_Deck_cards_triggered() {

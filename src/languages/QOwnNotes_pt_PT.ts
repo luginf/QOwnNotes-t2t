@@ -1568,6 +1568,14 @@
 <translation type="unfinished">Copy</translation>
 </message>
 <message>
+<source>Copy image file path</source>
+<translation type="unfinished">Copy image file path</translation>
+</message>
+<message>
+<source>Copy image to clipboard</source>
+<translation type="unfinished">Copy image to clipboard</translation>
+</message>
+<message>
 <source>Copy link location</source>
 <translation type="unfinished">Copy link location</translation>
 </message>
@@ -2488,6 +2496,10 @@
 <translation>Abre o canal de IRC (Kiwi) #qownnotes, pois precisas de estar conetado para receber uma resposta</translation>
 </message>
 <message>
+<source>Use softwrap in note editor</source>
+<translation type="unfinished">Use softwrap in note editor</translation>
+</message>
+<message>
 <source>Cycle text case</source>
 <translation>Ciclo de caixa de texto</translation>
 </message>
@@ -2851,10 +2863,6 @@
 <message>
 <source>Insert headline from note filename</source>
 <translation>Inserir título do nome do arquivo da nota</translation>
-</message>
-<message>
-<source>Use softwrap in note editor and preview</source>
-<translation>Use o softwrap no editor de notas e visualize</translation>
 </message>
 <message>
 <source>Show status bar</source>
@@ -3379,6 +3387,13 @@ Se a reciclagem não estiver ativada no servidor de ownCloud não será possíve
 </message>
 </context>
 <context>
+<name>McpService</name>
+<message>
+<source>MCP server listening on port %1</source>
+<translation type="unfinished">MCP server listening on port %1</translation>
+</message>
+</context>
+<context>
 <name>MediaInsertionManager</name>
 <message>
 <source>File extension</source>
@@ -3579,6 +3594,10 @@ Se a reciclagem não estiver ativada no servidor de ownCloud não será possíve
 <translation>Procurar ou criar cartão</translation>
 </message>
 <message>
+<source>Select the board and stack to work with</source>
+<translation type="unfinished">Select the board and stack to work with</translation>
+</message>
+<message>
 <source>Create card and insert link into current note</source>
 <translation>Criar cartão e inserir ligação na nota atual</translation>
 </message>
@@ -3623,8 +3642,12 @@ Se a reciclagem não estiver ativada no servidor de ownCloud não será possíve
 <translation>Recarregar do servidor</translation>
 </message>
 <message>
-<source>Reload cards from server</source>
-<translation>Recarregar cartões do servidor</translation>
+<source>Reload boards, stacks and cards from server</source>
+<translation type="unfinished">Reload boards, stacks and cards from server</translation>
+</message>
+<message>
+<source>%1 / %2</source>
+<translation type="unfinished">%1 / %2</translation>
 </message>
 <message>
 <source>No due date</source>
@@ -5964,6 +5987,10 @@ Teste por conta própria se você tiver problemas e coloque um valor mais alto s
 <translation type="unfinished">Color modes</translation>
 </message>
 <message>
+<source>MCP server</source>
+<translation type="unfinished">MCP server</translation>
+</message>
+<message>
 <source>Be aware that the ownCloud notes app doesn't support subfolders!</source>
 <translation>Esteja ciente de que o aplicativo de notas ownCloud não suporta subpastas!
 </translation>
@@ -5980,10 +6007,6 @@ Teste por conta própria se você tiver problemas e coloque um valor mais alto s
 <message>
 <source>Login to Nextcloud to grant access</source>
 <translation>Iniciar sessão no Nextcloud para conceder acesso</translation>
-</message>
-<message>
-<source>Stack:</source>
-<translation>Pilha:</translation>
 </message>
 <message>
 <source>Todo settings</source>
@@ -6122,6 +6145,10 @@ Teste por conta própria se você tiver problemas e coloque um valor mais alto s
 <translation>Punjabi</translation>
 </message>
 <message>
+<source>Open newly created notes in a new tab</source>
+<translation type="unfinished">Open newly created notes in a new tab</translation>
+</message>
+<message>
 <source>Ignored:</source>
 <translation type="unfinished">Ignored:</translation>
 </message>
@@ -6140,6 +6167,18 @@ Teste por conta própria se você tiver problemas e coloque um valor mais alto s
 <message>
 <source>Reset ignored words</source>
 <translation type="unfinished">Reset ignored words</translation>
+</message>
+<message>
+<source>Enable MCP server for AI agent access to notes</source>
+<translation type="unfinished">Enable MCP server for AI agent access to notes</translation>
+</message>
+<message>
+<source>Server port:</source>
+<translation type="unfinished">Server port:</translation>
+</message>
+<message>
+<source>Reset the MCP server port</source>
+<translation type="unfinished">Reset the MCP server port</translation>
 </message>
 <message>
 <source>Persian</source>
@@ -7731,14 +7770,6 @@ Mensagem de erro: </translation>
 <message>
 <source>The integrity of the disk database is not valid!</source>
 <translation>A integridade da base de dados do disco não está válida!</translation>
-</message>
-<message>
-<source>Board Id: %1</source>
-<translation>ID do Quadro: %1</translation>
-</message>
-<message>
-<source>Stack Id: %1</source>
-<translation>ID da Pilha: %1</translation>
 </message>
 <message>
 <source>API test result for %1 (%2)</source>

@@ -17,15 +17,15 @@
 #include "masterdialog.h"
 
 namespace Ui {
-class WorkspaceDialog;
+class LayoutDialog;
 }
 
-class WorkspaceDialog : public MasterDialog {
+class LayoutDialog : public MasterDialog {
     Q_OBJECT
 
    public:
-    explicit WorkspaceDialog(QWidget *parent = nullptr);
-    ~WorkspaceDialog();
+    explicit LayoutDialog(QWidget *parent = nullptr);
+    ~LayoutDialog();
 
    private slots:
     void on_addButton_clicked();
@@ -33,13 +33,13 @@ class WorkspaceDialog : public MasterDialog {
     void on_renameButton_clicked();
     void on_moveUpButton_clicked();
     void on_moveDownButton_clicked();
-    void on_workspaceListWidget_currentRowChanged(int currentRow);
-    void on_workspaceListWidget_itemDoubleClicked();
+    void on_layoutListWidget_currentRowChanged(int currentRow);
+    void on_layoutListWidget_itemDoubleClicked();
 
    private:
-    Ui::WorkspaceDialog *ui;
+    Ui::LayoutDialog *ui;
 
-    void reloadWorkspaceList();
+    void reloadLayoutList();
     void updateButtonStates();
-    void persistWorkspaceOrder();
+    void persistLayoutOrder();
 };

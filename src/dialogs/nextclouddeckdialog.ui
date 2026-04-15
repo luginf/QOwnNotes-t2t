@@ -192,26 +192,26 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-       <item row="2" column="0">
-        <widget class="QCheckBox" name="showArchivedCardsCheckBox">
-         <property name="text">
-          <string>Show archived cards</string>
-         </property>
-        </widget>
-       </item>
+      <layout class="QGridLayout" name="gridLayout_3">
        <item row="3" column="0">
-        <widget class="QCheckBox" name="showDueTodayItemsOnlyCheckBox">
-         <property name="toolTip">
-          <string>This doesn't work for sub-items, because they may be hidden by the parent item!</string>
+         <widget class="QCheckBox" name="showArchivedCardsCheckBox">
+          <property name="text">
+           <string>Show archived cards</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+          <widget class="QCheckBox" name="showDueTodayItemsOnlyCheckBox">
+          <property name="toolTip">
+           <string>This doesn't work for sub-items, because they may be hidden by the parent item!</string>
          </property>
          <property name="text">
           <string>Show only items due today</string>
          </property>
         </widget>
        </item>
-      <item row="1" column="0">
-       <widget class="QTreeWidget" name="cardItemTreeWidget">
+        <item row="2" column="0">
+         <widget class="QTreeWidget" name="cardItemTreeWidget">
         <property name="contextMenuPolicy">
          <enum>Qt::CustomContextMenu</enum>
         </property>
@@ -230,8 +230,8 @@
         </column>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QFrame" name="frame">
+        <item row="5" column="0">
+         <widget class="QFrame" name="frame">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="leftMargin">
           <number>0</number>
@@ -275,19 +275,29 @@
         </layout>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLineEdit" name="newItemEdit">
-        <property name="placeholderText">
-         <string>Search or create card</string>
+        <item row="0" column="0">
+         <widget class="QLineEdit" name="newItemEdit">
+         <property name="placeholderText">
+          <string>Search or create card</string>
         </property>
         <property name="clearButtonEnabled">
          <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
+         </property>
+        </widget>
+       </item>
+        <item row="1" column="0">
+         <widget class="QComboBox" name="boardStackComboBox">
+         <property name="toolTip">
+          <string>Select the board and stack to work with</string>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
   </layout>
  </widget>
  <customwidgets>
@@ -298,8 +308,9 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>newItemEdit</tabstop>
-  <tabstop>cardItemTreeWidget</tabstop>
+   <tabstop>newItemEdit</tabstop>
+   <tabstop>boardStackComboBox</tabstop>
+   <tabstop>cardItemTreeWidget</tabstop>
   <tabstop>titleLineEdit</tabstop>
   <tabstop>descriptionTextEdit</tabstop>
   <tabstop>dueDateTimeCheckBox</tabstop>

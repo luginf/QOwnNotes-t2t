@@ -143,7 +143,11 @@ src-clean:
 # Run the built application
 [group('src-build')]
 src-run:
-    ./{{ sourceBuildDir }}/QOwnNotes
+    @if [ "$(uname)" = "Darwin" ]; then \
+        ./{{ sourceBuildDir }}/QOwnNotes.app/Contents/MacOS/QOwnNotes; \
+    else \
+        ./{{ sourceBuildDir }}/QOwnNotes; \
+    fi
 
 # Build and run the application
 [group('src-build')]

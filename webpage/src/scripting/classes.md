@@ -152,12 +152,12 @@ class MainWindow {
     // Reloads the current note by id
     // This is useful when the path or filename of the current note changed
     Q_INVOKABLE void reloadCurrentNoteByNoteId();
-    // Returns the list of workspace UUIDs
-    Q_INVOKABLE QStringList getWorkspaceUuidList();
-    // Returns the UUID of a workspace, passing in the workspace name
-    Q_INVOKABLE QString getWorkspaceUuid(const QString &workspaceName);
-    // Sets the current workspace by UUID
-    Q_INVOKABLE void setCurrentWorkspace(const QString &uuid);
+    // Returns the list of layout UUIDs
+    Q_INVOKABLE QStringList getLayoutUuidList();
+    // Returns the UUID of a layout, passing in the layout name
+    Q_INVOKABLE QString getLayoutUuid(const QString &layoutName);
+    // Sets the current layout by UUID
+    Q_INVOKABLE void setCurrentLayout(const QString &uuid);
     // Closes a note tab on a specific index (returns true if successful)
     Q_INVOKABLE bool removeNoteTab(int index);
     // Returns a list of note ids that are opened in tabs
@@ -179,8 +179,8 @@ mainWindow.createNewNoteSubFolder("My fancy folder");
 // Inserts html in the current note as markdown
 mainWindow.insertHtmlAsMarkdownIntoCurrentNote("<h2>my headline</h2>some text");
 
-// Set 'Edit' workspace as current workspace
-mainWindow.setCurrentWorkspace(mainWindow.getWorkspaceUuid("Edit"));
+// Set 'Edit' layout as current layout
+mainWindow.setCurrentLayout(mainWindow.getLayoutUuid("Edit"));
 
 // Jump to the tag "test" in the tag tree
 // There is an example in https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/custom-actions.qml

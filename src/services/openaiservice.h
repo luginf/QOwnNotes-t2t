@@ -71,6 +71,7 @@ class OpenAiService : public QObject {
     void setApiKeyForCurrentBackend(const QString& apiKey);
     QMap<QString, QString> getBackendNames();
     QString getApiBaseUrlForBackend(const QString& backendId);
+    bool hasConfiguredBackend() const;
 
     // Callback for autocomplete results (avoids circular dependency)
     using AutocompleteCallback = std::function<void(const QString&)>;

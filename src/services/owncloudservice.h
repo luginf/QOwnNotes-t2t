@@ -65,6 +65,8 @@ class OwnCloudService : public QObject {
 
     void settingsGetFileList(SettingsDialog *dialog, const QString &path);
 
+    void abortSettingsConnectionTest();
+
     static bool hasOwnCloudSettings(bool withEnabledCheck = true, bool ignoreTableWarning = false);
 
     void shareNote(const Note &note, ShareDialog *dialog);
@@ -78,6 +80,8 @@ class OwnCloudService : public QObject {
     void removeNoteShare(const Note &note, ShareDialog *dialog);
 
     static OwnCloudService *instance(bool reset = false, int cloudConnectionId = -1);
+
+    static OwnCloudService *currentInstance();
 
     static bool isOwnCloudSupportEnabled();
 
@@ -176,6 +180,7 @@ class OwnCloudService : public QObject {
     QString webdavPath();
 
    signals:
+    void settingsConnectionTestFinished();
 
    private slots:
 

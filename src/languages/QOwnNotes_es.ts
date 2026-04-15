@@ -175,7 +175,7 @@
 </message>
 <message>
 <source>You need to restart the application to let this setting take effect</source>
-<translation>Debe reiniciar la aplicación para que este cambio se aplique</translation>
+<translation>Debe reiniciar la aplicación para aplicar este cambio</translation>
 </message>
 <message>
 <source>Use internal icon theme instead of system icon theme</source>
@@ -1568,6 +1568,14 @@
 <translation>Copiar</translation>
 </message>
 <message>
+<source>Copy image file path</source>
+<translation type="unfinished">Copy image file path</translation>
+</message>
+<message>
+<source>Copy image to clipboard</source>
+<translation type="unfinished">Copy image to clipboard</translation>
+</message>
+<message>
 <source>Copy link location</source>
 <translation>Copiar dirección del enlace</translation>
 </message>
@@ -1839,7 +1847,7 @@
 </message>
 <message>
 <source>Modified</source>
-<translation type="unfinished">Modified</translation>
+<translation>Con modificaciones</translation>
 </message>
 <message>
 <source>Search for a heading to link to</source>
@@ -2488,6 +2496,10 @@
 <translation>Abra el canal #qownnotes de IRC (Kiwi). Debe permanecer en línea para obtener una respuesta</translation>
 </message>
 <message>
+<source>Use softwrap in note editor</source>
+<translation type="unfinished">Use softwrap in note editor</translation>
+</message>
+<message>
 <source>Cycle text case</source>
 <translation>Alternar mayúsculas y minúsculas</translation>
 </message>
@@ -2847,10 +2859,6 @@
 <message>
 <source>Insert headline from note filename</source>
 <translation>Insertar título con el nombre del archivo de la nota</translation>
-</message>
-<message>
-<source>Use softwrap in note editor and preview</source>
-<translation>Usar softwrap en editor de notas y vista previa</translation>
 </message>
 <message>
 <source>Show status bar</source>
@@ -3371,6 +3379,13 @@ Si la papelera está habilitada en su servidor ownCloud debería poder restaurar
 </message>
 </context>
 <context>
+<name>McpService</name>
+<message>
+<source>MCP server listening on port %1</source>
+<translation type="unfinished">MCP server listening on port %1</translation>
+</message>
+</context>
+<context>
 <name>MediaInsertionManager</name>
 <message>
 <source>File extension</source>
@@ -3399,7 +3414,7 @@ Si la papelera está habilitada en su servidor ownCloud debería poder restaurar
 </message>
 <message>
 <source>Inserted text as text attachment file</source>
-<translation type="unfinished">Inserted text as text attachment file</translation>
+<translation>Texto insertado como archivo adjunto de texto</translation>
 </message>
 <message>
 <source>Inserting image</source>
@@ -3426,16 +3441,16 @@ Si la papelera está habilitada en su servidor ownCloud debería poder restaurar
 </message>
 <message numerus="yes">
 <source>Failed to copy %n note(s) (most likely already existing)</source>
-<translation type="unfinished">
-<numerusform>Failed to copy %n note(s) (most likely already existing)</numerusform>
-<numerusform>Failed to copy %n note(s) (most likely already existing)</numerusform>
+<translation>
+<numerusform>Error al copiar %n nota (probablemente ya existe)</numerusform>
+<numerusform>Error al copiar %n notas (probablemente ya existen)</numerusform>
 </translation>
 </message>
 <message numerus="yes">
 <source>Skipped copying of %n note(s) (no Markdown or text file or not readable)</source>
-<translation type="unfinished">
-<numerusform>Skipped copying of %n note(s) (no Markdown or text file or not readable)</numerusform>
-<numerusform>Skipped copying of %n note(s) (no Markdown or text file or not readable)</numerusform>
+<translation>
+<numerusform>Se omitió la copia de %n nota (no hay ningún archivo de texto o Markdown legible)</numerusform>
+<numerusform>Se omitió la copia de %n notas (no hay ningún archivo de texto o Markdown legible)</numerusform>
 </translation>
 </message>
 <message>
@@ -3571,6 +3586,10 @@ Si la papelera está habilitada en su servidor ownCloud debería poder restaurar
 <translation>Buscar o crear tarjeta</translation>
 </message>
 <message>
+<source>Select the board and stack to work with</source>
+<translation type="unfinished">Select the board and stack to work with</translation>
+</message>
+<message>
 <source>Create card and insert link into current note</source>
 <translation>Crear tarjeta e insertar enlace en la nota actual</translation>
 </message>
@@ -3615,8 +3634,12 @@ Si la papelera está habilitada en su servidor ownCloud debería poder restaurar
 <translation>Recargar desde el servidor</translation>
 </message>
 <message>
-<source>Reload cards from server</source>
-<translation>Recargar tarjetas desde el servidor</translation>
+<source>Reload boards, stacks and cards from server</source>
+<translation type="unfinished">Reload boards, stacks and cards from server</translation>
+</message>
+<message>
+<source>%1 / %2</source>
+<translation type="unfinished">%1 / %2</translation>
 </message>
 <message>
 <source>No due date</source>
@@ -4951,7 +4974,7 @@ Haga clic en "Cancelar" para descartar tus cambios y conservar la versión exter
 </message>
 <message>
 <source>Create checkbox list</source>
-<translation type="unfinished">Create checkbox list</translation>
+<translation>Crear lista de casillas de verificación</translation>
 </message>
 <message>
 <source>Clear list formatting</source>
@@ -4959,7 +4982,7 @@ Haga clic en "Cancelar" para descartar tus cambios y conservar la versión exter
 </message>
 <message>
 <source>Order checkboxes</source>
-<translation type="unfinished">Order checkboxes</translation>
+<translation>Ordenar casillas de verificación</translation>
 </message>
 <message>
 <source>Copy code block</source>
@@ -5059,7 +5082,7 @@ Haga clic en "Cancelar" para descartar tus cambios y conservar la versión exter
 </message>
 <message>
 <source>Ignore word "%1"</source>
-<translation type="unfinished">Ignore word "%1"</translation>
+<translation>Ignorar palabra "%1"</translation>
 </message>
 <message>
 <source>Markdown LSP server connected</source>
@@ -5950,6 +5973,10 @@ Se debe probar y si hay conflictos de sincronización establecer un valor más a
 <translation>Modos de colores</translation>
 </message>
 <message>
+<source>MCP server</source>
+<translation type="unfinished">MCP server</translation>
+</message>
+<message>
 <source>Be aware that the ownCloud notes app doesn't support subfolders!</source>
 <translation>¡Ten en cuenta que la aplicación de notas de ownCloud no admite subcarpetas!</translation>
 </message>
@@ -5964,10 +5991,6 @@ Se debe probar y si hay conflictos de sincronización establecer un valor más a
 <message>
 <source>Login to Nextcloud to grant access</source>
 <translation>Inicie sesión en Nextcloud para otorgar acceso</translation>
-</message>
-<message>
-<source>Stack:</source>
-<translation>Pila:</translation>
 </message>
 <message>
 <source>Todo settings</source>
@@ -6106,6 +6129,10 @@ Se debe probar y si hay conflictos de sincronización establecer un valor más a
 <translation>Punjabi</translation>
 </message>
 <message>
+<source>Open newly created notes in a new tab</source>
+<translation type="unfinished">Open newly created notes in a new tab</translation>
+</message>
+<message>
 <source>Ignored:</source>
 <translation type="unfinished">Ignored:</translation>
 </message>
@@ -6124,6 +6151,18 @@ Se debe probar y si hay conflictos de sincronización establecer un valor más a
 <message>
 <source>Reset ignored words</source>
 <translation type="unfinished">Reset ignored words</translation>
+</message>
+<message>
+<source>Enable MCP server for AI agent access to notes</source>
+<translation type="unfinished">Enable MCP server for AI agent access to notes</translation>
+</message>
+<message>
+<source>Server port:</source>
+<translation type="unfinished">Server port:</translation>
+</message>
+<message>
+<source>Reset the MCP server port</source>
+<translation type="unfinished">Reset the MCP server port</translation>
 </message>
 <message>
 <source>Persian</source>
@@ -6552,11 +6591,11 @@ Se debe probar y si hay conflictos de sincronización establecer un valor más a
 </message>
 <message>
 <source>Markdown language server</source>
-<translation type="unfinished">Markdown language server</translation>
+<translation>Servidor de lenguaje Markdown</translation>
 </message>
 <message>
 <source>Enable Markdown language server (LSP)</source>
-<translation type="unfinished">Enable Markdown language server (LSP)</translation>
+<translation>Habilitar servidor de lenguaje Markdown (LSP)</translation>
 </message>
 <message>
 <source>Command:</source>
@@ -6568,7 +6607,7 @@ Se debe probar y si hay conflictos de sincronización establecer un valor más a
 </message>
 <message>
 <source>Optional arguments separated by spaces.</source>
-<translation type="unfinished">Optional arguments separated by spaces.</translation>
+<translation>Argumentos opcionales separados por espacios.</translation>
 </message>
 <message>
 <source>Optional arguments</source>
@@ -6652,7 +6691,7 @@ Se debe probar y si hay conflictos de sincronización establecer un valor más a
 </message>
 <message>
 <source>Enable heading folding in the editor</source>
-<translation type="unfinished">Enable heading folding in the editor</translation>
+<translation>Habilitar plegado de encabezados en editor</translation>
 </message>
 <message>
 <source>Hides markdown formatting syntax (like **, *, #) on lines that are not being edited</source>
@@ -7709,14 +7748,6 @@ Mensaje de error de conexión: </translation>
 <message>
 <source>The integrity of the disk database is not valid!</source>
 <translation>¡La integridad de la base de datos del disco no es válida!</translation>
-</message>
-<message>
-<source>Board Id: %1</source>
-<translation>ID del tablero: %1</translation>
-</message>
-<message>
-<source>Stack Id: %1</source>
-<translation>ID de la pila: %1</translation>
 </message>
 <message>
 <source>API test result for %1 (%2)</source>

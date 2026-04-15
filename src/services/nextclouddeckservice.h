@@ -65,8 +65,10 @@ class NextcloudDeckService : public QObject {
     bool deleteCard(int cardId);
     int parseCardIdFromUrl(const QString& url) const;
     static bool isCardUrl(const QString& url);
+    static int parseBoardIdFromUrlDirectly(const QString& url);
     static int parseCardIdFromUrlDirectly(const QString& url);
     QString getCardUrlPattern() const;
+    void setBoardAndStackIds(int boardId, int stackId);
 
    private:
     CloudConnection cloudConnection;

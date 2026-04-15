@@ -117,9 +117,9 @@ Por favor visite el [gestor de fragmentos de órdenes de terminal de QOwnNotes](
 
 ## Servicio de LanguageTool
 
-QOwnNotes can use a local or remote [LanguageTool](https://languagetool.org/) server for **grammar and style checking** in the editor.
+QOwnNotes puede usar un servidor de [LanguageTool](https://languagetool.org/) local o remoto para la **comprobación de gramática y estilo** en el editor.
 
-- It is **optional** and works alongside the existing spell checker support
+- Es **opcional** y funciona en conjunto con el soporte actual de correctores ortográficos
 - Enable it in `Settings -> Editor`, then configure your **server URL**, **language**, optional **API key**, and the categories you want to check
 - You can also toggle it quickly from the **Spelling** menu with `Check grammar with LanguageTool`
 - En el menú contextual del editor se ofrecen sugerencias y acciones para los problemas detectados

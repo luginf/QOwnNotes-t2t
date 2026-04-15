@@ -57,7 +57,7 @@ class SettingsDialog : public MasterDialog {
         GitPage,
         PanelsPage,
         LocalTrashPage,
-        LayoutPage,
+        LayoutPresetsPage,
         WebCompanionPage,
         WebApplicationPage,
         ExperimentalPage,
@@ -246,7 +246,7 @@ class SettingsDialog : public MasterDialog {
 
     void on_enableWikiLinkSupportCheckBox_toggled(bool checked);
 
-    void onLayoutSettingsStored(const QString &workspaceIdentifier);
+    void onLayoutStored(const QString &layoutUuid);
 
     void on_localTrashEnabledCheckBox_toggled(bool checked);
 
@@ -348,8 +348,7 @@ class SettingsDialog : public MasterDialog {
 
     void on_appNextcloudDeckCheckBox_toggled(bool checked);
 
-    void on_nextcloudDeckStackTreeWidget_currentItemChanged(QTreeWidgetItem *current,
-                                                            QTreeWidgetItem *previous);
+    void onSettingsConnectionTestFinished();
 
     void on_groqApiKeyWebButton_clicked();
 
@@ -410,12 +409,17 @@ class SettingsDialog : public MasterDialog {
     bool _initialDarkModeTrayIcon = false;
     bool _initialDarkModeIconTheme = false;
     QString _initialSchemaKey;
+    bool _connectionTestInProgress = false;
     QList<QWidget *> _searchMatchedWidgets;
     QHash<QWidget *, QString> _searchMatchedWidgetOriginalTexts;
 
     void storeSettings();
 
     void startConnectionTest();
+
+    void setConnectionTestInProgress(bool inProgress);
+
+    void cancelConnectionTest();
 
     void setFontLabel(QLineEdit *label, const QFont &font);
 
@@ -504,8 +508,6 @@ class SettingsDialog : public MasterDialog {
     void handleDarkModeCheckBoxToggled(bool updateCheckBoxes = false, bool updateSchema = false);
 
     void resetOKLabelData();
-
-    void loadNextcloudDeckStackTreeWidget();
 
     void buildAiScriptingTreeWidget();
 

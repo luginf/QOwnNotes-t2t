@@ -57,7 +57,6 @@
 #include "services/languagetoolchecker.h"
 #include "services/languagetoolclient.h"
 #endif
-#include "services/nextclouddeckservice.h"
 #include "services/openaiservice.h"
 #include "services/owncloudservice.h"
 #include "services/settingsservice.h"
@@ -207,6 +206,16 @@ SettingsDialog::SettingsDialog(int page, QWidget *parent)
     connect(ui->webAppServerUrlLineEdit, SIGNAL(textChanged(QString)), this, SLOT(needRestart()));
     connect(ui->webAppTokenLineEdit, SIGNAL(textChanged(QString)), this, SLOT(needRestart()));
 
+    connect(ui->cloudServerConnectionNameLineEdit, &QLineEdit::textChanged, this,
+            [this] { cancelConnectionTest(); });
+    connect(ui->serverUrlEdit, &QLineEdit::textChanged, this, [this] { cancelConnectionTest(); });
+    connect(ui->userNameEdit, &QLineEdit::textChanged, this, [this] { cancelConnectionTest(); });
+    connect(ui->passwordEdit, &QLineEdit::textChanged, this, [this] { cancelConnectionTest(); });
+    connect(ui->appQOwnNotesAPICheckBox, &QCheckBox::toggled, this,
+            [this] { cancelConnectionTest(); });
+    connect(ui->appNextcloudDeckCheckBox, &QCheckBox::toggled, this,
+            [this] { cancelConnectionTest(); });
+
 #ifdef LANGUAGETOOL_ENABLED
     connect(ui->languageToolEnabledCheckBox, SIGNAL(toggled(bool)), this,
             SLOT(on_languageToolEnabledCheckBox_toggled(bool)));
@@ -216,10 +225,10 @@ SettingsDialog::SettingsDialog(int page, QWidget *parent)
     connect(ui->editorFontColorWidget, &FontColorWidget::schemaChanged, this,
             &SettingsDialog::applyEditorSchemaSettings);
 
-    //    connect(ui->layoutWidget, SIGNAL(settingsStored()),
+    //    connect(ui->layoutPresetWidget, SIGNAL(layoutStored(QString)),
     //            this, SLOT(needRestart()));
-    connect(ui->layoutWidget, &LayoutWidget::settingsStored, this,
-            &SettingsDialog::onLayoutSettingsStored);
+    connect(ui->layoutPresetWidget, &LayoutPresetWidget::layoutStored, this,
+            &SettingsDialog::onLayoutStored);
 
     if (fromWelcomeDialog) {
         // hide the whole left side frame with the settings menu tree
@@ -494,15 +503,41 @@ void SettingsDialog::storeProxySettings() {
 void SettingsDialog::startConnectionTest() {
     ui->connectionTestLabel->hide();
     OwnCloudService *ownCloud = OwnCloudService::instance(true, _selectedCloudConnection.getId());
+    connect(ownCloud, &OwnCloudService::settingsConnectionTestFinished, this,
+            &SettingsDialog::onSettingsConnectionTestFinished, Qt::UniqueConnection);
     ownCloud->settingsConnectionTest(this);
     ui->check8Label->setText(
         tr("notes path <b>%1</b> found on server").arg(NoteFolder::currentRemotePath(false)));
+}
+
+void SettingsDialog::setConnectionTestInProgress(bool inProgress) {
+    _connectionTestInProgress = inProgress;
+    ui->connectButton->setEnabled(!inProgress);
+}
+
+void SettingsDialog::cancelConnectionTest() {
+    if (!_connectionTestInProgress) {
+        return;
+    }
+
+    OwnCloudService *ownCloud = OwnCloudService::currentInstance();
+    if (ownCloud != nullptr) {
+        ownCloud->abortSettingsConnectionTest();
+    }
+
+    setConnectionTestInProgress(false);
+    resetOKLabelData();
+    ui->connectionTestLabel->hide();
 }
 
 /**
  * @brief SettingsDialog::on_connectButton_clicked
  */
 void SettingsDialog::on_connectButton_clicked() {
+    setConnectionTestInProgress(true);
+    ui->connectButton->repaint();
+    qApp->processEvents();
+
     storeSettings();
     resetOKLabelData();
 
@@ -645,6 +680,8 @@ void SettingsDialog::storeSettings() {
                       ui->hideFormattingSyntaxCheckBox->isChecked());
     settings.setValue(QStringLiteral("Editor/wikiLinkSupport"),
                       ui->enableWikiLinkSupportCheckBox->isChecked());
+    settings.setValue(QStringLiteral("Editor/wikiLinkFileNameAutoSelect"),
+                      ui->wikiLinkFileNameAutoSelectCheckBox->isChecked());
     settings.setValue(QStringLiteral("Editor/hangingIndent"),
                       ui->hangingIndentCheckBox->isChecked());
     settings.setValue(QStringLiteral("Editor/showMarkdownImagePreviews"),
@@ -709,6 +746,11 @@ void SettingsDialog::storeSettings() {
 
     settings.setValue(QStringLiteral("showStatusBarRelativeNotePath"),
                       ui->showStatusBarRelativeNotePathCheckBox->isChecked());
+
+    settings.setValue(QStringLiteral("DistractionFreeMode/hideStatusBar"),
+                      ui->hideStatusBarInDistractionFreeModeCheckBox->isChecked());
+    settings.setValue(QStringLiteral("DistractionFreeMode/openInFullScreen"),
+                      ui->openDistractionFreeModeInFullScreenCheckBox->isChecked());
 
     QStringList todoCalendarUrlList;
     QStringList todoCalendarDisplayNameList;
@@ -978,6 +1020,8 @@ void SettingsDialog::storeFontSettings() {
 void SettingsDialog::readSettings() {
     SettingsService settings;
 
+    initSearchEngineComboBox();
+
     // set current note folder list item
     QListWidgetItem *noteFolderListItem = Utils::Gui::getListWidgetItemWithUserData(
         ui->noteFolderListWidget, NoteFolder::currentNoteFolderId());
@@ -994,8 +1038,6 @@ void SettingsDialog::readSettings() {
     ui->passwordEdit->setText(_selectedCloudConnection.getPassword());
     ui->appQOwnNotesAPICheckBox->setChecked(_selectedCloudConnection.getAppQOwnNotesAPIEnabled());
     ui->appNextcloudDeckCheckBox->setChecked(_selectedCloudConnection.getNextcloudDeckEnabled());
-    loadNextcloudDeckStackTreeWidget();
-    ui->nextcloudDeckFrame->setVisible(ui->appNextcloudDeckCheckBox->isChecked());
     ui->timeFormatLineEdit->setText(settings.value(QStringLiteral("insertTimeFormat")).toString());
 
     // prepend the portable data path if we are in portable mode
@@ -1076,6 +1118,8 @@ void SettingsDialog::readSettings() {
     ui->enableWikiLinkSupportCheckBox->setChecked(
         settings.value(QStringLiteral("Editor/wikiLinkSupport"), false).toBool());
     on_enableWikiLinkSupportCheckBox_toggled(ui->enableWikiLinkSupportCheckBox->isChecked());
+    ui->wikiLinkFileNameAutoSelectCheckBox->setChecked(
+        settings.value(QStringLiteral("Editor/wikiLinkFileNameAutoSelect"), false).toBool());
     ui->hangingIndentCheckBox->setChecked(
         settings.value(QStringLiteral("Editor/hangingIndent"), false).toBool());
     ui->showMarkdownImagePreviewsCheckBox->setChecked(
@@ -1208,6 +1252,11 @@ void SettingsDialog::readSettings() {
         settings.value(QStringLiteral("showStatusBarRelativeNotePath")).toBool());
     ui->showStatusBarRelativeNotePathCheckBox->setEnabled(
         ui->showStatusBarNotePathCheckBox->isChecked());
+
+    ui->hideStatusBarInDistractionFreeModeCheckBox->setChecked(
+        settings.value(QStringLiteral("DistractionFreeMode/hideStatusBar")).toBool());
+    ui->openDistractionFreeModeInFullScreenCheckBox->setChecked(
+        settings.value(QStringLiteral("DistractionFreeMode/openInFullScreen"), true).toBool());
 
     noteTextEditFont.fromString(
         settings.value(QStringLiteral("MainWindow/noteTextEdit.font")).toString());
@@ -1943,6 +1992,10 @@ void SettingsDialog::outputSettings() {
 void SettingsDialog::connectTestCallback(bool appIsValid, QString appVersion, QString serverVersion,
                                          QString notesPathExistsText,
                                          QString connectionErrorMessage) {
+    if (!_connectionTestInProgress) {
+        return;
+    }
+
     this->appIsValid = appIsValid;
     this->appVersion = appVersion;
     this->serverVersion = serverVersion;
@@ -1975,6 +2028,8 @@ void SettingsDialog::connectTestCallback(bool appIsValid, QString appVersion, QS
     ui->connectionTestLabel->adjustSize();
     ui->connectionTestLabel->show();
 }
+
+void SettingsDialog::onSettingsConnectionTestFinished() { setConnectionTestInProgress(false); }
 
 /**
  * @brief set text and color of an ok-label
@@ -2237,14 +2292,14 @@ void SettingsDialog::on_languageToolResetIgnoredWordsButton_clicked() {
 }
 #endif
 
-void SettingsDialog::onLayoutSettingsStored(const QString &workspaceIdentifier) {
+void SettingsDialog::onLayoutStored(const QString &layoutUuid) {
     auto *mainWindow = MainWindow::instance();
-    if ((mainWindow == nullptr) || workspaceIdentifier.isEmpty()) {
+    if ((mainWindow == nullptr) || layoutUuid.isEmpty()) {
         return;
     }
 
-    // Switch to the new workspace (stores the current workspace first, then restores the new one)
-    mainWindow->setCurrentWorkspace(workspaceIdentifier);
+    // Switch to the new layout after creating it from the preset.
+    mainWindow->setCurrentLayout(layoutUuid);
 }
 
 void SettingsDialog::on_ownCloudServerAppPageButton_clicked() {
@@ -3577,8 +3632,8 @@ void SettingsDialog::on_settingsTreeWidget_currentItemChanged(QTreeWidgetItem *c
     ui->settingsStackedWidget->setCurrentIndex(currentIndex);
 
     switch (currentIndex) {
-        case SettingsPages::LayoutPage:
-            ui->layoutWidget->resizeLayoutImage();
+        case SettingsPages::LayoutPresetsPage:
+            ui->layoutPresetWidget->resizeLayoutPresetImage();
             break;
         case SettingsPages::ShortcutPage:
             ui->shortcutTreeWidget->resizeColumnToContents(0);
@@ -3851,6 +3906,8 @@ void SettingsDialog::initMainSplitter() {
 
 void SettingsDialog::closeEvent(QCloseEvent *event) {
     Q_UNUSED(event)
+
+    cancelConnectionTest();
 
     // make sure no settings get written after we got the
     // clearAppDataAndExit call
@@ -4305,6 +4362,8 @@ void SettingsDialog::on_clearLogFileButton_clicked() {
 void SettingsDialog::needRestart() { Utils::Misc::needRestart(); }
 
 void SettingsDialog::on_ownCloudSupportCheckBox_toggled() {
+    cancelConnectionTest();
+
     bool checked = ui->ownCloudSupportCheckBox->isChecked();
     ui->ownCloudGroupBox->setEnabled(checked);
 
@@ -4483,6 +4542,7 @@ void SettingsDialog::on_markdownLspEnabledCheckBox_toggled(bool checked) {
 
 void SettingsDialog::on_enableWikiLinkSupportCheckBox_toggled(bool checked) {
     ui->editorFontColorWidget->setWikiLinkItemsVisible(checked);
+    ui->wikiLinkFileNameAutoSelectCheckBox->setEnabled(checked);
 }
 
 void SettingsDialog::on_localTrashEnabledCheckBox_toggled(bool checked) {
@@ -4758,6 +4818,8 @@ void SettingsDialog::initCloudConnectionComboBox(int selectedId) {
 
 void SettingsDialog::on_cloudConnectionComboBox_currentIndexChanged(int index) {
     Q_UNUSED(index)
+    cancelConnectionTest();
+
     const int id = ui->cloudConnectionComboBox->currentData().toInt();
     _selectedCloudConnection = CloudConnection::fetch(id);
 
@@ -4780,13 +4842,13 @@ void SettingsDialog::on_cloudConnectionComboBox_currentIndexChanged(int index) {
     ui->passwordEdit->setText(_selectedCloudConnection.getPassword());
     ui->appQOwnNotesAPICheckBox->setChecked(_selectedCloudConnection.getAppQOwnNotesAPIEnabled());
     ui->appNextcloudDeckCheckBox->setChecked(_selectedCloudConnection.getNextcloudDeckEnabled());
-    loadNextcloudDeckStackTreeWidget();
-    ui->nextcloudDeckFrame->setVisible(ui->appNextcloudDeckCheckBox->isChecked());
     ui->cloudConnectionRemoveButton->setDisabled(
         CloudConnection::fetchUsedCloudConnectionsIds().contains(id));
 }
 
 void SettingsDialog::on_cloudConnectionAddButton_clicked() {
+    cancelConnectionTest();
+
     // create a new cloud connection
     CloudConnection cloudConnection;
     cloudConnection.setName(QObject::tr("New connection"));
@@ -4799,6 +4861,8 @@ void SettingsDialog::on_cloudConnectionAddButton_clicked() {
 }
 
 void SettingsDialog::on_cloudConnectionRemoveButton_clicked() {
+    cancelConnectionTest();
+
     if (CloudConnection::countAll() <= 1) {
         return;
     }
@@ -5015,60 +5079,7 @@ void SettingsDialog::on_noteTextViewRefreshDebounceTimeResetButton_clicked() {
 }
 
 void SettingsDialog::on_appNextcloudDeckCheckBox_toggled(bool checked) {
-    ui->nextcloudDeckFrame->setVisible(checked);
     _selectedCloudConnection.setNextcloudDeckEnabled(checked);
-    loadNextcloudDeckStackTreeWidget();
-}
-
-void SettingsDialog::loadNextcloudDeckStackTreeWidget() {
-    ui->nextcloudDeckStackTreeWidget->clear();
-    NextcloudDeckService nextcloudDeckService(this, _selectedCloudConnection.getId());
-
-    if (!nextcloudDeckService.isEnabled()) {
-        return;
-    }
-
-    auto boards = nextcloudDeckService.getBoards();
-    int currentStackId = _selectedCloudConnection.getNextcloudDeckStackId();
-
-    for (const auto &board : boards) {
-        auto boardItem = new QTreeWidgetItem(ui->nextcloudDeckStackTreeWidget);
-        boardItem->setText(0, board.title);
-        boardItem->setData(0, Qt::UserRole, board.id);
-        boardItem->setToolTip(0, tr("Board Id: %1").arg(board.id));
-        boardItem->setFlags(boardItem->flags() & ~Qt::ItemIsSelectable);
-
-        auto stacks = board.stacks;
-
-        QHash<int, QString>::const_iterator it;
-        for (it = stacks.constBegin(); it != stacks.constEnd(); ++it) {
-            auto stackItem = new QTreeWidgetItem(boardItem);
-            int stackId = it.key();
-
-            stackItem->setText(0, it.value());
-            stackItem->setData(0, Qt::UserRole, stackId);
-            stackItem->setToolTip(0, tr("Stack Id: %1").arg(stackId));
-
-            if (stackId == currentStackId) {
-                ui->nextcloudDeckStackTreeWidget->setCurrentItem(stackItem);
-            }
-        }
-    }
-
-    ui->nextcloudDeckStackTreeWidget->expandAll();
-}
-
-void SettingsDialog::on_nextcloudDeckStackTreeWidget_currentItemChanged(QTreeWidgetItem *current,
-                                                                        QTreeWidgetItem *previous) {
-    Q_UNUSED(previous)
-
-    if (current == nullptr) {
-        return;
-    }
-
-    _selectedCloudConnection.setNextcloudDeckStackId(current->data(0, Qt::UserRole).toInt());
-    _selectedCloudConnection.setNextcloudDeckBoardId(
-        current->parent()->data(0, Qt::UserRole).toInt());
 }
 
 void SettingsDialog::on_groqApiKeyWebButton_clicked() {

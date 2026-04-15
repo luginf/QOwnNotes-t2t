@@ -1,5 +1,87 @@
 # QOwnNotes Changelog
 
+## 26.4.13
+
+- Renamed saved **Workspaces** to **Layouts** across the interface, settings,
+  scripting and documentation, renamed the old **Layout** settings page to
+  **Layout presets**, and added a migration for existing saved layout settings,
+  selector shortcuts, and related message box overrides so current setups keep
+  working after the rename (for [#3564](https://github.com/pbek/QOwnNotes/issues/3564))
+  - For scripting, the new hook name is `layoutSwitchedHook(oldUuid, newUuid)`
+  - Older scripts using `workspaceSwitchedHook(oldUuid, newUuid)` will still
+    work for now, but they are deprecated and should be updated
+
+## 26.4.12
+
+- Turned the **AI toolbar** off by default when no AI backend is configured, so
+  fresh installations without AI setup start with a less cluttered interface; if
+  an AI backend is configured later while the toolbar is hidden, the application
+  now asks whether it should be turned on (for [#3561](https://github.com/pbek/QOwnNotes/issues/3561))
+- Fixed the **Search engine** setting being reset to **Google** when the
+  **Settings** dialog was applied without opening the **General** page first
+  (for [#3562](https://github.com/pbek/QOwnNotes/issues/3562))
+- Fixed following note links from the **note editor** or **preview** while the
+  **note tree** is enabled, so the active note is now also selected in the
+  **note tree panel**, even for notes inside subfolders (for
+  [#3560](https://github.com/pbek/QOwnNotes/issues/3560))
+- In the **Heading** tab of the **Navigation panel**, **Shift + Click** on a heading
+  now recursively expands or collapses all nested topics below that heading
+  (for [#1912](https://github.com/pbek/QOwnNotes/issues/1912))
+- The expand/collapse state of headings in the **Navigation panel** is now remembered
+  per note while the application is running, so switching between notes preserves the
+  user's chosen heading tree layout (for [#1912](https://github.com/pbek/QOwnNotes/issues/1912))
+- The **Connect to server** button in the **Nextcloud settings** is now disabled while a
+  connection test is running to prevent starting overlapping requests; changing any
+  Nextcloud setting or switching to another cloud connection now aborts the in-flight
+  test and immediately re-enables the button (for [#3557](https://github.com/pbek/QOwnNotes/issues/3557))
+- Renamed the **Automatically show note filename selection when [[ is typed**
+  checkbox in the **Editor settings** to **Show note filename selection when
+  [[ is typed** (for [#3552](https://github.com/pbek/QOwnNotes/issues/3552))
+- Reworked the **Distraction free mode** interface settings into their own area,
+  moved **Hide status bar in distraction free mode** there, and added a new
+  **Open distraction free mode in full-screen** option that is **enabled by
+  default**; entering distraction free mode now only switches to full-screen
+  when that setting is enabled, the status bar now shows just one **Leave**
+  button while distraction free mode is active, the standalone full-screen leave
+  button is also now labeled **Leave**, and it is no longer shown on **macOS**
+  (for [#3553](https://github.com/pbek/QOwnNotes/issues/3553))
+
+## 26.4.11
+
+- The **Leave distraction free mode** and **Leave full-screen mode** status bar
+  buttons now use descriptive labels instead of a generic "leave" label, making
+  it clear which mode each button exits (for [#3553](https://github.com/pbek/QOwnNotes/issues/3553))
+- Added a **Hide status bar in distraction free mode** checkbox to the
+  **Interface settings** under the **Status bar** section, allowing the status
+  bar to be hidden when entering distraction free mode and automatically
+  restored when leaving it (for [#3553](https://github.com/pbek/QOwnNotes/issues/3553))
+- Changed the **Find in current note** search bar and the search bars in both the
+  **QLiteHtml** and **legacy preview** to wait until at least **two characters** are
+  entered before searching, while still searching immediately for a single **emoji**
+  so emoji-only note content remains easy to find; the search bars no longer jump to
+  the top of the document when the search term is deleted; the **QLiteHtml** and
+  **legacy preview** search bars now have a **300ms debounce delay**, and the note
+  editor search debounce delay applies to notes longer than **20,000 characters**
+  (for [#3550](https://github.com/pbek/QOwnNotes/issues/3550))
+- Added a new **Automatically show note filename selection when [[ is typed**
+  checkbox to the **Editor settings**, which is only available when
+  **wiki-style link support** is enabled and is turned **off by default**
+  (for [#3552](https://github.com/pbek/QOwnNotes/issues/3552))
+
+## 26.4.10
+
+- When a note is **deleted**, the application now checks for **images and attachments**
+  referenced by the note that are not used in any other note and offers to **delete
+  those orphaned files** after a confirmation dialog, also when **multiple notes** are
+  deleted at once in the note tree (for [#2121](https://github.com/pbek/QOwnNotes/issues/2121))
+- Added a **board / stack selector** to the **Nextcloud Deck card dialog** below
+  **Search or create card**, so cards can be listed and created in any available
+  Deck stack without first changing the default Deck stack in the settings
+  (for [#3540](https://github.com/pbek/QOwnNotes/issues/3540))
+  - The old **Nextcloud settings** board/stack picker was removed so Deck
+    selection is now handled directly in the dialog where the cards are managed
+- Added more French, Korean, Spanish translation (thank you, jd-develop, VenusGirl, AlejandroMoc)
+
 ## 26.4.9
 
 - Extended the **scripting engine's syntax highlighting** support with **custom

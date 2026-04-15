@@ -6,7 +6,7 @@ heroText: QOwnNotes
 tagline: Prise de notes en Markdown dans des fichier en texte brut, open source et gratuite, avec intégration Nextcloud / ownCloud
 actions:
   - 
-    text: Quick Start →
+    text: Commencer →
     link: /fr/getting-started/overview
     type: primary
 features:

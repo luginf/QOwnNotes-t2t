@@ -470,3 +470,54 @@ function openAiBackendsHook() {
 :::
 
 ربما تحب أن تلقي نظرة على المثال [custom-openai-backends.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/custom-openai-backends.qml).
+
+## highlightingHook
+
+This hook is called for each text block in the editor during syntax highlighting. It allows you to add dynamic, context-aware highlighting that goes beyond static regex rules registered with `addHighlightingRule`.
+
+::: warning
+This hook is called very frequently (for every visible text block on every keystroke), so keep your implementation fast. If you only need static regex-based highlighting, prefer using [`addHighlightingRule`](methods-and-objects.md#adding-a-highlighting-rule-for-the-editor) or [`addHighlightingRule` with custom colors](methods-and-objects.md#adding-a-highlighting-rule-with-custom-colors-and-styles) instead.
+:::
+
+### Method call and parameters
+
+```js
+/**
+ * This function is called for each text block during syntax highlighting.
+ * It allows context-aware, dynamic highlighting.
+ *
+ * @param text {QString} the text of the current block being highlighted
+ * @param previousBlockState {int} the highlighter state of the previous block
+ *     (-1 if this is the first block)
+ * @return {Array} an array of highlight range objects, each with:
+ *     start {int} - start position in the text
+ *     length {int} - number of characters to highlight
+ *     state {int} - the HighlighterState to use (optional, -1 for custom only)
+ *     foregroundColor {string} - foreground color name or hex (optional)
+ *     backgroundColor {string} - background color name or hex (optional)
+ *     bold {bool} - bold font weight (optional)
+ *     italic {bool} - italic font style (optional)
+ *     underline {bool} - underline the text (optional)
+ *     fontSize {int} - font point size (optional)
+ */
+function highlightingHook(text, previousBlockState) {
+  var highlights = [];
+
+  // Example: highlight all occurrences of "FIXME" with red bold underline
+  var re = /FIXME/g;
+  var match;
+  while ((match = re.exec(text)) !== null) {
+    highlights.push({
+      start: match.index,
+      length: match[0].length,
+      foregroundColor: "#ff0000",
+      underline: true,
+      bold: true,
+    });
+  }
+
+  return highlights;
+}
+```
+
+You may want to take a look at the examples [highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/highlighting.qml) and [custom-highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/custom-highlighting.qml).

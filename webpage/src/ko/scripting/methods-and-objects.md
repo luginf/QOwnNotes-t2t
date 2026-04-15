@@ -1868,19 +1868,19 @@ script.log(result);
 
 ```cpp
 /**
- * 편집기의 구문 강조 표시에 강조 표시 규칙을 추가
+ * 편집기의 구문 강조 표시기에 강조 규칙 추가
  *
- * @param pattern {QString} the regular expression pattern to highlight
- * @param shouldContain {QString} a string that must be contained in the highlighted text for the pattern to be parsed
- * @param state {int} the state of the syntax highlighter to use
- * @param capturingGroup {int} the capturing group for the pattern to use for highlighting (default: 0)
- * @param maskedGroup {int} the capturing group for the pattern to use for masking (default: 0)
+* @param 패턴 {QString} 강조 표시할 정규 표현식 패턴
+* @param 패턴을 구문 분석하려면 강조 표시된 텍스트에 포함되어야 하는 문자열 {QString}을 포함해야 합니다
+* @paramstate {int} 구문 강조의 상태를 사용합니다
+* @param captureGroup 강조 표시에 사용할 패턴의 캡처 그룹 {int}  (기본값: 0)
+* @param maskedGroup 마스킹에 사용할 패턴의 캡처 그룹 {int}  (기본값: 0)
  */
 void ScriptingService::addHighlightingRule(const QString &pattern,
-                                           const QString &shouldContain,
-                                           int state,
-                                           int capturingGroup,
-                                           int maskedGroup);
+                                            const QString &shouldContain,
+                                            int state,
+                                            int capturingGroup,
+                                            int maskedGroup);
 ```
 
 ### 강조 표시 상태
@@ -1928,3 +1928,65 @@ script.addHighlightingRule("^.{32}(.+)", "", 24, 1, -1);
 ```
 
 또한 [highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/highlighting.qml)의 예를 볼 수 있습니다.
+
+## 사용자 지정 색상과 스타일로 강조 규칙 추가
+
+미리 정의된 강조 상태에 국한되지 않고 사용자 지정 전경/배경 색상 및 글꼴 스타일로 강조 규칙을 추가할 수도 있습니다. 이를 통해 사용자 지정 구문 패턴에 대한 자신만의 색상 체계를 정의할 수 있습니다.
+
+### 메소드 호출 및 매개변수
+
+```cpp
+/**
+ * 구문 강조에 맞춤형 형식 스타일링으로 강조 규칙 추가
+ *
+* @param 패턴 {QString} 강조 표시할 정규 표현식 패턴
+* @param 패턴을 구문 분석하려면 강조 표시된 텍스트에 포함되어야 하는 문자열 {QString}을 포함해야 합니다
+* @paramstate {int} 구문 강조 표시기의 상태입니다 (사용자 지정 형식에만 -1 / NoState 사용)
+* @paramcaptureGroup 강조 표시에 사용할 패턴의 캡처 그룹 {int}
+* @param maskedGroup 마스킹에 사용할 패턴 캡처 그룹 {int}
+* @paramformatStyle {QVariantMap} 사용자 지정 형식 속성이 있는 지도입니다:
+* - foregroundColor {QString} 전경 색상 이름 또는 헥스 값 (예: "#ff0000" 또는 "빨간색")
+* - backgroundColor {QString} 배경 색상 이름 또는 헥스 값
+* - bold {bool} 굵은 글꼴 가중치를 사용할지 여부를 굵은 글씨로 표시합니다
+* - italic {bool} 이탤릭체 글꼴 스타일 사용 여부
+* - underline {bool}  텍스트에 밑줄을 칠지 여부
+* - fontSize {int} 글꼴 포인트 크기
+ */
+void ScriptingService::addHighlightingRule(const QString &pattern,
+                                            const QString &shouldContain,
+                                            int state,
+                                            int capturingGroup,
+                                            int maskedGroup,
+                                            const QVariantMap &formatStyle);
+```
+
+::: tip
+미리 정의된 `상태`을 사용자 지정 형식 속성과 결합할 수 있습니다. 사용자 지정 속성은 주 기본값을 재정의합니다. 사용자 지정 형식만 사용하려면 state `-1` (`NoState`)을 사용합니다.
+:::
+
+### 예시
+
+```js
+function init() {
+  // 노란색 배경에 굵은 빨간색 텍스트로 "중요"를 강조합니다
+  script.addHighlightingRule("IMPORTANT", "IMPORTANT", -1, 0, 0, {
+    foregroundColor: "#ff0000",
+    backgroundColor: "#ffff00",
+    bold: true,
+  });
+
+  // Highlight "@username" mentions with underlined blue text
+  script.addHighlightingRule("@\\w+", "@", -1, 0, 0, {
+    foregroundColor: "#3366cc",
+    underline: true,
+  });
+
+  // Highlight "NOTE:" with italic green text
+  script.addHighlightingRule("NOTE:", "NOTE:", -1, 0, 0, {
+    foregroundColor: "#00aa00",
+    italic: true,
+  });
+}
+```
+
+[highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/highlighting.qml) 및 [custom-highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/custom-highlighting.qml)의 예시도 살펴볼 수 있습니다.

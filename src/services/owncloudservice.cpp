@@ -232,8 +232,16 @@ void OwnCloudService::slotReplyFinished(QNetworkReply *reply) {
 #ifndef INTEGRATION_TESTS
     QUrl url = reply->url();
     QString urlPath = url.path();
+    const bool isSettingsConnectionTestReply = reply->property("settingsConnectionTest").toBool();
+    const bool skipSettingsConnectionTestReply =
+        isSettingsConnectionTestReply &&
+        (reply->property("settingsConnectionTestCancelled").toBool() || !settingsDialog);
 
     qDebug() << "Reply from " << urlPath;
+
+    if (skipSettingsConnectionTestReply) {
+        goto finalize;
+    }
 
     // output a warning if there is an error
     if (reply->error() != QNetworkReply::NoError) {
@@ -339,6 +347,28 @@ void OwnCloudService::slotReplyFinished(QNetworkReply *reply) {
         }
     }
 #endif
+
+finalize:
+    if (reply->property("settingsConnectionTest").toBool()) {
+        bool hasPendingSettingsConnectionTestReplies = false;
+        const auto replies = findChildren<QNetworkReply *>();
+
+        for (QNetworkReply *pendingReply : replies) {
+            if ((pendingReply == nullptr) || (pendingReply == reply)) {
+                continue;
+            }
+
+            if (pendingReply->property("settingsConnectionTest").toBool() &&
+                !pendingReply->isFinished()) {
+                hasPendingSettingsConnectionTestReplies = true;
+                break;
+            }
+        }
+
+        if (!hasPendingSettingsConnectionTestReplies) {
+            emit settingsConnectionTestFinished();
+        }
+    }
 
     reply->deleteLater();
 }
@@ -493,6 +523,7 @@ void OwnCloudService::settingsConnectionTest(SettingsDialog *dialog) {
 
     // direct server url request without auth header
     QNetworkReply *reply = networkManager->get(r);
+    reply->setProperty("settingsConnectionTest", true);
     ignoreSslErrorsIfAllowed(reply);
 
     QUrlQuery q;
@@ -504,11 +535,13 @@ void OwnCloudService::settingsConnectionTest(SettingsDialog *dialog) {
     url.setUrl(serverUrl % capabilitiesPath);
     r.setUrl(url);
     reply = networkManager->get(r);
+    reply->setProperty("settingsConnectionTest", true);
     ignoreSslErrorsIfAllowed(reply);
 
     url.setUrl(serverUrl % ownCloudTestPath);
     r.setUrl(url);
     reply = networkManager->get(r);
+    reply->setProperty("settingsConnectionTest", true);
     ignoreSslErrorsIfAllowed(reply);
 
     if (appQOwnNotesAPICheckEnabled) {
@@ -518,7 +551,22 @@ void OwnCloudService::settingsConnectionTest(SettingsDialog *dialog) {
         url.setQuery(q);
         r.setUrl(url);
         reply = networkManager->get(r);
+        reply->setProperty("settingsConnectionTest", true);
         ignoreSslErrorsIfAllowed(reply);
+    }
+}
+
+void OwnCloudService::abortSettingsConnectionTest() {
+    const auto replies = findChildren<QNetworkReply *>();
+
+    for (QNetworkReply *reply : replies) {
+        if ((reply == nullptr) || !reply->property("settingsConnectionTest").toBool() ||
+            reply->isFinished()) {
+            continue;
+        }
+
+        reply->setProperty("settingsConnectionTestCancelled", true);
+        reply->abort();
     }
 }
 
@@ -1205,6 +1253,10 @@ OwnCloudService *OwnCloudService::instance(bool reset, int cloudConnectionId) {
     }
 
     return instance;
+}
+
+OwnCloudService *OwnCloudService::currentInstance() {
+    return qApp->property("ownCloudService").value<OwnCloudService *>();
 }
 
 /**

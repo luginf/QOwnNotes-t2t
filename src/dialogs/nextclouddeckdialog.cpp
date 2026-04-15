@@ -3,6 +3,7 @@
 #include <QDesktopServices>
 #include <QMenu>
 #include <QShortcut>
+#include <QSignalBlocker>
 #include <QTimeZone>
 
 #include "mainwindow.h"
@@ -36,6 +37,7 @@ NextcloudDeckDialog::~NextcloudDeckDialog() { delete ui; }
 
 void NextcloudDeckDialog::setupUi() {
     setupMainSplitter();
+    loadBoardStackComboBox();
     refreshUi();
 
     ui->newItemEdit->installEventFilter(this);
@@ -77,8 +79,8 @@ void NextcloudDeckDialog::setupUi() {
     QAction *reloadAction = reloadMenu->addAction(tr("Reload from server"));
     reloadAction->setIcon(QIcon::fromTheme(
         QStringLiteral("view-refresh"), QIcon(":icons/breeze-qownnotes/16x16/view-refresh.svg")));
-    reloadAction->setToolTip(tr("Reload cards from server"));
-    connect(reloadAction, SIGNAL(triggered()), this, SLOT(reloadCardList()));
+    reloadAction->setToolTip(tr("Reload boards, stacks and cards from server"));
+    connect(reloadAction, SIGNAL(triggered()), this, SLOT(on_reloadCardListButton_clicked()));
 
     // Explicitly transfer ownership to the button (Qt 5.7 compatibility)
     ui->reloadCardListButton->setMenu(reloadMenu);
@@ -92,6 +94,12 @@ void NextcloudDeckDialog::setupUi() {
 void NextcloudDeckDialog::on_saveButton_clicked() {
     ui->saveButton->setEnabled(false);
     NextcloudDeckService nextcloudDeckService(this);
+
+    if (_currentCard.id > 0) {
+        nextcloudDeckService.setBoardAndStackIds(_currentCard.boardId, _currentCard.stackId);
+    } else {
+        configureDeckService(nextcloudDeckService);
+    }
 
     auto *dateTime = new QDateTime(ui->dueDateTimeEdit->dateTime());
     dateTime->setTimeZone(QTimeZone::systemTimeZone());
@@ -187,17 +195,168 @@ void NextcloudDeckDialog::setupMainSplitter() {
     ui->gridLayout->layout()->addWidget(this->mainSplitter);
 }
 
-void NextcloudDeckDialog::refreshUi() { reloadCardList(); }
+void NextcloudDeckDialog::refreshUi() { reloadDeckData(); }
+
+void NextcloudDeckDialog::reloadDeckData() {
+    loadBoardStackComboBox();
+    reloadCardList();
+}
+
+void NextcloudDeckDialog::loadBoardStackComboBox() {
+    const int previousBoardId = selectedBoardId();
+    const int previousStackId = selectedStackId();
+    const CloudConnection cloudConnection = CloudConnection::currentCloudConnection();
+    const int configuredBoardId = cloudConnection.getNextcloudDeckBoardId();
+    const int configuredStackId = cloudConnection.getNextcloudDeckStackId();
+    NextcloudDeckService nextcloudDeckService(this);
+
+    {
+        const QSignalBlocker blocker(ui->boardStackComboBox);
+        ui->boardStackComboBox->clear();
+
+        if (!nextcloudDeckService.isEnabled()) {
+            updateDeckControlsEnabledState();
+            return;
+        }
+
+        auto boards = nextcloudDeckService.getBoards();
+        int targetIndex = -1;
+        int fallbackIndex = -1;
+
+        for (const auto &board : boards) {
+            QHash<int, QString>::const_iterator it;
+
+            for (it = board.stacks.constBegin(); it != board.stacks.constEnd(); ++it) {
+                const int index = ui->boardStackComboBox->count();
+                const int stackId = it.key();
+                const QString comboText = tr("%1 / %2").arg(board.title, it.value());
+
+                ui->boardStackComboBox->addItem(comboText);
+                ui->boardStackComboBox->setItemData(index, board.id, Qt::UserRole);
+                ui->boardStackComboBox->setItemData(index, stackId, Qt::UserRole + 1);
+
+                if (previousBoardId == board.id && previousStackId == stackId) {
+                    targetIndex = index;
+                } else if (targetIndex == -1 && configuredBoardId == board.id &&
+                           configuredStackId == stackId) {
+                    fallbackIndex = index;
+                }
+            }
+        }
+
+        if (targetIndex == -1) {
+            targetIndex = fallbackIndex;
+        }
+
+        if (targetIndex == -1 && ui->boardStackComboBox->count() > 0) {
+            targetIndex = 0;
+        }
+
+        if (targetIndex >= 0) {
+            ui->boardStackComboBox->setCurrentIndex(targetIndex);
+        }
+    }
+
+    updateDeckControlsEnabledState();
+}
+
+void NextcloudDeckDialog::persistSelectedBoardAndStack() const {
+    const int boardId = selectedBoardId();
+    const int stackId = selectedStackId();
+
+    if (boardId < 1 || stackId < 1) {
+        return;
+    }
+
+    CloudConnection cloudConnection = CloudConnection::currentCloudConnection();
+
+    if (!cloudConnection.isFetched()) {
+        return;
+    }
+
+    cloudConnection.setNextcloudDeckBoardId(boardId);
+    cloudConnection.setNextcloudDeckStackId(stackId);
+}
+
+bool NextcloudDeckDialog::selectBoardStack(int boardId, int stackId) {
+    int targetIndex = -1;
+
+    for (int i = 0; i < ui->boardStackComboBox->count(); ++i) {
+        const int comboBoardId = ui->boardStackComboBox->itemData(i, Qt::UserRole).toInt();
+        const int comboStackId = ui->boardStackComboBox->itemData(i, Qt::UserRole + 1).toInt();
+
+        if (comboBoardId != boardId) {
+            continue;
+        }
+
+        if (stackId < 1 || comboStackId == stackId) {
+            targetIndex = i;
+            break;
+        }
+    }
+
+    if (targetIndex < 0) {
+        return false;
+    }
+
+    const QSignalBlocker blocker(ui->boardStackComboBox);
+    ui->boardStackComboBox->setCurrentIndex(targetIndex);
+    return true;
+}
+
+bool NextcloudDeckDialog::selectBoardForCard(int boardId, int cardId) {
+    if (!selectBoardStack(boardId)) {
+        return false;
+    }
+
+    persistSelectedBoardAndStack();
+    reloadCardList();
+
+    if (_cards.contains(cardId)) {
+        return true;
+    }
+
+    for (int i = 0; i < ui->boardStackComboBox->count(); ++i) {
+        if (ui->boardStackComboBox->itemData(i, Qt::UserRole).toInt() != boardId) {
+            continue;
+        }
+
+        if (i == ui->boardStackComboBox->currentIndex()) {
+            continue;
+        }
+
+        {
+            const QSignalBlocker blocker(ui->boardStackComboBox);
+            ui->boardStackComboBox->setCurrentIndex(i);
+        }
+
+        persistSelectedBoardAndStack();
+        reloadCardList();
+
+        if (_cards.contains(cardId)) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 void NextcloudDeckDialog::reloadCardList() {
     ui->newItemEdit->clear();
+    _cards.clear();
+    ui->cardItemTreeWidget->clear();
+    updateDeckControlsEnabledState();
+
+    if (selectedBoardId() < 1 || selectedStackId() < 1) {
+        resetEditFrameControls();
+        return;
+    }
+
     NextcloudDeckService nextcloudDeckService(this);
+    configureDeckService(nextcloudDeckService);
     _cards = nextcloudDeckService.getCards(ui->showArchivedCardsCheckBox->isChecked());
 
     qDebug() << __func__ << " - 'cards': " << _cards;
-
-    // Clear existing items (this should delete all child items)
-    ui->cardItemTreeWidget->clear();
 
     // Populate the tree widget with cards
     QList<QTreeWidgetItem *> items;    // Collect items for batch insertion (more efficient)
@@ -259,6 +418,38 @@ void NextcloudDeckDialog::resetEditFrameControls() {
     _currentCard = NextcloudDeckService::Card();
 }
 
+int NextcloudDeckDialog::selectedBoardId() const {
+    return ui->boardStackComboBox->currentData(Qt::UserRole).toInt();
+}
+
+int NextcloudDeckDialog::selectedStackId() const {
+    return ui->boardStackComboBox->currentData(Qt::UserRole + 1).toInt();
+}
+
+void NextcloudDeckDialog::configureDeckService(NextcloudDeckService &nextcloudDeckService) const {
+    nextcloudDeckService.setBoardAndStackIds(selectedBoardId(), selectedStackId());
+}
+
+void NextcloudDeckDialog::configureDeckServiceForCard(NextcloudDeckService &nextcloudDeckService,
+                                                      int cardId) const {
+    if (_cards.contains(cardId)) {
+        const auto card = _cards.value(cardId);
+        nextcloudDeckService.setBoardAndStackIds(card.boardId, card.stackId);
+        return;
+    }
+
+    configureDeckService(nextcloudDeckService);
+}
+
+void NextcloudDeckDialog::updateDeckControlsEnabledState() {
+    const bool hasSelection = selectedBoardId() > 0 && selectedStackId() > 0;
+
+    ui->newItemEdit->setEnabled(hasSelection);
+    ui->cardItemTreeWidget->setEnabled(hasSelection);
+    ui->showArchivedCardsCheckBox->setEnabled(hasSelection);
+    ui->reloadCardListButton->setEnabled(hasSelection);
+}
+
 void NextcloudDeckDialog::jumpToCard(int id) {
     if (_cards.contains(id)) {
         _currentCard = _cards[id];
@@ -301,20 +492,18 @@ void NextcloudDeckDialog::on_cardItemTreeWidget_currentItemChanged(QTreeWidgetIt
     jumpToCard(id);
 }
 
-void NextcloudDeckDialog::setCardId(const int id) {
+void NextcloudDeckDialog::setCardId(const int id, const int boardId) {
     if (id < 1) {
         return;
     }
 
-    if (ui->cardItemTreeWidget->topLevelItemCount() == 0) {
+    if (boardId > 0) {
+        selectBoardForCard(boardId, id);
+    } else if (ui->cardItemTreeWidget->topLevelItemCount() == 0) {
         reloadCardList();
     }
 
-    const auto item = Utils::Gui::getTreeWidgetItemWithUserData(ui->cardItemTreeWidget, id);
-
-    if (item != nullptr) {
-        ui->cardItemTreeWidget->setCurrentItem(item);
-    }
+    selectCardInList(id);
 }
 
 void NextcloudDeckDialog::on_newItemEdit_textChanged(const QString &arg1) {
@@ -364,13 +553,23 @@ void NextcloudDeckDialog::on_archiveCardButton_clicked() {
     }
 }
 
+void NextcloudDeckDialog::on_boardStackComboBox_currentIndexChanged(int index) {
+    Q_UNUSED(index)
+
+    persistSelectedBoardAndStack();
+    resetEditFrameControls();
+    reloadCardList();
+}
+
 void NextcloudDeckDialog::openUrlInBrowserForItem(const QTreeWidgetItem *item) {
     if (item == nullptr) {
         return;
     }
 
-    QDesktopServices::openUrl(
-        QUrl(NextcloudDeckService(this).getCardLinkForId(item->data(0, Qt::UserRole).toInt())));
+    const int cardId = item->data(0, Qt::UserRole).toInt();
+    NextcloudDeckService nextcloudDeckService(this);
+    configureDeckServiceForCard(nextcloudDeckService, cardId);
+    QDesktopServices::openUrl(QUrl(nextcloudDeckService.getCardLinkForId(cardId)));
 }
 
 void NextcloudDeckDialog::on_cardItemTreeWidget_itemDoubleClicked(QTreeWidgetItem *item,
@@ -418,7 +617,9 @@ void NextcloudDeckDialog::searchLinkInNotes(QTreeWidgetItem *item) {
         return;
     }
 
-    const auto link = NextcloudDeckService(this).getCardLinkForId(cardId);
+    NextcloudDeckService nextcloudDeckService(this);
+    configureDeckServiceForCard(nextcloudDeckService, cardId);
+    const auto link = nextcloudDeckService.getCardLinkForId(cardId);
     Q_EMIT searchInNotes(link);
     close();
 }
@@ -431,6 +632,12 @@ void NextcloudDeckDialog::on_showArchivedCardsCheckBox_toggled(bool checked) {
     selectCardInList(selectedCardId);
 }
 
+void NextcloudDeckDialog::on_reloadCardListButton_clicked() {
+    const int selectedCardId = _currentCard.id;
+    reloadDeckData();
+    selectCardInList(selectedCardId);
+}
+
 void NextcloudDeckDialog::addCardLinkToCurrentNote(const QTreeWidgetItem *item) {
     const int cardId = item->data(0, Qt::UserRole).toInt();
     if (cardId < 1) {
@@ -438,8 +645,10 @@ void NextcloudDeckDialog::addCardLinkToCurrentNote(const QTreeWidgetItem *item) 
     }
 
     const auto title = item->text(0);
+    NextcloudDeckService nextcloudDeckService(this);
+    configureDeckServiceForCard(nextcloudDeckService, cardId);
     const auto linkText =
-        QStringLiteral("[%1](%2)").arg(title, NextcloudDeckService(this).getCardLinkForId(cardId));
+        QStringLiteral("[%1](%2)").arg(title, nextcloudDeckService.getCardLinkForId(cardId));
 
 #ifndef INTEGRATION_TESTS
     MainWindow *mainWindow = MainWindow::instance();

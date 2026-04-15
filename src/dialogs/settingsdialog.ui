@@ -176,7 +176,7 @@
             </property>
              <item>
               <property name="text">
-               <string>Layout</string>
+                <string>Layout presets</string>
               </property>
               <property name="whatsThis">
                <string notr="true">18</string>
@@ -1530,37 +1530,6 @@
                     <property name="text">
                      <string>Enable Nextcloud Deck support</string>
                     </property>
-                   </widget>
-                  </item>
-                  <item row="12" column="1">
-                   <widget class="QFrame" name="nextcloudDeckFrame">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <layout class="QGridLayout" name="gridLayout_83">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="nextcloudDeckStackLabel">
-                       <property name="text">
-                        <string>Stack:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0" colspan="2">
-                      <widget class="QTreeWidget" name="nextcloudDeckStackTreeWidget">
-                       <attribute name="headerVisible">
-                        <bool>false</bool>
-                       </attribute>
-                       <column>
-                        <property name="text">
-                         <string/>
-                        </property>
-                       </column>
-                      </widget>
-                     </item>
-                    </layout>
                    </widget>
                   </item>
                  </layout>
@@ -3377,28 +3346,51 @@
                     <property name="title">
                      <string>Status bar</string>
                     </property>
-                    <layout class="QGridLayout" name="gridLayout_86">
-                     <item row="0" column="0">
-                      <widget class="QCheckBox" name="showStatusBarNotePathCheckBox">
-                       <property name="text">
-                        <string>Show note path</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QCheckBox" name="showStatusBarRelativeNotePathCheckBox">
-                       <property name="text">
-                        <string>Only show relative note path</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </widget>
-                  </item>
-                  <item>
-                   <spacer name="verticalSpacer_6">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
+                     <layout class="QGridLayout" name="gridLayout_86">
+                      <item row="0" column="0">
+                       <widget class="QCheckBox" name="showStatusBarNotePathCheckBox">
+                        <property name="text">
+                         <string>Show note path</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="0">
+                       <widget class="QCheckBox" name="showStatusBarRelativeNotePathCheckBox">
+                        <property name="text">
+                         <string>Only show relative note path</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QGroupBox" name="distractionFreeModeGroupBox">
+                     <property name="title">
+                      <string>Distraction free mode</string>
+                     </property>
+                     <layout class="QGridLayout" name="gridLayout_147">
+                      <item row="0" column="0">
+                       <widget class="QCheckBox" name="openDistractionFreeModeInFullScreenCheckBox">
+                        <property name="text">
+                         <string>Open distraction free mode in full-screen</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="0">
+                       <widget class="QCheckBox" name="hideStatusBarInDistractionFreeModeCheckBox">
+                        <property name="text">
+                         <string>Hide status bar in distraction free mode</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer_6">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
                     </property>
                     <property name="sizeHint" stdset="0">
                      <size>
@@ -5697,14 +5689,24 @@ li.checked::marker { content: &quot;\2612&quot;; }
                    </property>
                    </widget>
                   </item>
-                  <item row="13" column="0" colspan="4">
-                   <widget class="QCheckBox" name="enableWikiLinkSupportCheckBox">
-                    <property name="text">
-                     <string>Enable wiki-style link support [[note name]]</string>
-                    </property>
-                   </widget>
-                  </item>
-                </layout>
+                   <item row="13" column="0" colspan="4">
+                    <widget class="QCheckBox" name="enableWikiLinkSupportCheckBox">
+                     <property name="text">
+                      <string>Enable wiki-style link support [[note name]]</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="14" column="0" colspan="4">
+                    <widget class="QCheckBox" name="wikiLinkFileNameAutoSelectCheckBox">
+                      <property name="toolTip">
+                       <string>Show the note filename selection when [[ is typed</string>
+                      </property>
+                      <property name="text">
+                       <string>Show note filename selection when [[ is typed</string>
+                      </property>
+                    </widget>
+                   </item>
+                 </layout>
                </widget>
              </item>
               <item row="2" column="0">
@@ -6570,13 +6572,13 @@ Just test yourself if you get sync conflicts and set a higher value if so.</stri
              <item>
               <widget class="QGroupBox" name="groupBox_31">
                <property name="title">
-                <string>Layout selector</string>
+                 <string>Layout preset selector</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_24">
                 <item>
                  <widget class="QLabel" name="label_17">
                   <property name="text">
-                   <string>You can set a new layout here. Keep in mind that you always can modify the position of the panels with the &lt;i&gt;Unlock panels&lt;/i&gt; button.</string>
+                    <string>You can create a new layout from a preset here. Keep in mind that you always can modify the position of the panels with the &lt;i&gt;Unlock panels&lt;/i&gt; button.</string>
                   </property>
                   <property name="wordWrap">
                    <bool>true</bool>
@@ -6589,7 +6591,7 @@ Just test yourself if you get sync conflicts and set a higher value if so.</stri
                    <bool>true</bool>
                   </property>
                   <property name="text">
-                   <string>Panels can be turned on and off in the &lt;i&gt;Window / Panels&lt;/i&gt; main menu and you can also configure different &lt;i&gt;Workspaces&lt;/i&gt; for different panel configurations.</string>
+                   <string>Panels can be turned on and off in the &lt;i&gt;Window / Panels&lt;/i&gt; main menu and you can also configure different &lt;i&gt;Layouts&lt;/i&gt; for different panel configurations.</string>
                   </property>
                   <property name="wordWrap">
                    <bool>true</bool>
@@ -6597,7 +6599,7 @@ Just test yourself if you get sync conflicts and set a higher value if so.</stri
                  </widget>
                 </item>
                 <item>
-                 <widget class="LayoutWidget" name="layoutWidget" native="true">
+                  <widget class="LayoutPresetWidget" name="layoutPresetWidget" native="true">
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -8115,9 +8117,9 @@ Just test yourself if you get sync conflicts and set a higher value if so.</stri
    <header>widgets/scriptlistwidget.h</header>
   </customwidget>
   <customwidget>
-   <class>LayoutWidget</class>
+   <class>LayoutPresetWidget</class>
    <extends>QWidget</extends>
-   <header location="global">widgets/layoutwidget.h</header>
+   <header location="global">widgets/layoutpresetwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

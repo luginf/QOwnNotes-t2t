@@ -214,6 +214,30 @@ QStringList OpenAiService::getModelsForCurrentBackend() {
 
 QMap<QString, QString> OpenAiService::getBackendNames() { return _backendNames; }
 
+bool OpenAiService::hasConfiguredBackend() const {
+    SettingsService settings;
+
+    for (auto it = _backendNames.constBegin(); it != _backendNames.constEnd(); ++it) {
+        const QString& backendId = it.key();
+        QString apiKey = _backendApiKeys.value(backendId);
+
+        if (backendId == QStringLiteral("groq") || backendId == QStringLiteral("openai")) {
+            apiKey = CryptoService::instance()->decryptToString(
+                settings.value(getApiKeySettingsKeyForBackend(backendId)).toString());
+        }
+
+        if (!apiKey.trimmed().isEmpty()) {
+            return true;
+        }
+
+        if (backendId != QStringLiteral("groq") && backendId != QStringLiteral("openai")) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 QString OpenAiService::getApiBaseUrlForCurrentBackend() {
     return getApiBaseUrlForBackend(getBackendId());
 }

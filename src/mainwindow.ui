@@ -1287,9 +1287,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <addaction name="actionEditorWidthFull"/>
      <addaction name="actionEditorWidthCustom"/>
     </widget>
-    <widget class="QMenu" name="menuWorkspaces">
+    <widget class="QMenu" name="menuLayouts">
      <property name="title">
-      <string>Workspaces</string>
+      <string>Layouts</string>
      </property>
     </widget>
     <widget class="QMenu" name="menuPanels">
@@ -1317,16 +1317,16 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <addaction name="actionShow_all_panels"/>
      <addaction name="actionShow_Hide_application"/>
     </widget>
-     <widget class="QMenu" name="menuWorkspace">
+     <widget class="QMenu" name="menuLayout">
       <property name="title">
-       <string>Workspace</string>
+       <string>Layout</string>
       </property>
-      <addaction name="actionManage_workspaces"/>
+      <addaction name="actionManage_layouts"/>
       <addaction name="separator"/>
-      <addaction name="actionStore_as_new_workspace"/>
-      <addaction name="actionRemove_current_workspace"/>
-      <addaction name="actionRename_current_workspace"/>
-      <addaction name="actionSwitch_to_previous_workspace"/>
+      <addaction name="actionStore_as_new_layout"/>
+      <addaction name="actionRemove_current_layout"/>
+      <addaction name="actionRename_current_layout"/>
+      <addaction name="actionSwitch_to_previous_layout"/>
      </widget>
     <widget class="QMenu" name="menuJumpTo">
      <property name="title">
@@ -1342,11 +1342,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="menuJumpTo"/>
     <addaction name="menuToolbars"/>
     <addaction name="menuPanels"/>
-    <addaction name="menuWorkspaces"/>
+    <addaction name="menuLayouts"/>
     <addaction name="actionUnlock_panels"/>
     <addaction name="actionReattach_panels"/>
     <addaction name="separator"/>
-    <addaction name="menuWorkspace"/>
+    <addaction name="menuLayout"/>
     <addaction name="separator"/>
     <addaction name="actionUse_softwrap_in_note_editor"/>
     <addaction name="actionTypewriter_mode"/>
@@ -2430,52 +2430,52 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <string>Reattaches all floating panels</string>
    </property>
   </action>
-  <action name="actionRemove_current_workspace">
+  <action name="actionRemove_current_layout">
    <property name="icon">
     <iconset theme="list-remove" resource="breeze-dark-qownnotes.qrc">
      <normaloff>:/icons/breeze-dark-qownnotes/16x16/list-remove.svg</normaloff>:/icons/breeze-dark-qownnotes/16x16/list-remove.svg</iconset>
    </property>
    <property name="text">
-    <string>Remove current workspace</string>
+    <string>Remove current layout</string>
    </property>
   </action>
-  <action name="actionStore_as_new_workspace">
+  <action name="actionStore_as_new_layout">
    <property name="icon">
     <iconset theme="list-add" resource="breeze-qownnotes.qrc">
      <normaloff>:/icons/breeze-qownnotes/16x16/list-add.svg</normaloff>:/icons/breeze-qownnotes/16x16/list-add.svg</iconset>
    </property>
    <property name="text">
-    <string>Add new workspace</string>
+    <string>Add new layout</string>
    </property>
   </action>
-  <action name="actionRename_current_workspace">
+  <action name="actionRename_current_layout">
    <property name="icon">
     <iconset theme="document-edit" resource="breeze-qownnotes.qrc">
      <normaloff>:/icons/breeze-qownnotes/16x16/document-edit.svg</normaloff>:/icons/breeze-qownnotes/16x16/document-edit.svg</iconset>
    </property>
    <property name="text">
-    <string>Rename current workspace</string>
+    <string>Rename current layout</string>
    </property>
   </action>
-   <action name="actionSwitch_to_previous_workspace">
+   <action name="actionSwitch_to_previous_layout">
     <property name="icon">
      <iconset theme="go-previous" resource="breeze-qownnotes.qrc">
       <normaloff>:/icons/breeze-qownnotes/16x16/go-previous.svg</normaloff>:/icons/breeze-qownnotes/16x16/go-previous.svg</iconset>
     </property>
     <property name="text">
-     <string>Switch to previous workspace</string>
+     <string>Switch to previous layout</string>
     </property>
     <property name="shortcut">
      <string notr="true">Alt+Shift+P</string>
     </property>
    </action>
-   <action name="actionManage_workspaces">
+   <action name="actionManage_layouts">
     <property name="icon">
      <iconset theme="configure" resource="breeze-qownnotes.qrc">
       <normaloff>:/icons/breeze-qownnotes/16x16/configure.svg</normaloff>:/icons/breeze-qownnotes/16x16/configure.svg</iconset>
     </property>
     <property name="text">
-     <string>Manage workspaces</string>
+     <string>Manage layouts</string>
     </property>
    </action>
    <action name="actionShow_all_panels">

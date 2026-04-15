@@ -12,7 +12,7 @@
  *
  */
 
-#include "workspacemanager.h"
+#include "layoutmanager.h"
 
 #include <entities/notefolder.h>
 #include <services/metricsservice.h>
@@ -35,40 +35,39 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-WorkspaceManager::WorkspaceManager(MainWindow *mainWindow, Ui::MainWindow *ui, QObject *parent)
+LayoutManager::LayoutManager(MainWindow *mainWindow, Ui::MainWindow *ui, QObject *parent)
     : QObject(parent), _mainWindow(mainWindow), _ui(ui) {}
 
-void WorkspaceManager::initWorkspaceComboBox() {
-    _workspaceComboBox = new QComboBox(_mainWindow);
-    connect(_workspaceComboBox,
-            static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this,
-            &WorkspaceManager::onWorkspaceComboBoxCurrentIndexChanged);
-    _workspaceComboBox->setToolTip(tr("Workspaces"));
-    _workspaceComboBox->setObjectName(QStringLiteral("workspaceComboBox"));
+void LayoutManager::initLayoutComboBox() {
+    _layoutComboBox = new QComboBox(_mainWindow);
+    connect(_layoutComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &LayoutManager::onLayoutComboBoxCurrentIndexChanged);
+    _layoutComboBox->setToolTip(tr("Layouts"));
+    _layoutComboBox->setObjectName(QStringLiteral("layoutComboBox"));
 }
 
-void WorkspaceManager::updateWorkspaceLists(bool rebuild) {
+void LayoutManager::updateLayoutLists(bool rebuild) {
     SettingsService settings;
-    const QStringList workspaces = getWorkspaceUuidList();
-    const QString currentUuid = currentWorkspaceUuid();
+    const QStringList layouts = getLayoutUuidList();
+    const QString currentUuid = currentLayoutUuid();
 
     if (rebuild) {
         // we need to create a new combo box so the width gets updated in the
         // window toolbar
-        initWorkspaceComboBox();
+        initLayoutComboBox();
 
-        _ui->menuWorkspaces->clear();
+        _ui->menuLayouts->clear();
 
-        _workspaceNameUuidMap.clear();
+        _layoutNameUuidMap.clear();
     }
 
-    const QSignalBlocker blocker(_workspaceComboBox);
+    const QSignalBlocker blocker(_layoutComboBox);
     Q_UNUSED(blocker)
 
     int currentIndex = 0;
 
-    for (int i = 0; i < workspaces.count(); i++) {
-        const QString &uuid = workspaces.at(i);
+    for (int i = 0; i < layouts.count(); i++) {
+        const QString &uuid = layouts.at(i);
 
         if (uuid == currentUuid) {
             currentIndex = i;
@@ -80,16 +79,15 @@ void WorkspaceManager::updateWorkspaceLists(bool rebuild) {
         }
 
         const QString name =
-            settings.value(QStringLiteral("workspace-") + uuid + QStringLiteral("/name"))
-                .toString();
-        const QString objectName = QStringLiteral("restoreWorkspace-") + uuid;
+            settings.value(QStringLiteral("layout-") + uuid + QStringLiteral("/name")).toString();
+        const QString objectName = QStringLiteral("restoreLayout-") + uuid;
 
-        _workspaceNameUuidMap.insert(name, uuid);
+        _layoutNameUuidMap.insert(name, uuid);
 
-        _workspaceComboBox->addItem(name, uuid);
+        _layoutComboBox->addItem(name, uuid);
 
-        auto *action = new QAction(name, _ui->menuWorkspaces);
-        connect(action, &QAction::triggered, this, [this, uuid]() { setCurrentWorkspace(uuid); });
+        auto *action = new QAction(name, _ui->menuLayouts);
+        connect(action, &QAction::triggered, this, [this, uuid]() { setCurrentLayout(uuid); });
 
         // set an object name for creating shortcuts
         action->setObjectName(objectName);
@@ -105,60 +103,60 @@ void WorkspaceManager::updateWorkspaceLists(bool rebuild) {
         //            action->setFont(font);
         //        }
 
-        _ui->menuWorkspaces->addAction(action);
+        _ui->menuLayouts->addAction(action);
     }
 
-    _workspaceComboBox->setCurrentIndex(currentIndex);
+    _layoutComboBox->setCurrentIndex(currentIndex);
 
     if (rebuild) {
-        // we need to adapt the width of the workspaces combo box
+        // we need to adapt the width of the layouts combo box
         _mainWindow->updateWindowToolbar();
     }
 
-    // enable the remove button if there are at least two workspaces
-    _ui->actionRemove_current_workspace->setEnabled(workspaces.count() > 1);
+    // enable the remove button if there are at least two layouts
+    _ui->actionRemove_current_layout->setEnabled(layouts.count() > 1);
 }
 
 /**
- * Sets the new current workspace when the workspace combo box index has changed
+ * Sets the new current layout when the layout combo box index has changed
  */
-void WorkspaceManager::onWorkspaceComboBoxCurrentIndexChanged(int index) {
+void LayoutManager::onLayoutComboBoxCurrentIndexChanged(int index) {
     Q_UNUSED(index)
 
-    const QString uuid = _workspaceComboBox->currentData().toString();
+    const QString uuid = _layoutComboBox->currentData().toString();
 
-    // set the new workspace
-    setCurrentWorkspace(uuid);
+    // set the new layout
+    setCurrentLayout(uuid);
 }
 
-void WorkspaceManager::setCurrentWorkspace(const QString &uuid) {
-    // store the current workspace
-    storeCurrentWorkspace();
+void LayoutManager::setCurrentLayout(const QString &uuid) {
+    // store the current layout
+    storeCurrentLayout();
 
     SettingsService settings;
-    QString currentUuid = currentWorkspaceUuid();
-    settings.setValue(QStringLiteral("previousWorkspace"), currentUuid);
-    settings.setValue(QStringLiteral("currentWorkspace"), uuid);
+    QString currentUuid = currentLayoutUuid();
+    settings.setValue(QStringLiteral("previousLayout"), currentUuid);
+    settings.setValue(QStringLiteral("currentLayout"), uuid);
 
-    // restore the new workspace
-    QTimer::singleShot(0, _mainWindow, SLOT(restoreCurrentWorkspace()));
+    // restore the new layout
+    QTimer::singleShot(0, _mainWindow, SLOT(restoreCurrentLayout()));
 
-    // Check if the workspace is new (not yet in the combo box) and needs a full rebuild
-    bool needsRebuild = _workspaceComboBox->findData(uuid) == -1;
+    // Check if the layout is new (not yet in the combo box) and needs a full rebuild
+    bool needsRebuild = _layoutComboBox->findData(uuid) == -1;
 
     // update the menu and combo box
-    updateWorkspaceLists(needsRebuild);
+    updateLayoutLists(needsRebuild);
 
     // update the preview in case it was disabled previously
     _mainWindow->setNoteTextFromNote(&_mainWindow->currentNote, true);
 
-    ScriptingService::instance()->callWorkspaceSwitchedHook(currentUuid, uuid);
+    ScriptingService::instance()->callLayoutSwitchedHook(currentUuid, uuid);
 }
 
 /**
- * Stores the current workspace
+ * Stores the current layout
  */
-void WorkspaceManager::storeCurrentWorkspace() {
+void LayoutManager::storeCurrentLayout() {
     const bool forceQuit = qApp->property("clearAppDataAndExit").toBool();
     if (MainWindow::isInDistractionFreeMode() || forceQuit || _mainWindow->closeEventWasFired()) {
         return;
@@ -166,29 +164,28 @@ void WorkspaceManager::storeCurrentWorkspace() {
 
     qDebug() << __func__;
     SettingsService settings;
-    QString uuid = currentWorkspaceUuid();
+    QString uuid = currentLayoutUuid();
 
-    settings.setValue(QStringLiteral("workspace-") + uuid + QStringLiteral("/windowState"),
+    settings.setValue(QStringLiteral("layout-") + uuid + QStringLiteral("/windowState"),
                       _mainWindow->saveState());
+    settings.setValue(QStringLiteral("layout-") + uuid + QStringLiteral("/noteEditIsCentralWidget"),
+                      _mainWindow->noteEditIsCentralWidget());
     settings.setValue(
-        QStringLiteral("workspace-") + uuid + QStringLiteral("/noteEditIsCentralWidget"),
-        _mainWindow->noteEditIsCentralWidget());
-    settings.setValue(
-        QStringLiteral("workspace-") + uuid + QStringLiteral("/noteSubFolderDockWidgetVisible"),
+        QStringLiteral("layout-") + uuid + QStringLiteral("/noteSubFolderDockWidgetVisible"),
         _mainWindow->noteSubFolderDockWidgetVisible());
 }
 
 /**
- * Restores the current workspace
+ * Restores the current layout
  */
-void WorkspaceManager::restoreCurrentWorkspace() {
+void LayoutManager::restoreCurrentLayout() {
     SettingsService settings;
-    QStringList workspaces = getWorkspaceUuidList();
+    QStringList layouts = getLayoutUuidList();
     QWidget *focusWidget = qApp->focusWidget();
 
-    // create a default workspace if there is none yet
-    if (workspaces.count() == 0) {
-        createNewWorkspace(tr("full", "full workspace"));
+    // create a default layout if there is none yet
+    if (layouts.count() == 0) {
+        createNewLayout(tr("full", "full layout"));
 
         _mainWindow->setDockWidgetVisible("taggingDockWidget", false);
         _mainWindow->setDockWidgetVisible("noteFolderDockWidget", false);
@@ -196,30 +193,30 @@ void WorkspaceManager::restoreCurrentWorkspace() {
         _mainWindow->setDockWidgetVisible("noteTagDockWidget", false);
         _mainWindow->setDockWidgetVisible("notePreviewDockWidget", false);
         _mainWindow->setDockWidgetVisible("noteGraphicsViewDockWidget", false);
-        createNewWorkspace(tr("minimal", "minimal workspace"));
+        createNewLayout(tr("minimal", "minimal layout"));
 
-        // TODO: maybe still create those workspaces initially?
+        // TODO: maybe still create those layouts initially?
     }
 
-    QString uuid = currentWorkspaceUuid();
+    QString uuid = currentLayoutUuid();
 
-    // set the first workspace as current workspace if there is none set
+    // set the first layout as current layout if there is none set
     if (uuid.isEmpty()) {
-        workspaces = getWorkspaceUuidList();
+        layouts = getLayoutUuidList();
 
-        if (workspaces.count() == 0) {
+        if (layouts.count() == 0) {
             return;
         }
 
-        uuid = workspaces.at(0);
-        settings.setValue(QStringLiteral("currentWorkspace"), uuid);
+        uuid = layouts.at(0);
+        settings.setValue(QStringLiteral("currentLayout"), uuid);
 
         // update the menu and combo box
-        updateWorkspaceLists();
+        updateLayoutLists();
     }
 
     const QString noteEditIsCentralWidgetKey =
-        QStringLiteral("workspace-") + uuid + QStringLiteral("/noteEditIsCentralWidget");
+        QStringLiteral("layout-") + uuid + QStringLiteral("/noteEditIsCentralWidget");
     const bool noteEditIsCentralWidget =
         settings.contains(noteEditIsCentralWidgetKey)
             ? settings.value(noteEditIsCentralWidgetKey).toBool()
@@ -231,7 +228,7 @@ void WorkspaceManager::restoreCurrentWorkspace() {
     }
 
     _mainWindow->restoreState(
-        settings.value(QStringLiteral("workspace-") + uuid + QStringLiteral("/windowState"))
+        settings.value(QStringLiteral("layout-") + uuid + QStringLiteral("/windowState"))
             .toByteArray());
 
     // handle the visibility of the note subfolder panel
@@ -243,7 +240,7 @@ void WorkspaceManager::restoreCurrentWorkspace() {
     // check if the user wanted the note subfolder dock widget visible
     _mainWindow->setNoteSubFolderDockWidgetVisible(
         settings
-            .value(QStringLiteral("workspace-") + uuid +
+            .value(QStringLiteral("layout-") + uuid +
                        QStringLiteral("/noteSubFolderDockWidgetVisible"),
                    true)
             .toBool());
@@ -252,30 +249,30 @@ void WorkspaceManager::restoreCurrentWorkspace() {
     _mainWindow->handleNoteSubFolderVisibility();
 
     // if app was newly installed we want to center and resize the window
-    if (settings.value(QStringLiteral("initialWorkspace")).toBool()) {
+    if (settings.value(QStringLiteral("initialLayout")).toBool()) {
         MetricsService::instance()->sendEventIfEnabled(
             QStringLiteral("app/initial-layout"), QStringLiteral("app"),
             QStringLiteral("initial-layout"),
-            settings.value(QStringLiteral("initialLayoutIdentifier")).toString());
+            settings.value(QStringLiteral("initialLayoutPresetIdentifier")).toString());
 
-        settings.remove(QStringLiteral("initialWorkspace"));
+        settings.remove(QStringLiteral("initialLayout"));
         _mainWindow->centerAndResize();
     }
 
     if (focusWidget != nullptr) {
         // set the focus to the widget that had the focus before
-        // the workspace was restored
+        // the layout was restored
         focusWidget->setFocus();
     }
 }
 
 /**
- * Creates a new workspace with name
+ * Creates a new layout with name
  *
  * @param name
  * @return
  */
-bool WorkspaceManager::createNewWorkspace(QString name) {
+bool LayoutManager::createNewLayout(QString name) {
     name = name.trimmed();
 
     if (name.isEmpty()) {
@@ -283,122 +280,121 @@ bool WorkspaceManager::createNewWorkspace(QString name) {
     }
 
     SettingsService settings;
-    const QString currentUuid = currentWorkspaceUuid();
-    settings.setValue(QStringLiteral("previousWorkspace"), currentUuid);
+    const QString currentUuid = currentLayoutUuid();
+    settings.setValue(QStringLiteral("previousLayout"), currentUuid);
 
     const QString uuid = Utils::Misc::createUuidString();
-    QStringList workspaces = getWorkspaceUuidList();
-    workspaces.append(uuid);
+    QStringList layouts = getLayoutUuidList();
+    layouts.append(uuid);
 
-    settings.setValue(QStringLiteral("workspaces"), workspaces);
-    settings.setValue(QStringLiteral("currentWorkspace"), uuid);
-    settings.setValue(QStringLiteral("workspace-") + uuid + QStringLiteral("/name"), name);
+    settings.setValue(QStringLiteral("layouts"), layouts);
+    settings.setValue(QStringLiteral("currentLayout"), uuid);
+    settings.setValue(QStringLiteral("layout-") + uuid + QStringLiteral("/name"), name);
 
-    // store the new current workspace
-    storeCurrentWorkspace();
+    // store the new current layout
+    storeCurrentLayout();
 
     // update the menu and combo box
-    updateWorkspaceLists();
+    updateLayoutLists();
 
     return true;
 }
 
 /**
- * Returns the uuid of the current workspace
+ * Returns the uuid of the current layout
  *
  * @return
  */
-QString WorkspaceManager::currentWorkspaceUuid() {
+QString LayoutManager::currentLayoutUuid() {
     SettingsService settings;
-    return settings.value(QStringLiteral("currentWorkspace")).toString();
+    return settings.value(QStringLiteral("currentLayout")).toString();
 }
 
-QStringList WorkspaceManager::getWorkspaceUuidList() {
+QStringList LayoutManager::getLayoutUuidList() {
     SettingsService settings;
-    return settings.value(QStringLiteral("workspaces")).toStringList();
+    return settings.value(QStringLiteral("layouts")).toStringList();
 }
 
-QString WorkspaceManager::getWorkspaceUuid(const QString &workspaceName) {
-    return _workspaceNameUuidMap.value(workspaceName, "");
+QString LayoutManager::getLayoutUuid(const QString &layoutName) {
+    return _layoutNameUuidMap.value(layoutName, "");
 }
 
 /**
- * Creates a new workspace with asking for its name
+ * Creates a new layout with asking for its name
  */
-void WorkspaceManager::on_actionStore_as_new_workspace_triggered() {
+void LayoutManager::on_actionStore_as_new_layout_triggered() {
     const QString name =
-        QInputDialog::getText(_mainWindow, tr("Create new workspace"), tr("Workspace name:"))
-            .trimmed();
+        QInputDialog::getText(_mainWindow, tr("Create new layout"), tr("Layout name:")).trimmed();
 
     if (name.isEmpty()) {
         return;
     }
 
-    // store the current workspace
-    storeCurrentWorkspace();
+    // store the current layout
+    storeCurrentLayout();
 
-    // create the new workspace
-    createNewWorkspace(name);
+    // create the new layout
+    createNewLayout(name);
 }
 
 /**
- * Removes the current workspace
+ * Removes the current layout
  */
-void WorkspaceManager::on_actionRemove_current_workspace_triggered() {
-    QStringList workspaces = getWorkspaceUuidList();
+void LayoutManager::on_actionRemove_current_layout_triggered() {
+    QStringList layouts = getLayoutUuidList();
 
-    // there have to be at least one workspace
-    if (workspaces.count() < 2) {
+    // there have to be at least one layout
+    if (layouts.count() < 2) {
         return;
     }
 
-    QString uuid = currentWorkspaceUuid();
+    QString uuid = currentLayoutUuid();
 
-    // if no workspace is set we can't remove it
+    // if no layout is set we can't remove it
     if (uuid.isEmpty()) {
         return;
     }
 
     // ask for permission
-    if (Utils::Gui::question(_mainWindow, tr("Remove current workspace"),
-                             tr("Remove the current workspace?"),
-                             QStringLiteral("remove-workspace")) != QMessageBox::Yes) {
+    if (Utils::Gui::question(_mainWindow, tr("Remove current layout"),
+                             tr("Remove the current layout?"),
+                             QStringLiteral("remove-layout")) != QMessageBox::Yes) {
         return;
     }
 
-    // reset current workspace
-    workspaces.removeAll(uuid);
-    const QString newUuid = workspaces.at(0);
+    // reset current layout
+    layouts.removeAll(uuid);
+    const QString newUuid = layouts.at(0);
 
-    // set the new workspace
-    setCurrentWorkspace(newUuid);
+    // set the new layout
+    setCurrentLayout(newUuid);
 
     SettingsService settings;
-    settings.setValue(QStringLiteral("workspaces"), workspaces);
+    settings.setValue(QStringLiteral("layouts"), layouts);
 
     // remove all settings in the group
-    settings.beginGroup(QStringLiteral("workspace-") + uuid);
+    settings.beginGroup(QStringLiteral("layout-") + uuid);
     settings.remove(QLatin1String(""));
     settings.endGroup();
 
     // update the menu and combo box
-    updateWorkspaceLists();
+    updateLayoutLists();
 }
 
-void WorkspaceManager::on_actionRename_current_workspace_triggered() {
-    const QString uuid = currentWorkspaceUuid();
+void LayoutManager::on_actionRename_current_layout_triggered() {
+    const QString uuid = currentLayoutUuid();
 
-    // if no workspace is set we can't rename it
+    // if no layout is set we can't rename it
     if (uuid.isEmpty()) {
         return;
     }
 
     SettingsService settings;
     QString name =
-        settings.value(QStringLiteral("workspace-") + uuid + QStringLiteral("/name")).toString();
+        settings.value(QStringLiteral("layout-") + uuid + QStringLiteral("/name")).toString();
 
     // ask for the new name
-    name = QInputDialog::getText(_mainWindow, tr("Rename workspace"), tr("Workspace name:"),
+    name = QInputDialog::getText(_mainWindow, tr("Rename layout"), tr("Layout name:"),
                                  QLineEdit::Normal, name)
                .trimmed();
 
@@ -406,26 +402,26 @@ void WorkspaceManager::on_actionRename_current_workspace_triggered() {
         return;
     }
 
-    // rename the workspace
-    settings.setValue(QStringLiteral("workspace-") + uuid + QStringLiteral("/name"), name);
+    // rename the layout
+    settings.setValue(QStringLiteral("layout-") + uuid + QStringLiteral("/name"), name);
 
     // update the menu and combo box
-    updateWorkspaceLists();
+    updateLayoutLists();
 }
 
 /**
- * Switch to the previous workspace
+ * Switch to the previous layout
  */
-void WorkspaceManager::on_actionSwitch_to_previous_workspace_triggered() {
+void LayoutManager::on_actionSwitch_to_previous_layout_triggered() {
     SettingsService settings;
-    QString uuid = settings.value(QStringLiteral("previousWorkspace")).toString();
+    QString uuid = settings.value(QStringLiteral("previousLayout")).toString();
 
     if (!uuid.isEmpty()) {
-        setCurrentWorkspace(uuid);
+        setCurrentLayout(uuid);
     }
 }
 
-void WorkspaceManager::on_actionUnlock_panels_toggled(bool arg1) {
+void LayoutManager::on_actionUnlock_panels_toggled(bool arg1) {
     const QSignalBlocker blocker(_ui->actionUnlock_panels);
     {
         Q_UNUSED(blocker)
@@ -455,7 +451,7 @@ void WorkspaceManager::on_actionUnlock_panels_toggled(bool arg1) {
     }
 }
 
-void WorkspaceManager::handleDockWidgetLocking(QDockWidget *dockWidget) {
+void LayoutManager::handleDockWidgetLocking(QDockWidget *dockWidget) {
     // Remove the title bar widget
     dockWidget->setTitleBarWidget(new QWidget());
 
@@ -468,7 +464,7 @@ void WorkspaceManager::handleDockWidgetLocking(QDockWidget *dockWidget) {
 /**
  * Shows all dock widgets
  */
-void WorkspaceManager::on_actionShow_all_panels_triggered() {
+void LayoutManager::on_actionShow_all_panels_triggered() {
     const QList<QDockWidget *> dockWidgets = _mainWindow->findChildren<QDockWidget *>();
 
     for (QDockWidget *dockWidget : dockWidgets) {
@@ -490,7 +486,7 @@ void WorkspaceManager::on_actionShow_all_panels_triggered() {
 /**
  * Reattaches all floating panels in case they can't be reattached manually anymore
  */
-void WorkspaceManager::on_actionReattach_panels_triggered() {
+void LayoutManager::on_actionReattach_panels_triggered() {
     const QList<QDockWidget *> dockWidgets = _mainWindow->findChildren<QDockWidget *>();
 
     for (QDockWidget *dockWidget : dockWidgets) {

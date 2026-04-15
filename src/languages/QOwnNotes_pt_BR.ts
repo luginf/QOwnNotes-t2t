@@ -1563,6 +1563,14 @@
 <translation type="unfinished">Copy</translation>
 </message>
 <message>
+<source>Copy image file path</source>
+<translation type="unfinished">Copy image file path</translation>
+</message>
+<message>
+<source>Copy image to clipboard</source>
+<translation type="unfinished">Copy image to clipboard</translation>
+</message>
+<message>
 <source>Copy link location</source>
 <translation type="unfinished">Copy link location</translation>
 </message>
@@ -2483,6 +2491,10 @@
 <translation>Abir o canal #qownnotes no IRC (Kiwi). Você terá que ficar online para receber a resposta</translation>
 </message>
 <message>
+<source>Use softwrap in note editor</source>
+<translation type="unfinished">Use softwrap in note editor</translation>
+</message>
+<message>
 <source>Cycle text case</source>
 <translation>Alternar entre tipos de Text case</translation>
 </message>
@@ -2842,10 +2854,6 @@
 <message>
 <source>Insert headline from note filename</source>
 <translation>Insira o título da nota para o nome do arquivo</translation>
-</message>
-<message>
-<source>Use softwrap in note editor and preview</source>
-<translation>Usar quebra de linha no editor e na pré-visualização</translation>
 </message>
 <message>
 <source>Show status bar</source>
@@ -3364,6 +3372,13 @@ Se a lixeira estiver ativada no seu servidor ownCloud, você poderá restaurá-l
 </message>
 </context>
 <context>
+<name>McpService</name>
+<message>
+<source>MCP server listening on port %1</source>
+<translation type="unfinished">MCP server listening on port %1</translation>
+</message>
+</context>
+<context>
 <name>MediaInsertionManager</name>
 <message>
 <source>File extension</source>
@@ -3564,6 +3579,10 @@ Se a lixeira estiver ativada no seu servidor ownCloud, você poderá restaurá-l
 <translation>Pesquisar ou criar cartão</translation>
 </message>
 <message>
+<source>Select the board and stack to work with</source>
+<translation type="unfinished">Select the board and stack to work with</translation>
+</message>
+<message>
 <source>Create card and insert link into current note</source>
 <translation>Criar cartão e inserir link na nota atual</translation>
 </message>
@@ -3608,8 +3627,12 @@ Se a lixeira estiver ativada no seu servidor ownCloud, você poderá restaurá-l
 <translation>Recarregar do servidor</translation>
 </message>
 <message>
-<source>Reload cards from server</source>
-<translation>Recarregar cartões do servidor</translation>
+<source>Reload boards, stacks and cards from server</source>
+<translation type="unfinished">Reload boards, stacks and cards from server</translation>
+</message>
+<message>
+<source>%1 / %2</source>
+<translation type="unfinished">%1 / %2</translation>
 </message>
 <message>
 <source>No due date</source>
@@ -5944,6 +5967,10 @@ Se encontrar conflitos de sincronização, utilize um valor maior.</translation>
 <translation type="unfinished">Color modes</translation>
 </message>
 <message>
+<source>MCP server</source>
+<translation type="unfinished">MCP server</translation>
+</message>
+<message>
 <source>Be aware that the ownCloud notes app doesn't support subfolders!</source>
 <translation>Esteja ciente de que o app de notas ownCloud não suporta subpastas!</translation>
 </message>
@@ -5958,10 +5985,6 @@ Se encontrar conflitos de sincronização, utilize um valor maior.</translation>
 <message>
 <source>Login to Nextcloud to grant access</source>
 <translation>Faça login no Nextcloud para conceder acesso</translation>
-</message>
-<message>
-<source>Stack:</source>
-<translation>Pilha:</translation>
 </message>
 <message>
 <source>Todo settings</source>
@@ -6100,6 +6123,10 @@ Se encontrar conflitos de sincronização, utilize um valor maior.</translation>
 <translation>Punjabi</translation>
 </message>
 <message>
+<source>Open newly created notes in a new tab</source>
+<translation type="unfinished">Open newly created notes in a new tab</translation>
+</message>
+<message>
 <source>Ignored:</source>
 <translation type="unfinished">Ignored:</translation>
 </message>
@@ -6118,6 +6145,18 @@ Se encontrar conflitos de sincronização, utilize um valor maior.</translation>
 <message>
 <source>Reset ignored words</source>
 <translation type="unfinished">Reset ignored words</translation>
+</message>
+<message>
+<source>Enable MCP server for AI agent access to notes</source>
+<translation type="unfinished">Enable MCP server for AI agent access to notes</translation>
+</message>
+<message>
+<source>Server port:</source>
+<translation type="unfinished">Server port:</translation>
+</message>
+<message>
+<source>Reset the MCP server port</source>
+<translation type="unfinished">Reset the MCP server port</translation>
 </message>
 <message>
 <source>Persian</source>
@@ -7706,14 +7745,6 @@ Mensagem de erro: </translation>
 <message>
 <source>The integrity of the disk database is not valid!</source>
 <translation>A integridade do banco de dados do disco não é valida.</translation>
-</message>
-<message>
-<source>Board Id: %1</source>
-<translation>ID do Quadro: %1</translation>
-</message>
-<message>
-<source>Stack Id: %1</source>
-<translation>ID da Pilha: %1</translation>
 </message>
 <message>
 <source>API test result for %1 (%2)</source>

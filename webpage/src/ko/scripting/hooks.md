@@ -442,3 +442,54 @@ function openAiBackendsHook() {
 :::
 
 예제를 살펴보실 수 있습니다 [ custom-openai-backends.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/custom-openai-backends.qml).
+
+## highlightingHook
+
+이 후크는 구문 강조 표시 중에 편집기의 각 텍스트 블록에 대해 호출됩니다. 이를 통해 `addHighlightingRule`에 등록된 정적 정규화 규칙을 넘어서는 동적 컨텍스트 인식 강조를 추가할 수 있습니다.
+
+::: warning
+이 후크는 매우 자주 호출되므로 (모든 키 입력 시 보이는 텍스트 블록마다) 구현 속도를 빠르게 유지하세요. 정적 정규식 기반 강조 표시만 필요한 경우 [`addHighlightingRule`](methods-and-objects.md#adding-a-highlighting-rule-for-the-editor) 또는 [`addHighlightingRule` 사용자 지정 색상 포함](methods-and-objects.md#adding-a-highlighting-rule-with-custom-colors-and-styles)을 사용하는 것이 좋습니다.
+:::
+
+### 메서드 호출 및 매개 변수
+
+```js
+/**
+ * 이 기능은 구문 강조 표시 중에 각 텍스트 블록에 대해 호출됩니다.
+ * 상황을 인식하고 역동적인 강조 표시를 가능하게 합니다.
+ *
+ * @param 텍스트 {QString} 현재 강조 표시 중인 블록의 텍스트
+ * @param previorBlockState {int} 이전 블록의 강조 상태
+ *     (-1이 첫 번째 블록인 경우)
+ * @Return {Array}는 각각 다음과 같은 하이라이트 범위 객체 배열을 포함합니다:
+ *     start {int} - 텍스트에서 시작 위치
+ *     length {int} - 강조 표시할 문자 수
+ *     state {int} - 사용할 강조 상태 (선택 사항, 사용자 지정 전용 -1)
+ *     foregroundColor {string} - 전경 색상 이름 또는 헥스 (선택 사항)
+ *     backgroundColor {string} - 배경 색상 이름 또는 헥스(선택 사항)
+ *     bold {bool} - 굵은 글꼴 무게 (선택 사항)
+ *     italic {bool} - 기울림꼴 스타일 (선택 사항)
+ *     underline {bool} - 텍스트 밑줄  (선택 사항)
+ *     fontSize {int} - 글꼴 포인트 크기 (선택 사항)
+ */
+function highlightingHook(text, previousBlockState) {
+  var highlights = [];
+
+  // Example: highlight all occurrences of "FIXME" with red bold underline
+  var re = /FIXME/g;
+  var match;
+  while ((match = re.exec(text)) !== null) {
+    highlights.push({
+      start: match.index,
+      length: match[0].length,
+      foregroundColor: "#ff0000",
+      underline: true,
+      bold: true,
+    });
+  }
+
+  return highlights;
+}
+```
+
+예시 [highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/highlighting.qml) 및 [custom-highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/custom-highlighting.qml)을 살펴보는 것이 좋습니다.

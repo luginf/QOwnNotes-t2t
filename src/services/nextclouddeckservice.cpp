@@ -237,6 +237,17 @@ bool NextcloudDeckService::isCardUrl(const QString& url) {
     return match.hasMatch();
 }
 
+int NextcloudDeckService::parseBoardIdFromUrlDirectly(const QString& url) {
+    static const QRegularExpression re(QStringLiteral(R"(\/board\/(\d+)\/card\/)"));
+    QRegularExpressionMatch match = re.match(url);
+
+    if (match.hasMatch()) {
+        return match.captured(1).toInt();
+    }
+
+    return -1;
+}
+
 QString NextcloudDeckService::getCardUrlPattern() const {
     return serverUrl + QStringLiteral("/apps/deck/#/board/") + QString::number(this->boardId) +
            QStringLiteral("/card/");
@@ -332,6 +343,11 @@ QString NextcloudDeckService::getCardLinkForId(int cardId) {
 
     return QStringLiteral("%1/apps/deck/#/board/%2/card/%3")
         .arg(this->serverUrl, QString::number(this->boardId), QString::number(cardId));
+}
+
+void NextcloudDeckService::setBoardAndStackIds(int boardId, int stackId) {
+    this->boardId = boardId;
+    this->stackId = stackId;
 }
 
 void NextcloudDeckService::addAuthHeader(QNetworkRequest& networkRequest) {

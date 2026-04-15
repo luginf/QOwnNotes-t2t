@@ -91,7 +91,7 @@ class NoteEncryptionManager;
 class DistractionFreeManager;
 class NoteTabManager;
 class AiToolbarManager;
-class WorkspaceManager;
+class LayoutManager;
 class TagManager;
 class NoteOperationsManager;
 class NoteIndexManager;
@@ -117,7 +117,7 @@ class MainWindow : public QMainWindow {
     friend class DistractionFreeManager;
     friend class NoteTabManager;
     friend class AiToolbarManager;
-    friend class WorkspaceManager;
+    friend class LayoutManager;
     friend class TagManager;
     friend class NoteOperationsManager;
     friend class NoteIndexManager;
@@ -252,13 +252,22 @@ class MainWindow : public QMainWindow {
 
     void resetBrokenTagNotesLinkFlag();
 
-    Q_INVOKABLE QString getWorkspaceUuid(const QString &workspaceName);
+    Q_INVOKABLE QString getLayoutUuid(const QString &layoutName);
 
     Q_INVOKABLE void reloadCurrentNoteByNoteId(bool updateNoteText = false);
 
-    Q_INVOKABLE QStringList getWorkspaceUuidList();
+    Q_INVOKABLE QStringList getLayoutUuidList();
 
-    Q_INVOKABLE void setCurrentWorkspace(const QString &uuid);
+    Q_INVOKABLE void setCurrentLayout(const QString &uuid);
+
+    // Deprecated scripting aliases kept for existing user scripts.
+    Q_INVOKABLE QString getWorkspaceUuid(const QString &layoutName) {
+        return getLayoutUuid(layoutName);
+    }
+
+    Q_INVOKABLE QStringList getWorkspaceUuidList() { return getLayoutUuidList(); }
+
+    Q_INVOKABLE void setCurrentWorkspace(const QString &uuid) { setCurrentLayout(uuid); }
 
     Q_INVOKABLE bool insertDataUrlAsFileIntoCurrentNote(const QString &dataUrl);
 
@@ -266,7 +275,7 @@ class MainWindow : public QMainWindow {
 
     void openTodoDialog(const QString &taskUid = QString());
 
-    void openNextcloudDeckDialog(int cardId = -1);
+    void openNextcloudDeckDialog(int cardId = -1, int boardId = -1);
 
     class QOwnNotesMarkdownTextEdit *noteTextEdit();
 
@@ -601,9 +610,9 @@ class MainWindow : public QMainWindow {
 
     void on_actionUnlock_panels_toggled(bool arg1);
 
-    void on_actionStore_as_new_workspace_triggered();
+    void on_actionStore_as_new_layout_triggered();
 
-    void onWorkspaceComboBoxCurrentIndexChanged(int index);
+    void onLayoutComboBoxCurrentIndexChanged(int index);
 
     void onAiBackendComboBoxCurrentIndexChanged(int index);
 
@@ -611,17 +620,17 @@ class MainWindow : public QMainWindow {
 
     void onAiModelGroupChanged(QAction *action);
 
-    void on_actionRemove_current_workspace_triggered();
+    void on_actionRemove_current_layout_triggered();
 
-    void on_actionRename_current_workspace_triggered();
+    void on_actionRename_current_layout_triggered();
 
-    void on_actionSwitch_to_previous_workspace_triggered();
+    void on_actionSwitch_to_previous_layout_triggered();
 
-    void on_actionManage_workspaces_triggered();
+    void on_actionManage_layouts_triggered();
 
     void on_actionShow_all_panels_triggered();
 
-    Q_SLOT void restoreCurrentWorkspace();
+    Q_SLOT void restoreCurrentLayout();
 
     void togglePanelVisibility(const QString &objectName);
 
@@ -823,7 +832,7 @@ class MainWindow : public QMainWindow {
     DistractionFreeManager *distractionFreeManager() const { return _distractionFreeManager; }
     NoteTabManager *noteTabManager() const { return _noteTabManager; }
     AiToolbarManager *aiToolbarManager() const { return _aiToolbarManager; }
-    WorkspaceManager *workspaceManager() const { return _workspaceManager; }
+    LayoutManager *layoutManager() const { return _layoutManager; }
     TagManager *tagManager() const { return _tagManager; }
     NoteOperationsManager *noteOperationsManager() const { return _noteOperationsManager; }
     NoteIndexManager *noteIndexManager() const { return _noteIndexManager; }
@@ -847,7 +856,7 @@ class MainWindow : public QMainWindow {
     void updateNoteTextEditReadOnly();
     void handleNoteTextChanged();
     void storeSettings();
-    void storeCurrentWorkspace();
+    void storeCurrentLayout();
     void handleNoteSubFolderVisibility() const;
     Q_SLOT void updatePanelMenu();
     void updateWindowToolbar();
@@ -1003,7 +1012,7 @@ class MainWindow : public QMainWindow {
     DistractionFreeManager *_distractionFreeManager = nullptr;
     NoteTabManager *_noteTabManager = nullptr;
     AiToolbarManager *_aiToolbarManager = nullptr;
-    WorkspaceManager *_workspaceManager = nullptr;
+    LayoutManager *_layoutManager = nullptr;
     TagManager *_tagManager = nullptr;
     NoteOperationsManager *_noteOperationsManager = nullptr;
     NoteIndexManager *_noteIndexManager = nullptr;
@@ -1053,6 +1062,7 @@ class MainWindow : public QMainWindow {
     void makeCurrentNoteFirstInNoteList();
 
     void readSettingsFromSettingsDialog(const bool isAppLaunch = false);
+    void checkAiToolbarConfiguration(bool askToShowToolbar = true);
 
     void setCurrentNoteFromHistoryItem(const NoteHistoryItem &item);
 
@@ -1241,8 +1251,8 @@ class MainWindow : public QMainWindow {
 
     // Methods that remain in mainwindow.cpp (delegated or full implementations)
     void startAppVersionTest();
-    void initWorkspaceComboBox();
-    void updateWorkspaceLists(bool rebuild = true);
+    void initLayoutComboBox();
+    void updateLayoutLists(bool rebuild = true);
     void initializeOpenAiActivitySpinner();
     void directoryWatcherWorkaround(bool isNotesDirectoryWasModifiedDisabled,
                                     bool alsoHandleNotesWereModified = false);
@@ -1259,8 +1269,8 @@ class MainWindow : public QMainWindow {
     void selectAllNotesInNoteSubFolderTreeWidget() const;
     void selectAllNotesInTagTreeWidget() const;
     void handleDockWidgetLocking(QDockWidget *dockWidget);
-    bool createNewWorkspace(QString name);
-    QString currentWorkspaceUuid();
+    bool createNewLayout(QString name);
+    QString currentLayoutUuid();
     void generateAiBackendComboBox();
     void generateAiModelMainMenu();
     void aiModelMainMenuSetCurrentItem();

@@ -46,9 +46,9 @@ The MCP server exposes the following tools to AI agents:
   Accepts a `query` string parameter and an optional `limit` (default 20).
   Returns matching note names and a short preview of each.
 - **`fetch_note`** — Retrieve the full content of a single note by `name` or `id`.
-  Returns the note text, file name, and note ID.
+  Devuelve el texto, nombre de archivo e identificador de la nota.
 
-### Connecting an AI Agent
+### Conectar un agente de IA
 
 AI agents connect to the MCP server using the HTTP+SSE transport:
 
@@ -58,7 +58,7 @@ AI agents connect to the MCP server using the HTTP+SSE transport:
 2. **Message endpoint**: `POST http://localhost:22226/message?sessionId=<id>`  
    Send MCP JSON-RPC requests here. The response is delivered over the SSE stream.
 
-All requests must include the header:
+Todas las solicitudes deben incluir el encabezado:
 
 ```
 Authorization: Bearer <your-security-token>
@@ -66,10 +66,10 @@ Authorization: Bearer <your-security-token>
 
 ### Example `curl` Requests
 
-Set the token and port first:
+Primero, establezca el token y puerto:
 
 ```bash
-export TOKEN="your-mcp-token"
+export TOKEN="su-token-mcp"
 export PORT=22226
 ```
 

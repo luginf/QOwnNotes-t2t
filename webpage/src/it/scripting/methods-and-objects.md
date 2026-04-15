@@ -1795,7 +1795,7 @@ Puoi inserire direttamente le regole di evidenziazione nell'editor definendo esp
 
 ```cpp
 /**
- * Aggiunge una regola di evidenziazione all'evidenziatore della sintassi dell'editor
+ * Adds a highlighting rule to the syntax highlighter of the editor
  *
  * @param pattern {QString} the regular expression pattern to highlight
  * @param shouldContain {QString} a string that must be contained in the highlighted text for the pattern to be parsed
@@ -1804,10 +1804,10 @@ Puoi inserire direttamente le regole di evidenziazione nell'editor definendo esp
  * @param maskedGroup {int} the capturing group for the pattern to use for masking (default: 0)
  */
 void ScriptingService::addHighlightingRule(const QString &pattern,
-                                           const QString &shouldContain,
-                                           int state,
-                                           int capturingGroup,
-                                           int maskedGroup);
+                                            const QString &shouldContain,
+                                            int state,
+                                            int capturingGroup,
+                                            int maskedGroup);
 ```
 
 ### Highlighting states
@@ -1855,3 +1855,65 @@ script.addHighlightingRule("^.{32}(.+)", "", 24, 1, -1);
 ```
 
 You can also take a look at the examples in [highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/highlighting.qml).
+
+## Adding a highlighting rule with custom colors and styles
+
+You can also add highlighting rules with custom foreground/background colors and font styles, instead of being limited to the predefined highlighting states. This allows you to define your own color schemes for custom syntax patterns.
+
+### Method call and parameters
+
+```cpp
+/**
+ * Adds a highlighting rule with custom format styling to the syntax highlighter
+ *
+ * @param pattern {QString} the regular expression pattern to highlight
+ * @param shouldContain {QString} a string that must be contained in the highlighted text for the pattern to be parsed
+ * @param state {int} the state of the syntax highlighter to use (use -1 / NoState for custom format only)
+ * @param capturingGroup {int} the capturing group for the pattern to use for highlighting
+ * @param maskedGroup {int} the capturing group for the pattern to use for masking
+ * @param formatStyle {QVariantMap} a map with custom format properties:
+ *   - foregroundColor {QString} foreground color name or hex value (e.g. "#ff0000" or "red")
+ *   - backgroundColor {QString} background color name or hex value
+ *   - bold {bool} whether to use bold font weight
+ *   - italic {bool} whether to use italic font style
+ *   - underline {bool} whether to underline the text
+ *   - fontSize {int} the font point size
+ */
+void ScriptingService::addHighlightingRule(const QString &pattern,
+                                            const QString &shouldContain,
+                                            int state,
+                                            int capturingGroup,
+                                            int maskedGroup,
+                                            const QVariantMap &formatStyle);
+```
+
+::: tip
+You can combine a predefined `state` with custom format properties. The custom properties will override the state's defaults. Use state `-1` (`NoState`) if you only want to use custom formatting.
+:::
+
+### Example
+
+```js
+function init() {
+  // Highlight "IMPORTANT" with bold red text on a yellow background
+  script.addHighlightingRule("IMPORTANT", "IMPORTANT", -1, 0, 0, {
+    foregroundColor: "#ff0000",
+    backgroundColor: "#ffff00",
+    bold: true,
+  });
+
+  // Highlight "@username" mentions with underlined blue text
+  script.addHighlightingRule("@\\w+", "@", -1, 0, 0, {
+    foregroundColor: "#3366cc",
+    underline: true,
+  });
+
+  // Highlight "NOTE:" with italic green text
+  script.addHighlightingRule("NOTE:", "NOTE:", -1, 0, 0, {
+    foregroundColor: "#00aa00",
+    italic: true,
+  });
+}
+```
+
+You can also take a look at the examples in [highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/highlighting.qml) and [custom-highlighting.qml](https://github.com/pbek/QOwnNotes/blob/main/docs/scripting/examples/custom-highlighting.qml).

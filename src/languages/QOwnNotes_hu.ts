@@ -1568,6 +1568,14 @@
 <translation type="unfinished">Copy</translation>
 </message>
 <message>
+<source>Copy image file path</source>
+<translation type="unfinished">Copy image file path</translation>
+</message>
+<message>
+<source>Copy image to clipboard</source>
+<translation type="unfinished">Copy image to clipboard</translation>
+</message>
+<message>
 <source>Copy link location</source>
 <translation type="unfinished">Copy link location</translation>
 </message>
@@ -2488,6 +2496,10 @@
 <translation>Nyissa meg a #qownnotes IRC (Kiwi) csatornát, online maradnia kell ahhoz, hogy választ kapjon</translation>
 </message>
 <message>
+<source>Use softwrap in note editor</source>
+<translation type="unfinished">Use softwrap in note editor</translation>
+</message>
+<message>
 <source>Cycle text case</source>
 <translation>Kisbetű-nagybetű váltása a szövegben</translation>
 </message>
@@ -2847,10 +2859,6 @@
 <message>
 <source>Insert headline from note filename</source>
 <translation>Főcím beszúrása a jegyzet fájlnevéből</translation>
-</message>
-<message>
-<source>Use softwrap in note editor and preview</source>
-<translation>Szoftver használata a jegyzet szerkesztőben és az előnézetben</translation>
 </message>
 <message>
 <source>Show status bar</source>
@@ -3371,6 +3379,13 @@ Ha a kuka a ownCloud kiszolgálón engedélyezett, onnan visszaállítható.</nu
 </message>
 </context>
 <context>
+<name>McpService</name>
+<message>
+<source>MCP server listening on port %1</source>
+<translation type="unfinished">MCP server listening on port %1</translation>
+</message>
+</context>
+<context>
 <name>MediaInsertionManager</name>
 <message>
 <source>File extension</source>
@@ -3571,6 +3586,10 @@ Ha a kuka a ownCloud kiszolgálón engedélyezett, onnan visszaállítható.</nu
 <translation type="unfinished">Search or create card</translation>
 </message>
 <message>
+<source>Select the board and stack to work with</source>
+<translation type="unfinished">Select the board and stack to work with</translation>
+</message>
+<message>
 <source>Create card and insert link into current note</source>
 <translation type="unfinished">Create card and insert link into current note</translation>
 </message>
@@ -3615,8 +3634,12 @@ Ha a kuka a ownCloud kiszolgálón engedélyezett, onnan visszaállítható.</nu
 <translation type="unfinished">Reload from server</translation>
 </message>
 <message>
-<source>Reload cards from server</source>
-<translation type="unfinished">Reload cards from server</translation>
+<source>Reload boards, stacks and cards from server</source>
+<translation type="unfinished">Reload boards, stacks and cards from server</translation>
+</message>
+<message>
+<source>%1 / %2</source>
+<translation type="unfinished">%1 / %2</translation>
 </message>
 <message>
 <source>No due date</source>
@@ -5951,6 +5974,10 @@ Tesztelje, ha szinkronizációs konfliktus lép fel és állítson be ilyen eset
 <translation type="unfinished">Color modes</translation>
 </message>
 <message>
+<source>MCP server</source>
+<translation type="unfinished">MCP server</translation>
+</message>
+<message>
 <source>Be aware that the ownCloud notes app doesn't support subfolders!</source>
 <translation>Vegye figyelembe, hogy a ownCloud jegyzetek alkalmazás nem támogatja az almappákat!</translation>
 </message>
@@ -5965,10 +5992,6 @@ Tesztelje, ha szinkronizációs konfliktus lép fel és állítson be ilyen eset
 <message>
 <source>Login to Nextcloud to grant access</source>
 <translation>Belépéshez jelentkezzen be a Nextcloud szolgáltatásba</translation>
-</message>
-<message>
-<source>Stack:</source>
-<translation type="unfinished">Stack:</translation>
 </message>
 <message>
 <source>Todo settings</source>
@@ -6107,6 +6130,10 @@ Tesztelje, ha szinkronizációs konfliktus lép fel és állítson be ilyen eset
 <translation>Pandzsábi</translation>
 </message>
 <message>
+<source>Open newly created notes in a new tab</source>
+<translation type="unfinished">Open newly created notes in a new tab</translation>
+</message>
+<message>
 <source>Ignored:</source>
 <translation type="unfinished">Ignored:</translation>
 </message>
@@ -6125,6 +6152,18 @@ Tesztelje, ha szinkronizációs konfliktus lép fel és állítson be ilyen eset
 <message>
 <source>Reset ignored words</source>
 <translation type="unfinished">Reset ignored words</translation>
+</message>
+<message>
+<source>Enable MCP server for AI agent access to notes</source>
+<translation type="unfinished">Enable MCP server for AI agent access to notes</translation>
+</message>
+<message>
+<source>Server port:</source>
+<translation type="unfinished">Server port:</translation>
+</message>
+<message>
+<source>Reset the MCP server port</source>
+<translation type="unfinished">Reset the MCP server port</translation>
 </message>
 <message>
 <source>Persian</source>
@@ -7713,14 +7752,6 @@ Kapcsolathiba üzenet: </translation>
 <message>
 <source>The integrity of the disk database is not valid!</source>
 <translation>A lemez adatbázis integritása nem érvényes!</translation>
-</message>
-<message>
-<source>Board Id: %1</source>
-<translation type="unfinished">Board Id: %1</translation>
-</message>
-<message>
-<source>Stack Id: %1</source>
-<translation type="unfinished">Stack Id: %1</translation>
 </message>
 <message>
 <source>API test result for %1 (%2)</source>

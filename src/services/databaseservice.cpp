@@ -22,6 +22,60 @@
 #include "services/settingsservice.h"
 #include "services/websocketserverservice.h"
 
+namespace {
+void migrateSettingKey(SettingsService& settings, const QString& oldKey, const QString& newKey) {
+    if (!settings.contains(oldKey)) {
+        return;
+    }
+
+    if (!settings.contains(newKey)) {
+        settings.setValue(newKey, settings.value(oldKey));
+    }
+
+    settings.remove(oldKey);
+}
+
+void migrateSettingPrefix(SettingsService& settings, const QString& oldPrefix,
+                          const QString& newPrefix) {
+    const auto keys = settings.allKeys();
+
+    for (const QString& key : keys) {
+        if (!key.startsWith(oldPrefix)) {
+            continue;
+        }
+
+        const QString newKey = newPrefix + key.mid(oldPrefix.size());
+
+        if (!settings.contains(newKey)) {
+            settings.setValue(newKey, settings.value(key));
+        }
+
+        settings.remove(key);
+    }
+}
+
+void migrateWorkspaceSettingsToLayouts(SettingsService& settings) {
+    migrateSettingKey(settings, QStringLiteral("workspaces"), QStringLiteral("layouts"));
+    migrateSettingKey(settings, QStringLiteral("currentWorkspace"),
+                      QStringLiteral("currentLayout"));
+    migrateSettingKey(settings, QStringLiteral("previousWorkspace"),
+                      QStringLiteral("previousLayout"));
+    migrateSettingKey(settings, QStringLiteral("initialWorkspace"),
+                      QStringLiteral("initialLayout"));
+    migrateSettingKey(settings, QStringLiteral("initialLayoutIdentifier"),
+                      QStringLiteral("initialLayoutPresetIdentifier"));
+
+    migrateSettingPrefix(settings, QStringLiteral("workspace-"), QStringLiteral("layout-"));
+    migrateSettingPrefix(settings, QStringLiteral("Shortcuts/MainWindow-restoreWorkspace-"),
+                         QStringLiteral("Shortcuts/MainWindow-restoreLayout-"));
+
+    migrateSettingKey(settings, QStringLiteral("MessageBoxOverride/remove-workspace"),
+                      QStringLiteral("MessageBoxOverride/remove-layout"));
+    migrateSettingKey(settings, QStringLiteral("MessageBoxOverride/layoutwidget-use-layout"),
+                      QStringLiteral("MessageBoxOverride/layoutpresetwidget-use-layout-preset"));
+}
+}    // namespace
+
 DatabaseService::DatabaseService() = default;
 
 /**
@@ -915,6 +969,11 @@ bool DatabaseService::setupTables() {
     if (version < 42) {
         queryDisk.exec(QStringLiteral("ALTER TABLE calendarItem ADD tags VARCHAR(512)"));
         version = 42;
+    }
+
+    if (version < 43) {
+        migrateWorkspaceSettingsToLayouts(settings);
+        version = 43;
     }
 
     if (version != oldVersion) {

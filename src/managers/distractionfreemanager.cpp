@@ -70,11 +70,6 @@ void DistractionFreeManager::toggleDistractionFreeMode() {
     settings.setValue(QStringLiteral("DistractionFreeMode/isEnabled"), isInDFM);
 
     setDistractionFreeMode(isInDFM);
-
-    // Enter or leave fullscreen mode if we are in or left distraction-free mode
-    if ((isInDFM && !_mainWindow->isFullScreen()) || (!isInDFM && _mainWindow->isFullScreen())) {
-        on_actionToggle_fullscreen_triggered();
-    }
 }
 
 /**
@@ -92,8 +87,8 @@ void DistractionFreeManager::setDistractionFreeMode(const bool enabled) {
         _ui->noteTextEdit->setLineNumberEnabled(false);
         _ui->encryptedNoteTextEdit->setLineNumberEnabled(false);
 
-        // store the current workspace in case we changed something
-        _mainWindow->storeCurrentWorkspace();
+        // Store the current layout in case we changed something.
+        _mainWindow->storeCurrentLayout();
 
         const bool menuBarWasVisible =
             settings.value(QStringLiteral("showMenuBar"), !_ui->menuBar->isHidden()).toBool();
@@ -139,9 +134,33 @@ void DistractionFreeManager::setDistractionFreeMode(const bool enabled) {
         // hide the status bar
         //        ui->statusBar->hide();
 
-        _leaveDistractionFreeModeButton = new QPushButton(tr("leave"));
+        // Hide the status bar in distraction free mode if the setting is enabled
+        const bool hideStatusBarInDFM =
+            settings.value(QStringLiteral("DistractionFreeMode/hideStatusBar")).toBool();
+        settings.setValue(QStringLiteral("DistractionFreeMode/statusBarWasVisible"),
+                          _mainWindow->statusBar()->isVisible());
+        if (hideStatusBarInDFM) {
+            _mainWindow->statusBar()->hide();
+        }
+
+        const bool openInFullScreen =
+            settings.value(QStringLiteral("DistractionFreeMode/openInFullScreen"), true).toBool();
+        const bool enterFullScreen = openInFullScreen && !_mainWindow->isFullScreen();
+        settings.setValue(QStringLiteral("DistractionFreeMode/leaveFullScreenOnExit"),
+                          enterFullScreen);
+
+        if (_leaveFullScreenModeButton != nullptr) {
+            _mainWindow->statusBar()->removeWidget(_leaveFullScreenModeButton);
+            disconnect(_leaveFullScreenModeButton, nullptr, nullptr, nullptr);
+        }
+
+        if (_leaveDistractionFreeModeButton == nullptr) {
+            _leaveDistractionFreeModeButton = new QPushButton(tr("Leave"));
+        }
+
+        _leaveDistractionFreeModeButton->setText(tr("Leave"));
         _leaveDistractionFreeModeButton->setFlat(true);
-        _leaveDistractionFreeModeButton->setToolTip(tr("Leave distraction free mode"));
+        _leaveDistractionFreeModeButton->setToolTip(tr("Leave"));
         _leaveDistractionFreeModeButton->setStyleSheet(
             QStringLiteral("QPushButton {padding: 0 5px}"));
 
@@ -149,10 +168,15 @@ void DistractionFreeManager::setDistractionFreeMode(const bool enabled) {
             QStringLiteral("zoom-original"),
             QIcon(QStringLiteral(":icons/breeze-qownnotes/16x16/zoom-original.svg"))));
 
+        disconnect(_leaveDistractionFreeModeButton, nullptr, nullptr, nullptr);
         connect(_leaveDistractionFreeModeButton, &QPushButton::clicked, this,
                 &DistractionFreeManager::toggleDistractionFreeMode);
 
         _mainWindow->statusBar()->addPermanentWidget(_leaveDistractionFreeModeButton);
+
+        if (enterFullScreen) {
+            on_actionToggle_fullscreen_triggered();
+        }
 
         _ui->noteEditTabWidget->tabBar()->hide();
     } else {
@@ -160,8 +184,18 @@ void DistractionFreeManager::setDistractionFreeMode(const bool enabled) {
         // leave the distraction free mode
         //
 
-        _mainWindow->statusBar()->removeWidget(_leaveDistractionFreeModeButton);
-        disconnect(_leaveDistractionFreeModeButton, nullptr, nullptr, nullptr);
+        if (_leaveDistractionFreeModeButton != nullptr) {
+            _mainWindow->statusBar()->removeWidget(_leaveDistractionFreeModeButton);
+            disconnect(_leaveDistractionFreeModeButton, nullptr, nullptr, nullptr);
+            delete _leaveDistractionFreeModeButton;
+            _leaveDistractionFreeModeButton = nullptr;
+        }
+
+        // Restore the status bar visibility if it was hidden in distraction free mode
+        const bool statusBarWasVisible =
+            settings.value(QStringLiteral("DistractionFreeMode/statusBarWasVisible"), true)
+                .toBool();
+        _mainWindow->statusBar()->setVisible(statusBarWasVisible);
 
         // restore states and sizes
         _mainWindow->restoreState(
@@ -172,6 +206,35 @@ void DistractionFreeManager::setDistractionFreeMode(const bool enabled) {
             settings.value(QStringLiteral("DistractionFreeMode/menuBarGeometry")).toByteArray());
         _ui->menuBar->setFixedHeight(
             settings.value(QStringLiteral("DistractionFreeMode/menuBarHeight")).toInt());
+
+        const bool leaveFullScreenOnExit =
+            settings.value(QStringLiteral("DistractionFreeMode/leaveFullScreenOnExit")).toBool();
+        settings.setValue(QStringLiteral("DistractionFreeMode/leaveFullScreenOnExit"), false);
+
+        if (leaveFullScreenOnExit && _mainWindow->isFullScreen()) {
+            on_actionToggle_fullscreen_triggered();
+        } else if (_mainWindow->isFullScreen()) {
+#ifndef Q_OS_MAC
+            if (_leaveFullScreenModeButton == nullptr) {
+                _leaveFullScreenModeButton = new QPushButton(tr("Leave"));
+            }
+
+            _leaveFullScreenModeButton->setText(tr("Leave"));
+            _leaveFullScreenModeButton->setFlat(true);
+            _leaveFullScreenModeButton->setToolTip(tr("Leave"));
+            _leaveFullScreenModeButton->setStyleSheet(
+                QStringLiteral("QPushButton {padding: 0 5px}"));
+            _leaveFullScreenModeButton->setIcon(QIcon::fromTheme(
+                QStringLiteral("zoom-original"),
+                QIcon(QStringLiteral(":icons/breeze-qownnotes/16x16/zoom-original.svg"))));
+
+            disconnect(_leaveFullScreenModeButton, nullptr, nullptr, nullptr);
+            connect(_leaveFullScreenModeButton, &QPushButton::clicked, this,
+                    &DistractionFreeManager::on_actionToggle_fullscreen_triggered);
+
+            _mainWindow->statusBar()->addPermanentWidget(_leaveFullScreenModeButton);
+#endif
+        }
 
         if (_ui->noteEditTabWidget->count() > 1) {
             _ui->noteEditTabWidget->tabBar()->show();
@@ -218,7 +281,7 @@ void DistractionFreeManager::on_actionToggle_fullscreen_triggered() {
     // #1302: we need to init the button in any case if the app was already in
     //        fullscreen mode or "disconnect" will crash the app
     if (_leaveFullScreenModeButton == nullptr) {
-        _leaveFullScreenModeButton = new QPushButton(tr("leave"));
+        _leaveFullScreenModeButton = new QPushButton(tr("Leave"));
     }
 
     if (_mainWindow->isFullScreen()) {
@@ -231,27 +294,36 @@ void DistractionFreeManager::on_actionToggle_fullscreen_triggered() {
             _mainWindow->showMinimized();
         }
 
-        _mainWindow->statusBar()->removeWidget(_leaveFullScreenModeButton);
-        disconnect(_leaveFullScreenModeButton, nullptr, nullptr, nullptr);
-        delete _leaveFullScreenModeButton;
-        _leaveFullScreenModeButton = nullptr;
+        if (_leaveFullScreenModeButton != nullptr) {
+            _mainWindow->statusBar()->removeWidget(_leaveFullScreenModeButton);
+            disconnect(_leaveFullScreenModeButton, nullptr, nullptr, nullptr);
+            delete _leaveFullScreenModeButton;
+            _leaveFullScreenModeButton = nullptr;
+        }
     } else {
         _isMaximizedBeforeFullScreen = _mainWindow->isMaximized();
         _isMinimizedBeforeFullScreen = _mainWindow->isMinimized();
         _mainWindow->showFullScreen();
 
-        _leaveFullScreenModeButton->setFlat(true);
-        _leaveFullScreenModeButton->setToolTip(tr("Leave full-screen mode"));
-        _leaveFullScreenModeButton->setStyleSheet(QStringLiteral("QPushButton {padding: 0 5px}"));
+#ifndef Q_OS_MAC
+        if (_leaveDistractionFreeModeButton == nullptr) {
+            _leaveFullScreenModeButton->setText(tr("Leave"));
+            _leaveFullScreenModeButton->setFlat(true);
+            _leaveFullScreenModeButton->setToolTip(tr("Leave"));
+            _leaveFullScreenModeButton->setStyleSheet(
+                QStringLiteral("QPushButton {padding: 0 5px}"));
 
-        _leaveFullScreenModeButton->setIcon(QIcon::fromTheme(
-            QStringLiteral("zoom-original"),
-            QIcon(QStringLiteral(":icons/breeze-qownnotes/16x16/zoom-original.svg"))));
+            _leaveFullScreenModeButton->setIcon(QIcon::fromTheme(
+                QStringLiteral("zoom-original"),
+                QIcon(QStringLiteral(":icons/breeze-qownnotes/16x16/zoom-original.svg"))));
 
-        connect(_leaveFullScreenModeButton, &QPushButton::clicked, this,
-                &DistractionFreeManager::on_actionToggle_fullscreen_triggered);
+            disconnect(_leaveFullScreenModeButton, nullptr, nullptr, nullptr);
+            connect(_leaveFullScreenModeButton, &QPushButton::clicked, this,
+                    &DistractionFreeManager::on_actionToggle_fullscreen_triggered);
 
-        _mainWindow->statusBar()->addPermanentWidget(_leaveFullScreenModeButton);
+            _mainWindow->statusBar()->addPermanentWidget(_leaveFullScreenModeButton);
+        }
+#endif
     }
 }
 

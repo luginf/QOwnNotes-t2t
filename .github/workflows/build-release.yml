@@ -44,7 +44,25 @@ jobs:
           export VERSION=$(cat version.h | sed 's/[^0-9,.]//g')
           #export TAG=v${VERSION}.${GITHUB_RUN_ID}.${GITHUB_RUN_NUMBER}
           export TAG=v${VERSION}
-          export RELEASE_TEXT=$(grep -Pzo "## ${VERSION}\n(\n|.)+?\n##" ../CHANGELOG.md | sed '$ d')
+          export RELEASE_NOTES=$(grep -Pzo "## ${VERSION}\n(\n|.)+?\n##" ../CHANGELOG.md | sed '$ d')
+          export RELEASE_TEXT=$(cat <<EOF
+          ${RELEASE_NOTES}
+
+          ## Released files
+
+          - QOwnNotes-x86_64.AppImage: Portable Linux AppImage build with Qt 6
+          - QOwnNotes-x86_64.AppImage.sha256sum: SHA-256 checksum for the AppImage
+          - QOwnNotes-amd64.snap: Linux Snap build with Qt 6
+          - QOwnNotes-amd64.snap.sha256sum: SHA-256 checksum for the Qt 6 Snap package
+          - QOwnNotes-Qt5-amd64.snap: Linux Snap build with Qt 5 for older environments
+          - QOwnNotes-Qt5-amd64.snap.sha256sum: SHA-256 checksum for the Qt 5 Snap package
+          - QOwnNotes.zip: Windows ZIP package built with Qt 6
+          - QOwnNotes.zip.sha256: SHA-256 checksum for the Qt 6 Windows ZIP package
+          - QOwnNotes.zip.sha256sum: Alternative SHA-256 checksum file for the Qt 6 Windows ZIP package
+          - QOwnNotes.dmg: macOS disk image built with Qt 6
+          - QOwnNotesQt5.dmg: macOS disk image built with Qt 5 for older systems
+          EOF
+          )
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "TAG=${TAG}" >> $GITHUB_ENV
           # add multiline release text
@@ -59,7 +77,7 @@ jobs:
           printenv
       - name: Create release
         id: create_release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ env.TAG }}
           name: Release v${{ env.VERSION }}

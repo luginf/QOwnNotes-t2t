@@ -61,4 +61,6 @@ class NoteOperationsManager : public QObject {
    private:
     MainWindow *_mainWindow;
     Ui::MainWindow *_ui;
+
+    void handleOrphanedMediaAndAttachments(const QVector<Note> &deletedNotes);
 };

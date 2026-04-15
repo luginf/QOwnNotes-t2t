@@ -23,7 +23,7 @@ class NextcloudDeckDialog : public MasterDialog {
     explicit NextcloudDeckDialog(QWidget *parent = nullptr, bool listMode = false);
     ~NextcloudDeckDialog();
     void setTitle(const QString &title);
-    void setCardId(int id);
+    void setCardId(int id, int boardId = -1);
 
    private slots:
     void on_saveButton_clicked();
@@ -65,14 +65,28 @@ class NextcloudDeckDialog : public MasterDialog {
 
     void on_showArchivedCardsCheckBox_toggled(bool checked);
 
+    void on_boardStackComboBox_currentIndexChanged(int index);
+
+    void on_reloadCardListButton_clicked();
+
    private:
     Ui::NextcloudDeckDialog *ui;
     void setupMainSplitter();
     QSplitter *mainSplitter;
     void setupUi();
     void refreshUi();
+    void reloadDeckData();
+    void loadBoardStackComboBox();
+    void persistSelectedBoardAndStack() const;
+    bool selectBoardStack(int boardId, int stackId = -1);
+    bool selectBoardForCard(int boardId, int cardId);
     void resetEditFrameControls();
     void jumpToCard(int id);
+    int selectedBoardId() const;
+    int selectedStackId() const;
+    void configureDeckService(NextcloudDeckService &nextcloudDeckService) const;
+    void configureDeckServiceForCard(NextcloudDeckService &nextcloudDeckService, int cardId) const;
+    void updateDeckControlsEnabledState();
     QHash<int, NextcloudDeckService::Card> _cards;
     NextcloudDeckService::Card _currentCard;
 

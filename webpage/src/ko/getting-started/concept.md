@@ -1,4 +1,4 @@
-# Concept
+# 개념
 
 <style>
   /* Remove max-width for content so there is enough space for the Mermaid diagram */
@@ -13,94 +13,80 @@
 ```mermaid
 graph TB
     subgraph Your computer
-        qon((QOwnNotes))-->md{{"Markdown files"}}
-        sync("Nextcloud Sync")-->md
-        qon-comp("Browser extension")-->qon
-        qc("Command-line snippet manager")-->qon
-        homepage("Homepage dashboard")-->qon
+        qon((QOwnNotes))-->md{{"마크다운 파일"}}
+        sync("Nextcloud 동기화")-->md
+        qon-comp("브라우저 확장")-->qon
+        qc("명령줄 스니펫 관리자")-->qon
     end
     subgraph Your Nextcloud server
-        qon-api("QOwnNotesApi")-->ncs[("Nextcloud server")]
-        nc-notes-app("Nextcloud Notes")-->ncs
-        nc-deck-app("Nextcloud Deck")-->ncs
+        qon-api("QOwnNotesApi")-->ncs[("Nextcloud 서버")]
+        nc-notes-app("Nextcloud 노트")-->ncs
     end
 
-    nc-notes-mob("Nextcloud Notes mobile app")-->nc-notes-app
-    qon-web-app("QOwnNotes web application")-->qon
+    nc-notes-mob("Nextcloud 노트 모바일 앱")-->nc-notes-app
+    qon-web-app("QOwnNotes 웹 응용 프로그램")-->qon
     qon-->qon-api
     qon-->ncs
-    qon-->nc-deck-app
     sync-->ncs
-    qon-.->lt("LanguageTool service")
     qon-.->qon-web-api("api.qownnotes.org")
     qon-web-api-->github("GitHub")
 
     style qon fill:#d0d0ff,stroke:#333,stroke-width:4px
-    click qon "/getting-started/concept.html#qownnotes" "QOwnNotes Desktop Application for managing your notes on your desktop computer"
-    click md "/getting-started/concept.html#markdown-note-files" "Markdown, media and attachment files in your note folder"
-    click qon-comp "/getting-started/concept.html#qownnotes-browser-extension" "QOwnNotes browser extension for managing bookmarks in markdown files and as web clipper"
-    click qc "/getting-started/concept.html#qownnotes-command-line-snippet-manager" "QOwnNotes command-line snippet manager"
-    click homepage "/getting-started/concept.html#homepage-dashboard" "Homepage dashboard using QOwnNotes bookmark suggestions"
-    click sync "/getting-started/concept.html#nextcloud-desktop-sync-client" "Nextcloud desktop sync client to sync your notes to your server"
+    click qon "/getting-started/concept.html#qownnotes" "데스크톱 컴퓨터에서 노트를 관리하기 위한 QOwnNotes 데스크톱 응용 프로그램"
+    click md "/getting-started/concept.html#markdown-note-files" "노트 폴더의 마크다운, 미디어 및 첨부 파일"
+    click qon-comp "/getting-started/concept.html#qownnotes-browser-extension" "마크다운 파일 및 웹 클리퍼로 책갈피를 관리하기 위한 QOwnNotes 브라우저 확장명"
+    click qc "/getting-started/concept.html#qownnotes-command-line-snippet-manager" "QOwnNotes 명령줄 스니펫 관리자"
+    click sync "/getting-started/concept.html#nextcloud-desktop-sync-client" "노트를 서버와 동기화하는 Nextcloud 데스크톱 동기화 클라이언트"
     click ncs "/getting-started/concept.html#nextcloud-server" "Nextcloud server to host your notes and other files"
-    click qon-api "/getting-started/concept.html#qownnotesapi-nextcloud-app" "QOwnNotesAPI Nextcloud app to access your server-side trash and note versions"
-    click nc-notes-app "/getting-started/concept.html#nextcloud-notes-server-app" "Nextcloud Notes server app to manage your notes in the web"
-    click nc-notes-mob "/getting-started/concept.html#nextcloud-notes-mobile-app" "Nextcloud Notes mobile app to manage your notes on your mobile phone"
-    click nc-deck-app "/getting-started/concept.html#nextcloud-deck-server-app" "Nextcloud Deck server app to manage reminders and todo lists in the web"
-    click qon-web-app "/getting-started/concept.html#qownnotes-web-app" "QOwnNotes Web App to send photos from your mobile phone"
-    click lt "/editor/languagetool.html" "Optional LanguageTool server for grammar and style checking"
+    click qon-api "/getting-started/concept.html#qownnotesapi-nextcloud-app" "서버 측 휴지통 및 노트 버전에 액세스하는 QOwnNotesAPI Nextcloud 앱"
+    click nc-notes-app "/getting-started/concept.html#nextcloud-notes-server-app" "웹에서 노트를 관리하는 Nextcloud 노트 서버 앱"
+    click nc-notes-mob "/getting-started/concept.html#nextcloud-notes-mobile-app" "휴대 전화에서 노트를 관리하는 Nextcloud 노트 모바일 앱"
+    click qon-web-app "/getting-started/concept.html#qownnotes-web-app" "휴대폰에서 사진을 보내는 QOwnNotes 웹 앱"
     click qon-web-api "/getting-started/concept.html#api-qownnotes-org"
 ```
 
 ## QOwnNotes
 
-- QOwnNotes **stores notes** to your **note folder as markdown files**
-- It can talk to your Nextcloud / ownCloud server **to publicly share notes** with other people
-- You can also **access your note history and trash** on your Nextcloud / ownCloud server
-  via the [QOwnNotesApi Nextcloud app](#qownnotesapi-nextcloud-app)
-- Todo lists on your Nextcloud / ownCloud server can be accessed from within QOwnNotes
-- **QOwnNotes does not sync your notes** and media / attachment files!
-  - File syncing is a complex endeavor, there are already great file syncing solutions
-    out there (see [Nextcloud desktop sync client](#nextcloud-desktop-sync-client))
+- QOwnNotes는 **노트 폴더에 마크다운 파일**로 **노트를 저장**합니다
+- Nextcloud / ownCloud 서버와 대화하여 다른 사람과 **공개적으로 노트를 공유 **할 수 있습니다
+- 또한 [QOwnNotesApi Nextcloud 앱](#qownnotesapi-nextcloud-app)을 통해 Nextcloud / ownCloud 서버의 **노트 기록 및 휴지통에 액세스**할 수 있습니다
+- QOwnNotes 내에서 Nextcloud / ownCloud 서버의 작업관리 목록에 액세스할 수 있습니다
+- **QOwnNotes**QOwnNotes 는 노트와 미디어/첨부 파일을 <0>동기화하지 않습니다</0>!
+  - 파일 동기화는 복잡한 작업입니다. 이미 우수한 파일 동기화 솔루션이 있습니다 ([Nextcloud 데스크탑 동기화 클라이언트](#nextcloud-desktop-sync-client) 참조)
 
-## Markdown note files
+## 마크다운 노트 파일
 
-- You **own** all your notes and media / attachment files!
-- Your notes are stored as **plain-text Markdown files** on your desktop computer
-- You can use any text editor you like beside QOwnNotes to view or edit your note files
-- **Sync your notes** with other devices (desktop & mobile) with your [Nextcloud](https://nextcloud.com/)
-  or [ownCloud](https://owncloud.org/) sync client to your server
+- 모든 노트와 미디어/첨부 파일을 **소유**하고 있습니다!
+- 노트는 데스크톱 컴퓨터에 **일반 텍스트 마크다운 파일**로 저장됩니다
+- QOwnNotes 옆에서 원하는 텍스트 편집기를 사용하여 노트 파일을 보거나 편집할 수 있습니다
+- [Nextcloud](https://nextcloud.com/) 또는 [ownCloud](https://owncloud.org/) 동기화 클라이언트를 사용하여 다른 장치( 데스크톱 및 모바일)와 서버에 **노트를 동기화**
 
-## QOwnNotes browser extension
+## QOwnNotes 브라우저 확장
 
-You can manage your **browser bookmarks** with QOwnNotes or use it as a **web clipper**.
+QOwnNotes를 사용하여 **브라우저 북마크를 관리**하거나 **웹 클리퍼**로 사용할 수 있습니다.
 
-The same bookmark parsing and indexing can also power a local suggestion API for [Homepage](https://github.com/gethomepage/homepage).
+동일한 북마크 구문 분석 및 인덱싱을 통해 [홈페이지](https://github.com/gethomepage/homepage)에 대한 로컬 제안 API를 실행할 수도 있습니다.
 
 ::: tip
-The browser extensions works **offline**, no internet connection needed.
-Please visit [QOwnNotes Web Companion browser extension](browser-extension.md) for more information.
+브라우저 확장 기능은 **오프라인**에서 작동하며 인터넷에 연결할 필요가 없습니다. 자세한 내용은 [QOwnNotes 웹 지원 브라우저 확장](browser-extension.md)을 참조하세요.
 :::
 
-## Homepage dashboard
+## 홈페이지 대시보드
 
-QOwnNotes can expose a local HTTP endpoint for [Homepage](https://github.com/gethomepage/homepage)
-`suggestionUrl` support, backed by the same bookmark parsing and indexing used by the Web Companion data source.
+QOwnNotes는 웹 동반 데이터 소스에서 사용하는 동일한 북마크 구문 분석 및 인덱싱을 지원하는 [홈페이지](https://github.com/gethomepage/homepage)`제안 Url` 지원을 위한 로컬 HTTP 엔드포인트를 노출할 수 있습니다.
 
-- Enable it in `Settings -> Browser extension / command snippets`
-- Turn on `Enable socket server`
-- In `Bookmark suggestion API`, enable `Enable Homepage-compatible bookmark suggestions API`
-- Set a port for the local endpoint
-- Optionally set a security token if you want Homepage requests to authenticate
-- The service binds to `127.0.0.1` only
+- `설정 -> 브라우저 확장/명령 스니펫 `에서 활성화합니다
+- ` 소켓 서버 활성화` 켜기
+- ` 북마크 제안 API`에서 ` 홈페이지 호환 북마크 제안 API 활성화`
+- 로컬 엔드포인트 포트 설정
+- 홈페이지 요청을 인증하려면 선택적으로 보안 토큰 설정
+- 서비스는 `127.0.0.1`에만 바인딩
 
-The endpoint is available as `GET /suggest?q=home` and supports an optional `limit` parameter
-(default `10`, maximum `50`) and an optional `token` parameter.
+엔드포인트는 `GET /suggest?q=home`으로 제공되며, 선택적인 `limit` 매개변수 (기본값 `10`, 최대값 `50`)와 선택적인 `token` 매개변수를 지원합니다.
 
-If you use the custom Homepage assets from `docs/homepage/custom.js`, set `QON_TOKEN` to the same
-security token configured in QOwnNotes.
+`docs/homepage/custom.js`의 사용자 지정 홈페이지 자산을 사용하는 경우, QOwnNotes에 구성된 동일한 보안 토큰으로 `QON_TOKEN`을 설정합니다.
 
-Example Homepage configuration:
+예제 홈페이지 구성:
 
 ```yaml
 search:
@@ -111,126 +97,110 @@ search:
 ```
 
 ::: tip
-Please visit [Homepage suggestion API](homepage-suggestion-api.md) for more information, including
-which Homepage settings file to edit and how to use the custom assets from `docs/homepage`.
+편집할 홈페이지 설정 파일과 `docs/homepage`에서 사용자 지정 자산을 사용하는 방법을 포함한 자세한 정보는 [홈페이지 제안 API](homepage-suggestion-api.md)을 방문하시기 바랍니다.
 :::
 
-## QOwnNotes command-line snippet manager
+## QOwnNotes 명령줄 스니펫 관리자
 
-You can manage your **command snippets** with QOwnNotes and execute them on the command-line.
+QOwnNotes를 사용하여 **명령 스니펫**을 관리하고 명령줄에서 실행할 수 있습니다.
 
 ::: tip
-Please visit [QOwnNotes command-line snippet manager](command-line-snippet-manager.md) for more information.
+자세한 내용은 [QOwnNotes 명령줄 스니펫 관리자](command-line-snippet-manager.md)를 참조하십시오.
 :::
 
-## LanguageTool service
+## 언어 도구 서비스
 
-QOwnNotes can use a local or remote [LanguageTool](https://languagetool.org/) server for
-**grammar and style checking** in the editor.
+QOwnNotes는 로컬 또는 원격 [언어 도구](https://languagetool.org/) 서버를 사용하여 편집기에서 **문법 및 스타일 검사**를 수행할 수 있습니다.
 
-- It is **optional** and works alongside the existing spell checker support
-- Enable it in `Settings -> Editor`, then configure your **server URL**, **language**,
-  optional **API key**, and the categories you want to check
-- You can also toggle it quickly from the **Spelling** menu with
-  `Check grammar with LanguageTool`
-- Suggestions and actions are available from the editor context menu for detected issues
+- **옵션**이며 기존 맟춤법 검사기 지원과 함께 작동합니다
+- `설정 -> 편집기`에서 활성화한 다음, **서버 URL**, **언어**, 선택 사항 **API 키** 및 확인할 범주를 구성합니다
+- `언어 도구로 문법 확인`을 사용하여 **맞춤법** 메뉴에서 빠르게 전환할 수도 있습니다
+- 탐지된 문제에 대한 제안 및 조치는 편집기 컨텍스트 메뉴에서 확인할 수 있습니다
 
 ::: tip
-Please visit [LanguageTool](../editor/languagetool.md) for more information.
+자세한 내용은 [언어 도구](../editor/languagetool.md)을 참조하시기 바랍니다.
 :::
 
-## Nextcloud desktop sync client
+## Nextcloud 데스크톱 동기화 클라이언트
 
-**Sync your notes** with other devices (desktop & mobile) with your [Nextcloud](https://nextcloud.com/)
-or [ownCloud](https://owncloud.org/) sync client to your server.
+[Nextcloud](https://nextcloud.com/)또는 [ownCloud](https://owncloud.org/) 동기화 클라이언트를 사용해 다른 장치 (데스크톱 및 모바일)와 서버에 **노트를 동기화**합니다.
 
 ::: tip
-Of course other solutions, like **Dropbox**, **Syncthing**, **Seafile** or BitTorrent Sync can be used
-too to sync your notes and other files.
+물론 **Dropbox**, **Syncthing**, **Seafile** 또는 BitTorrent Sync와 같은 다른 솔루션도 노트와 다른 파일을 동기화하는 데 사용할 수 있습니다.
 
-You can also use **git** to sync with tools like [gitomatic](https://github.com/muesli/gitomatic/).
+**git**을 사용하여 [gitomatic](https://github.com/muesli/gitomatic/)과 같은 도구와 동기화할 수도 있습니다.
 :::
 
-## Nextcloud server
+## Nextcloud 서버
 
-To work with your notes online you can use servers like [Nextcloud](https://nextcloud.com/)
-or [ownCloud](https://owncloud.org/).
+노트를 온라인으로 작업하려면 [Nextcloud](https://nextcloud.com/)또는 [ownCloud](https://owncloud.org/)와 같은 서버를 사용할 수 있습니다.
 
-You can host your own server or use hosted solutions.
+사용자 자신의 서버를 호스팅하거나 호스팅된 솔루션을 사용할 수 있습니다.
 
-There is a [community-maintained list of Nextcloud providers](https://github.com/nextcloud/providers#providers),
-as well as a [list of devices with Nextcloud](https://nextcloud.com/devices/).
+[커뮤니티에서 관리하는 Nextcloud 공급자 목록](https://github.com/nextcloud/providers#providers)과 [Nextcloud를 사용하는 장치 목록](https://nextcloud.com/devices/)이 있습니다.
 
-[Portknox](https://portknox.net) has reported they have [QOwnNotesAPI installed](https://portknox.net/en/app_listing).
+[Portknox](https://portknox.net)에서는 [QOwnNotesAPI가 설치되어 있다고](https://portknox.net/en/app_listing) 보고했습니다.
 
 ::: tip
-Of course other solutions, like **Dropbox**, **Syncthing**, **Seafile** or BitTorrent Sync can be used
-too to host your notes and other files.
+물론 **Dropbox**, **Syncthing**, **Seafile** 또는 BitTorrent Sync와 같은 다른 솔루션도 노트 및 기타 파일을 호스팅하는 데 사용할 수 있습니다.
 :::
 
-## QOwnNotesAPI Nextcloud app
+## QOwnNotesAPI Nextcloud 앱
 
-[**QOwnNotesAPI**](https://github.com/pbek/qownnotesapi) lets you access your
-server-side **trashed notes** and **note versions**.
+[**QOwnNotesAPI**](https://github.com/pbek/qownnotesapi)를 사용하여 서버 측의 **휴지통 노트** 및 **노트 버전**에 액세스할 수 있습니다.
 
 ::: tip
-Please visit [QOwnNotesAPI Nextcloud App](qownnotesapi.md) for more information.
+자세한 내용은 [QOwnNotesAPI Nextcloud 앱](qownnotesapi.md)을 참조하세요
 :::
 
-## Nextcloud Notes server app
+## Nextcloud 노트 서버 앱
 
-Use [**Nextcloud Notes**](https://github.com/nextcloud/notes) to edit your notes in the **web**.
+**웹</1/>에서 노트를 편집하려면 [**Nextcloud 노트**](https://github.com/nextcloud/notes)를 사용합니다.</p>
 
 ::: warning
-Keep in mind that Nextcloud Notes currently only supports up to one level of subfolders.
+의
+Nextcloud 노트는 현재 최대 한 수준의 하위 폴더만 지원합니다.
 :::
 
-## Nextcloud Deck server app
+## Nextcloud 노트 서버 앱
 
-You can use QOwnNotes to quickly create **cards** in [**Nextcloud Deck**](https://github.com/nextcloud/deck).
+QOwnNotes를 사용하여 [**Nextcloud Deck**](https://github.com/nextcloud/deck)에서 **카드**를 빠르게 만들 수 있습니다.
 
-## Nextcloud Notes mobile app
+## Nextcloud 노트 모바일 앱
 
-To access your Nextcloud / ownCloud notes from your **mobile device** you can use different apps.
+**모바일 장치**에서 Nextcloud / ownCloud 노트에 액세스하기 위해 다른 앱을 사용할 수 있습니다.
 
 ### Android
 
-- [Nextcloud Notes for Android](https://play.google.com/store/apps/details?id=it.niedermann.owncloud.notes) (3rd party)
+- [Android용 Nextcloud 노트](https://play.google.com/store/apps/details?id=it.niedermann.owncloud.notes) (타사 제품)
 
 ::: tip
-You could also use any sync-tool like _Synchronize Ultimate_ or _FolderSync_ to sync your note files
-and use software like _neutriNotes_ or [**Markor**](https://f-droid.org/packages/net.gsantner.markor/)
-to edit your notes.
+또한 _ynchronize Ultimate_ 또는 _FolderSync_과 같은 동기화 도구를 사용하여 노트 파일을 동기화하고 _neutriNotes_ 또는 [**Markor**](https://f-droid.org/packages/net.gsantner.markor/)과 같은 소프트웨어를 사용하여 노트를 편집할 수도 있습니다.
 :::
 
 ### iOS
 
-- [CloudNotes for iOS](https://itunes.apple.com/de/app/cloudnotes-owncloud-notes/id813973264?mt=8) (3rd party)
+- [iOS용 클라우드 노트](https://itunes.apple.com/de/app/cloudnotes-owncloud-notes/id813973264?mt=8) (타사 제품)
 
 ::: tip
-You can also use [Notebooks](https://itunes.apple.com/us/app/notebooks-write-and-organize/id780438662)
-and sync your notes via WebDAV, there is a good tutorial at [Taking Notes with Nextcloud, QOwnNotes, and Notebooks](https://lifemeetscode.com/blog/taking-notes-with-nextcloud-qownnotes-and-notebooks)
-:::
+WebDAV를 통해 [Notebooks](https://itunes.apple.com/us/app/notebooks-write-and-organize/id780438662)을 사용하고 노트를 동기화할 수도 있습니다. [Nextcloud, QOwnNotes 및 Notebooks](https://lifemeetscode.com/blog/taking-notes-with-nextcloud-qownnotes-and-notebooks)으로 노트 필기에 대한 좋은 자습서가 있습니다
 
 ## api.qownnotes.org
 
-This is an online service provided by QOwnNotes to check if there is a new release of the application available.
+사용 가능한 응용 프로그램의 새 버전이 있는지 확인하기 위해 QOwnNotes에서 제공하는 온라인 서비스입니다.
 
-It is talking to GitHub and checks for the latest release, gets a suited download url and compiles the changes
-from the changelog compared to the version of QOwnNotes you are currently using as html to show in the update dialog.
+이것은 GitHub과 대화하고 최신 릴리스를 확인하며, 적합한 다운로드 URL을 얻고 현재 html로 사용 중인 QOwnNotes 버전과 비교하여 변경 로그의 변경 사항을 컴파일하여 업데이트 대화 상자에 표시합니다.
 
-In addition, it also provides the [Release RSS Feed](http://api.qownnotes.org/rss/app-releases) and an implementation
-of the legacy update checking api for older versions of QOwnNotes.
+또한 이전 버전의 QOwnNotes에 대한 [릴리스 RSS 피드](http://api.qownnotes.org/rss/app-releases) 및 기존 업데이트 확인 API 구현도 제공합니다.
 
 ::: tip
-You can access the source code for [api.qownnotes.org](https://api.qownnotes.org) on [GitHub](https://github.com/qownnotes/api).
+[api.qownnotes.org](https://api.qownnotes.org)의 소스 코드는 [GitHub](https://github.com/qownnotes/api)에서 액세스할 수 있습니다.
 :::
 
-## QOwnNotes Web App
+## QOwnNotes 웹 앱
 
-You can insert photos from your mobile phone into the current note in QOwnNotes
-on your desktop via the **web application** on [app.qownnotes.org](https://app.qownnotes.org/).
+[app.qownnotes.org](https://app.qownnotes.org/)의 **웹 응용 프로그램**을 통해 휴대 전화의 사진을 바탕 화면의 QOwnNotes에 있는 현재 노트에 삽입할 수 있습니다.
 
 ::: tip
-Please visit [QOwnNotes Web App](web-app.md) for more information.
+자세한 내용은 [QOwnNotes 웹 앱](web-app.md)을 참조하십시오.
 :::

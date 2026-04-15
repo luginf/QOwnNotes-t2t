@@ -47,12 +47,9 @@ If you want to contribute source code to the project please make your pull reque
 
 ## البناء بـ&nbsp;Nix
 
-إذا كان لديك [مدير الحزم Nix](https://wiki.nixos.org/wiki/Nix_package_manager) فيمكنك استنساخ المصدر بــجت، كما شُرح بالأعلى، ثم بناءه بالأوامر التالية:
+If you have the [Nix package manager](https://nixos.org/download/) and [Devenv](https://devenv.sh/getting-started/) installed you can just git-clone the repository, like explained above and build with:
 
 ```bash
-# Get devenv if you don't have it already
-nix-shell -p devenv
-
 # Open a shell with all the tools you need
 devenv shell
 

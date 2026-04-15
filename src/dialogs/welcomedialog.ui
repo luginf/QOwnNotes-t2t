@@ -281,12 +281,12 @@
        </property>
        <item>
         <widget class="QGroupBox" name="groupBox_4">
-         <property name="title">
-          <string>Panel layout</string>
-         </property>
+          <property name="title">
+           <string>Layout preset</string>
+          </property>
          <layout class="QGridLayout" name="gridLayout_8">
           <item row="0" column="0">
-           <widget class="LayoutWidget" name="layoutWidget" native="true"/>
+            <widget class="LayoutPresetWidget" name="layoutPresetWidget" native="true"/>
           </item>
          </layout>
         </widget>
@@ -419,9 +419,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>LayoutWidget</class>
+   <class>LayoutPresetWidget</class>
    <extends>QWidget</extends>
-   <header location="global">widgets/layoutwidget.h</header>
+   <header location="global">widgets/layoutpresetwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

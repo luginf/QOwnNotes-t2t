@@ -15,7 +15,7 @@
 WelcomeDialog::WelcomeDialog(QWidget *parent) : MasterDialog(parent), ui(new Ui::WelcomeDialog) {
     ui->setupUi(this);
     afterSetupUI();
-    ui->layoutWidget->setManualSettingsStoring(false);
+    ui->layoutPresetWidget->setManualSettingsStoring(false);
 
     // replace ownCloud text
     ui->subHeadlineLabel->setText(Utils::Misc::replaceOwnCloudText(ui->subHeadlineLabel->text()));
@@ -28,7 +28,7 @@ WelcomeDialog::WelcomeDialog(QWidget *parent) : MasterDialog(parent), ui(new Ui:
     // if note layout has already been set, we can finish settings in the first
     // step
     SettingsService settings;
-    _allowFinishButton = settings.contains(QStringLiteral("workspace-initial/windowState"));
+    _allowFinishButton = settings.contains(QStringLiteral("layout-initial/windowState"));
     ui->finishButton->setEnabled(_allowFinishButton);
 
     ui->backButton->setEnabled(false);
@@ -71,8 +71,8 @@ void WelcomeDialog::on_nextButton_clicked() {
         settings.setValue(QStringLiteral("appMetrics/notificationShown"), true);
     }
 
-    if (index == WelcomePages::LayoutPage) {
-        ui->layoutWidget->resizeLayoutImage();
+    if (index == WelcomePages::LayoutPresetPage) {
+        ui->layoutPresetWidget->resizeLayoutPresetImage();
     }
 
     ui->finishButton->setEnabled(_allowFinishButton);
@@ -180,7 +180,7 @@ void WelcomeDialog::on_finishButton_clicked() {
     if (ui->stackedWidget->currentIndex() == WelcomePages::NoteFolderPage) {
         if (!handleNoteFolderSetup()) return;
     } else {
-        ui->layoutWidget->storeSettings();
+        ui->layoutPresetWidget->storeLayoutPreset();
     }
     storeNoteFolderSettings();
     done(QDialog::Accepted);

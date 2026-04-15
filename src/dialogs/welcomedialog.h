@@ -11,7 +11,7 @@ class WelcomeDialog : public MasterDialog {
     Q_OBJECT
 
    public:
-    enum WelcomePages { NoteFolderPage, LayoutPage, OwnCloudPage, MetricsPage };
+    enum WelcomePages { NoteFolderPage, LayoutPresetPage, OwnCloudPage, MetricsPage };
 
     explicit WelcomeDialog(QWidget *parent = 0);
     ~WelcomeDialog();

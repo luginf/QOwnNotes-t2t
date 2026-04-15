@@ -1556,6 +1556,14 @@
 <translation>复制</translation>
 </message>
 <message>
+<source>Copy image file path</source>
+<translation type="unfinished">Copy image file path</translation>
+</message>
+<message>
+<source>Copy image to clipboard</source>
+<translation type="unfinished">Copy image to clipboard</translation>
+</message>
+<message>
 <source>Copy link location</source>
 <translation>复制链接地址</translation>
 </message>
@@ -2472,6 +2480,10 @@
 <translation>打开 #qownnotes IRC (Kiwi) 频道，你必须保持在线以获得回复</translation>
 </message>
 <message>
+<source>Use softwrap in note editor</source>
+<translation type="unfinished">Use softwrap in note editor</translation>
+</message>
+<message>
 <source>Cycle text case</source>
 <translation>切换大小写</translation>
 </message>
@@ -2831,10 +2843,6 @@
 <message>
 <source>Insert headline from note filename</source>
 <translation>插入笔记文件名为标题</translation>
-</message>
-<message>
-<source>Use softwrap in note editor and preview</source>
-<translation>在笔记编辑器和预览使用自动换行</translation>
 </message>
 <message>
 <source>Show status bar</source>
@@ -3343,6 +3351,13 @@ If the trash is enabled on your ownCloud server you should be able to restore th
 </message>
 </context>
 <context>
+<name>McpService</name>
+<message>
+<source>MCP server listening on port %1</source>
+<translation type="unfinished">MCP server listening on port %1</translation>
+</message>
+</context>
+<context>
 <name>MediaInsertionManager</name>
 <message>
 <source>File extension</source>
@@ -3537,6 +3552,10 @@ If the trash is enabled on your ownCloud server you should be able to restore th
 <translation>搜索或创建卡片</translation>
 </message>
 <message>
+<source>Select the board and stack to work with</source>
+<translation type="unfinished">Select the board and stack to work with</translation>
+</message>
+<message>
 <source>Create card and insert link into current note</source>
 <translation>创建卡片并将链接插入当前笔记</translation>
 </message>
@@ -3581,8 +3600,12 @@ If the trash is enabled on your ownCloud server you should be able to restore th
 <translation>从服务器重新加载</translation>
 </message>
 <message>
-<source>Reload cards from server</source>
-<translation>从服务器重新加载卡片</translation>
+<source>Reload boards, stacks and cards from server</source>
+<translation type="unfinished">Reload boards, stacks and cards from server</translation>
+</message>
+<message>
+<source>%1 / %2</source>
+<translation type="unfinished">%1 / %2</translation>
 </message>
 <message>
 <source>No due date</source>
@@ -5885,6 +5908,10 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <translation type="unfinished">Color modes</translation>
 </message>
 <message>
+<source>MCP server</source>
+<translation type="unfinished">MCP server</translation>
+</message>
+<message>
 <source>Be aware that the ownCloud notes app doesn't support subfolders!</source>
 <translation>请注意，ownCloud notes 应用不支持子文件夹！</translation>
 </message>
@@ -5899,10 +5926,6 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <message>
 <source>Login to Nextcloud to grant access</source>
 <translation>登录 Nextcloud 以授权访问</translation>
-</message>
-<message>
-<source>Stack:</source>
-<translation>Stack：</translation>
 </message>
 <message>
 <source>Todo settings</source>
@@ -6041,6 +6064,10 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <translation>旁遮普语</translation>
 </message>
 <message>
+<source>Open newly created notes in a new tab</source>
+<translation type="unfinished">Open newly created notes in a new tab</translation>
+</message>
+<message>
 <source>Ignored:</source>
 <translation type="unfinished">Ignored:</translation>
 </message>
@@ -6059,6 +6086,18 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <message>
 <source>Reset ignored words</source>
 <translation type="unfinished">Reset ignored words</translation>
+</message>
+<message>
+<source>Enable MCP server for AI agent access to notes</source>
+<translation type="unfinished">Enable MCP server for AI agent access to notes</translation>
+</message>
+<message>
+<source>Server port:</source>
+<translation type="unfinished">Server port:</translation>
+</message>
+<message>
+<source>Reset the MCP server port</source>
+<translation type="unfinished">Reset the MCP server port</translation>
 </message>
 <message>
 <source>Persian</source>
@@ -7646,14 +7685,6 @@ Connection error message: </source>
 <message>
 <source>The integrity of the disk database is not valid!</source>
 <translation>磁盘数据库完整性无效！</translation>
-</message>
-<message>
-<source>Board Id: %1</source>
-<translation>Board Id： %1</translation>
-</message>
-<message>
-<source>Stack Id: %1</source>
-<translation>Stack Id： %1</translation>
 </message>
 <message>
 <source>API test result for %1 (%2)</source>

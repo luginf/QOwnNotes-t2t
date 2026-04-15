@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WorkspaceDialog</class>
- <widget class="QDialog" name="WorkspaceDialog">
+ <class>LayoutDialog</class>
+ <widget class="QDialog" name="LayoutDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,13 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Manage workspaces</string>
+   <string>Manage layouts</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QListWidget" name="workspaceListWidget">
+      <widget class="QListWidget" name="layoutListWidget">
        <property name="alternatingRowColors">
         <bool>true</bool>
        </property>
@@ -28,7 +28,7 @@
        <item>
         <widget class="QPushButton" name="addButton">
          <property name="toolTip">
-          <string>Add workspace</string>
+          <string>Add layout</string>
          </property>
          <property name="icon">
           <iconset theme="list-add" resource="../breeze-qownnotes.qrc">
@@ -42,7 +42,7 @@
        <item>
         <widget class="QPushButton" name="removeButton">
          <property name="toolTip">
-          <string>Remove workspace</string>
+          <string>Remove layout</string>
          </property>
          <property name="icon">
           <iconset theme="list-remove" resource="../breeze-qownnotes.qrc">
@@ -56,7 +56,7 @@
        <item>
         <widget class="QPushButton" name="renameButton">
          <property name="toolTip">
-          <string>Rename workspace</string>
+          <string>Rename layout</string>
          </property>
          <property name="icon">
           <iconset theme="document-edit" resource="../breeze-qownnotes.qrc">
@@ -83,7 +83,7 @@
        <item>
         <widget class="QPushButton" name="moveUpButton">
          <property name="toolTip">
-          <string>Move workspace up</string>
+          <string>Move layout up</string>
          </property>
          <property name="icon">
           <iconset theme="go-up" resource="../breeze-qownnotes.qrc">
@@ -97,7 +97,7 @@
        <item>
         <widget class="QPushButton" name="moveDownButton">
          <property name="toolTip">
-          <string>Move workspace down</string>
+          <string>Move layout down</string>
          </property>
          <property name="icon">
           <iconset theme="go-down" resource="../breeze-qownnotes.qrc">
@@ -131,7 +131,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>WorkspaceDialog</receiver>
+   <receiver>LayoutDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -147,7 +147,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>WorkspaceDialog</receiver>
+   <receiver>LayoutDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">

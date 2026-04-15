@@ -52,7 +52,7 @@ AI 에이전트는 HTTP+SSE 전송을 사용하여 MCP 서버에 연결합니다
 
 1. **SSE 엔드포인트**: 'http://localhost:22226/sse 가져오기'  
    서버에서 보낸 이벤트 스트림을 엽니다. 서버는 JSON-RPC 메시지를 보내기 위한 URL을 포함하는 '엔드포인트' 이벤트를 전송합니다.
-2. **메시지 엔드포인트**: `POST http://localhost:22226/message?sessionId=<id>`
+2. **메시지 엔드포인트**: 'POST http://localhost:22226/message?sessionId=<id>'
    여기로 MCP JSON-RPC 요청을 보냅니다. 응답은 SSE 스트림을 통해 전달됩니다.
 
 모든 요청에는 헤더가 포함되어야 합니다:

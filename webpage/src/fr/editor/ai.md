@@ -33,8 +33,8 @@ Il est possible d’activer et de configurer le serveur MCP dans la page **IA / 
 
 - **Activation et désactivation** du serveur MCP
 - **Configuration du port** (défaut : 22226)
-- **Bearer token authentication** — a security token is auto-generated and must be included as a
-  `Bearer` token in the `Authorization` header of all requests
+- **Jeton d’authentification « Bearer »** – un jeton de sécurité est automatiquement généré et doit être inclus en tant que
+  jeton `Bearer` dans l’en-tête `Authorization` de chaque requête
 
 ### Outils MCP disponibles
 

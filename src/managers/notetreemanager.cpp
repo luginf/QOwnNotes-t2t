@@ -221,11 +221,10 @@ void NoteTreeManager::makeCurrentNoteFirstInNoteList() {
  */
 QTreeWidgetItem *NoteTreeManager::findNoteInNoteTreeWidget(const Note &note) {
     const int noteId = note.getId();
-    const int count = _ui->noteTreeWidget->topLevelItemCount();
+    const QList<QTreeWidgetItem *> items =
+        _ui->noteTreeWidget->findItems(QString(), Qt::MatchContains | Qt::MatchRecursive);
 
-    for (int i = 0; i < count; ++i) {
-        QTreeWidgetItem *item = _ui->noteTreeWidget->topLevelItem(i);
-
+    for (QTreeWidgetItem *item : items) {
         if (item->data(0, Qt::UserRole + 1) == MainWindow::NoteType &&
             item->data(0, Qt::UserRole).toInt() == noteId) {
             return item;

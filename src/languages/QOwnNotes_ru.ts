@@ -1586,6 +1586,14 @@
 <translation>Копировать</translation>
 </message>
 <message>
+<source>Copy image file path</source>
+<translation type="unfinished">Copy image file path</translation>
+</message>
+<message>
+<source>Copy image to clipboard</source>
+<translation type="unfinished">Copy image to clipboard</translation>
+</message>
+<message>
 <source>Copy link location</source>
 <translation>Копировать местоположение ссылки</translation>
 </message>
@@ -2515,6 +2523,10 @@
 <translation>Откройте  #qownnotes IRC (Kiwi)-канал, вы должны оставаться в сети, чтобы получить ответ. </translation>
 </message>
 <message>
+<source>Use softwrap in note editor</source>
+<translation type="unfinished">Use softwrap in note editor</translation>
+</message>
+<message>
 <source>Cycle text case</source>
 <translation>Переключение регистра текста</translation>
 </message>
@@ -2874,10 +2886,6 @@
 <message>
 <source>Insert headline from note filename</source>
 <translation>Вставить заголовок из имени файла</translation>
-</message>
-<message>
-<source>Use softwrap in note editor and preview</source>
-<translation>Использовать мягкий перенос в редакторе и режиме просмотра</translation>
 </message>
 <message>
 <source>Show status bar</source>
@@ -3422,6 +3430,13 @@ If the trash is enabled on your ownCloud server you should be able to restore th
 </message>
 </context>
 <context>
+<name>McpService</name>
+<message>
+<source>MCP server listening on port %1</source>
+<translation type="unfinished">MCP server listening on port %1</translation>
+</message>
+</context>
+<context>
 <name>MediaInsertionManager</name>
 <message>
 <source>File extension</source>
@@ -3634,6 +3649,10 @@ If the trash is enabled on your ownCloud server you should be able to restore th
 <translation>Найти или создать карточку</translation>
 </message>
 <message>
+<source>Select the board and stack to work with</source>
+<translation type="unfinished">Select the board and stack to work with</translation>
+</message>
+<message>
 <source>Create card and insert link into current note</source>
 <translation>Создать карточку и вставить ссылку в текущую заметку</translation>
 </message>
@@ -3678,8 +3697,12 @@ If the trash is enabled on your ownCloud server you should be able to restore th
 <translation>Перезагрузить с сервера</translation>
 </message>
 <message>
-<source>Reload cards from server</source>
-<translation>Перезагрузить карточки с сервера</translation>
+<source>Reload boards, stacks and cards from server</source>
+<translation type="unfinished">Reload boards, stacks and cards from server</translation>
+</message>
+<message>
+<source>%1 / %2</source>
+<translation type="unfinished">%1 / %2</translation>
 </message>
 <message>
 <source>No due date</source>
@@ -6075,6 +6098,10 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <translation type="unfinished">Color modes</translation>
 </message>
 <message>
+<source>MCP server</source>
+<translation type="unfinished">MCP server</translation>
+</message>
+<message>
 <source>Be aware that the ownCloud notes app doesn't support subfolders!</source>
 <translation>Помните, что приложение ownCloud notes не поддерживает подпапки!</translation>
 </message>
@@ -6089,10 +6116,6 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <message>
 <source>Login to Nextcloud to grant access</source>
 <translation>Войдите в Nextcloud для доступа</translation>
-</message>
-<message>
-<source>Stack:</source>
-<translation>Стек:</translation>
 </message>
 <message>
 <source>Todo settings</source>
@@ -6231,6 +6254,10 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <translation>Панджаби</translation>
 </message>
 <message>
+<source>Open newly created notes in a new tab</source>
+<translation type="unfinished">Open newly created notes in a new tab</translation>
+</message>
+<message>
 <source>Ignored:</source>
 <translation type="unfinished">Ignored:</translation>
 </message>
@@ -6249,6 +6276,18 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <message>
 <source>Reset ignored words</source>
 <translation type="unfinished">Reset ignored words</translation>
+</message>
+<message>
+<source>Enable MCP server for AI agent access to notes</source>
+<translation type="unfinished">Enable MCP server for AI agent access to notes</translation>
+</message>
+<message>
+<source>Server port:</source>
+<translation type="unfinished">Server port:</translation>
+</message>
+<message>
+<source>Reset the MCP server port</source>
+<translation type="unfinished">Reset the MCP server port</translation>
 </message>
 <message>
 <source>Persian</source>
@@ -7841,14 +7880,6 @@ Connection error message: </source>
 <message>
 <source>The integrity of the disk database is not valid!</source>
 <translation>Целостность дисковой базы данных недействительна!</translation>
-</message>
-<message>
-<source>Board Id: %1</source>
-<translation>Id доски: %1</translation>
-</message>
-<message>
-<source>Stack Id: %1</source>
-<translation>Id стека: %1</translation>
 </message>
 <message>
 <source>API test result for %1 (%2)</source>

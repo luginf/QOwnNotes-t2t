@@ -1568,6 +1568,14 @@
 <translation type="unfinished">Copy</translation>
 </message>
 <message>
+<source>Copy image file path</source>
+<translation type="unfinished">Copy image file path</translation>
+</message>
+<message>
+<source>Copy image to clipboard</source>
+<translation type="unfinished">Copy image to clipboard</translation>
+</message>
+<message>
 <source>Copy link location</source>
 <translation type="unfinished">Copy link location</translation>
 </message>
@@ -2488,6 +2496,10 @@
 <translation>Apri il canale IRC (Kiwi) #qownnotes, devi rimanere online per ottenere una risposta</translation>
 </message>
 <message>
+<source>Use softwrap in note editor</source>
+<translation type="unfinished">Use softwrap in note editor</translation>
+</message>
+<message>
 <source>Cycle text case</source>
 <translation>Cambia maiuscolo/minuscolo</translation>
 </message>
@@ -2847,10 +2859,6 @@
 <message>
 <source>Insert headline from note filename</source>
 <translation>Inserisci linea di intestazione dal nome del file delle note</translation>
-</message>
-<message>
-<source>Use softwrap in note editor and preview</source>
-<translation>Usa ritorno a capo “soft” nell'editor e nell'anteprima delle note</translation>
 </message>
 <message>
 <source>Show status bar</source>
@@ -3371,6 +3379,13 @@ Se il cestino è attivato sul server ownCloud si dovrebbe essere in grado di rip
 </message>
 </context>
 <context>
+<name>McpService</name>
+<message>
+<source>MCP server listening on port %1</source>
+<translation type="unfinished">MCP server listening on port %1</translation>
+</message>
+</context>
+<context>
 <name>MediaInsertionManager</name>
 <message>
 <source>File extension</source>
@@ -3571,6 +3586,10 @@ Se il cestino è attivato sul server ownCloud si dovrebbe essere in grado di rip
 <translation>Cerca o crea scheda</translation>
 </message>
 <message>
+<source>Select the board and stack to work with</source>
+<translation type="unfinished">Select the board and stack to work with</translation>
+</message>
+<message>
 <source>Create card and insert link into current note</source>
 <translation>Crea una carta e inserisci il link nella nota corrente</translation>
 </message>
@@ -3615,8 +3634,12 @@ Se il cestino è attivato sul server ownCloud si dovrebbe essere in grado di rip
 <translation>Ricarica dal server</translation>
 </message>
 <message>
-<source>Reload cards from server</source>
-<translation>Ricarica schede dal server</translation>
+<source>Reload boards, stacks and cards from server</source>
+<translation type="unfinished">Reload boards, stacks and cards from server</translation>
+</message>
+<message>
+<source>%1 / %2</source>
+<translation type="unfinished">%1 / %2</translation>
 </message>
 <message>
 <source>No due date</source>
@@ -5952,6 +5975,10 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <translation type="unfinished">Color modes</translation>
 </message>
 <message>
+<source>MCP server</source>
+<translation type="unfinished">MCP server</translation>
+</message>
+<message>
 <source>Be aware that the ownCloud notes app doesn't support subfolders!</source>
 <translation>Prestare attenzione: l'app delle note "ownCloud" non supporta le sottocartelle!</translation>
 </message>
@@ -5966,10 +5993,6 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <message>
 <source>Login to Nextcloud to grant access</source>
 <translation>Accedi a Nextcloud per consentire l'accesso</translation>
-</message>
-<message>
-<source>Stack:</source>
-<translation>Stack:</translation>
 </message>
 <message>
 <source>Todo settings</source>
@@ -6108,6 +6131,10 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <translation>Punjabi</translation>
 </message>
 <message>
+<source>Open newly created notes in a new tab</source>
+<translation type="unfinished">Open newly created notes in a new tab</translation>
+</message>
+<message>
 <source>Ignored:</source>
 <translation type="unfinished">Ignored:</translation>
 </message>
@@ -6126,6 +6153,18 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <message>
 <source>Reset ignored words</source>
 <translation type="unfinished">Reset ignored words</translation>
+</message>
+<message>
+<source>Enable MCP server for AI agent access to notes</source>
+<translation type="unfinished">Enable MCP server for AI agent access to notes</translation>
+</message>
+<message>
+<source>Server port:</source>
+<translation type="unfinished">Server port:</translation>
+</message>
+<message>
+<source>Reset the MCP server port</source>
+<translation type="unfinished">Reset the MCP server port</translation>
 </message>
 <message>
 <source>Persian</source>
@@ -7714,14 +7753,6 @@ Messaggio di errore: </translation>
 <message>
 <source>The integrity of the disk database is not valid!</source>
 <translation>L'integrità del disco del database non è valida.</translation>
-</message>
-<message>
-<source>Board Id: %1</source>
-<translation>Id Board: %1</translation>
-</message>
-<message>
-<source>Stack Id: %1</source>
-<translation>Id Stack: %1</translation>
 </message>
 <message>
 <source>API test result for %1 (%2)</source>

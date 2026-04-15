@@ -31,3 +31,24 @@ Als u de **automatische updater** wilt gebruiken, zorg er dan voor dat u uw AppI
 ::: tip
 Als u problemen heeft met het uitvoeren van de AppImage, omdat uw glibc-versie te oud is, kunt u de [AppImage gebouwd op OBS](https://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/AppImage/QOwnNotes-latest-x86_64.AppImage) proberen, deze moet worden gebouwd met glibc 2.16.
 :::
+
+## Portable mode
+
+You can run the AppImage in **portable mode** by passing the `--portable` argument:
+
+```bash
+./QOwnNotes-x86_64.AppImage --portable
+```
+
+In portable mode all application data is stored in a `Data` folder next to the AppImage file instead of in your home directory. This includes:
+
+- Settings (`Data/QOwnNotes.ini`)
+- The notes database (`Data/QOwnNotes.sqlite`)
+- Your notes (`Data/Notes/`)
+- Scripts, spell-check dictionaries, and other application data
+
+This makes it easy to carry QOwnNotes together with all your notes on a USB drive or any other portable storage device.
+
+::: tip
+Make sure the directory containing the AppImage file is writable, so that the `Data` folder can be created next to it.
+:::

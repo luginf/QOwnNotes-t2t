@@ -24,9 +24,11 @@
 #include <widgets/htmlpreviewwidget.h>
 
 #include <QDir>
+#include <QFile>
 #include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
+#include <QSet>
 #include <QTextCursor>
 #include <QTimer>
 #include <QTreeWidgetItem>
@@ -64,6 +66,9 @@ void NoteOperationsManager::removeCurrentNote() {
             _mainWindow, tr("Remove current note"),
             tr("Remove current note: <strong>%1</strong>?").arg(_mainWindow->currentNote.getName()),
             QStringLiteral("remove-note")) == QMessageBox::Yes) {
+        // Capture the note before deletion so we can check for orphaned media/attachments
+        const QVector<Note> deletedNotes = {_mainWindow->currentNote};
+
         const QSignalBlocker blocker2(_ui->noteTextEdit);
         Q_UNUSED(blocker2)
 
@@ -104,6 +109,9 @@ void NoteOperationsManager::removeCurrentNote() {
         // something is happening after this method that reloads the
         // note folder
         _mainWindow->directoryWatcherWorkaround(false);
+
+        // Offer to delete orphaned media files and attachments
+        handleOrphanedMediaAndAttachments(deletedNotes);
     }
 }
 
@@ -219,6 +227,16 @@ void NoteOperationsManager::removeSelectedNotes() {
     }
 
     if (Utils::Gui::question(_mainWindow, title, message, dialogName) == QMessageBox::Yes) {
+        // Collect notes before deletion so we can check for orphaned media/attachments
+        QVector<Note> deletedNotes;
+        for (QTreeWidgetItem *item : noteItems) {
+            const int id = item->data(0, Qt::UserRole).toInt();
+            Note note = Note::fetch(id);
+            if (note.isFetched()) {
+                deletedNotes.append(note);
+            }
+        }
+
         const QSignalBlocker blocker(_mainWindow->noteDirectoryWatcher);
         Q_UNUSED(blocker)
 
@@ -282,6 +300,9 @@ void NoteOperationsManager::removeSelectedNotes() {
         if (folderCount > 0) {
             _mainWindow->reloadNoteFolderAction()->trigger();
         }
+
+        // Offer to delete orphaned media files and attachments
+        handleOrphanedMediaAndAttachments(deletedNotes);
     }
 
     _mainWindow->loadNoteDirectoryList();
@@ -917,4 +938,159 @@ void NoteOperationsManager::on_action_New_note_triggered() {
 
     // create a new note with date in the headline
     createNewNote(QString(), true);
+}
+
+/**
+ * Checks for media files and attachments that become orphaned after deleting the
+ * given notes, and offers to delete them if the user confirms.
+ */
+void NoteOperationsManager::handleOrphanedMediaAndAttachments(const QVector<Note> &deletedNotes) {
+    if (deletedNotes.isEmpty()) {
+        return;
+    }
+
+    // Collect all media files and attachments referenced by the deleted notes
+    QSet<QString> deletedMediaFiles;
+    QSet<QString> deletedAttachmentFiles;
+
+    for (const Note &note : deletedNotes) {
+        const QStringList mediaFiles = note.getMediaFileList();
+        for (const QString &file : mediaFiles) {
+            deletedMediaFiles.insert(file);
+        }
+
+        const QStringList attachmentFiles = note.getAttachmentsFileList();
+        for (const QString &file : attachmentFiles) {
+            deletedAttachmentFiles.insert(file);
+        }
+    }
+
+    if (deletedMediaFiles.isEmpty() && deletedAttachmentFiles.isEmpty()) {
+        return;
+    }
+
+    // Build a set of deleted note IDs for quick lookup
+    QSet<int> deletedNoteIds;
+    for (const Note &note : deletedNotes) {
+        deletedNoteIds.insert(note.getId());
+    }
+
+    // Check which files are still referenced by other notes (not being deleted)
+    const QVector<Note> allNotes = Note::fetchAll();
+
+    for (const Note &note : allNotes) {
+        // Skip notes that are being deleted
+        if (deletedNoteIds.contains(note.getId())) {
+            continue;
+        }
+
+        // Remove files from orphan candidates if they are used by this note
+        if (!deletedMediaFiles.isEmpty()) {
+            const QStringList mediaFiles = note.getMediaFileList();
+            for (const QString &file : mediaFiles) {
+                deletedMediaFiles.remove(file);
+            }
+        }
+
+        if (!deletedAttachmentFiles.isEmpty()) {
+            const QStringList attachmentFiles = note.getAttachmentsFileList();
+            for (const QString &file : attachmentFiles) {
+                deletedAttachmentFiles.remove(file);
+            }
+        }
+
+        // Early exit if nothing is orphaned anymore
+        if (deletedMediaFiles.isEmpty() && deletedAttachmentFiles.isEmpty()) {
+            return;
+        }
+    }
+
+    // Only keep files that actually exist on disk
+    QStringList orphanedMediaFiles;
+    const QString mediaPath = NoteFolder::currentMediaPath();
+
+    for (const QString &fileName : deletedMediaFiles) {
+        if (QFile::exists(mediaPath + QDir::separator() + fileName)) {
+            orphanedMediaFiles.append(fileName);
+        }
+    }
+
+    QStringList orphanedAttachmentFiles;
+    const QString attachmentsPath = NoteFolder::currentAttachmentsPath();
+
+    for (const QString &fileName : deletedAttachmentFiles) {
+        if (QFile::exists(attachmentsPath + QDir::separator() + fileName)) {
+            orphanedAttachmentFiles.append(fileName);
+        }
+    }
+
+    if (orphanedMediaFiles.isEmpty() && orphanedAttachmentFiles.isEmpty()) {
+        return;
+    }
+
+    // Build the confirmation message
+    QString message;
+    const int mediaCount = orphanedMediaFiles.count();
+    const int attachmentCount = orphanedAttachmentFiles.count();
+
+    if (mediaCount > 0 && attachmentCount > 0) {
+        message = tr("The deleted note(s) had <strong>%1 image(s)</strong> and "
+                     "<strong>%2 attachment(s)</strong> that are not used in any "
+                     "other note.\n\nDo you want to delete those files as well?")
+                      .arg(mediaCount)
+                      .arg(attachmentCount);
+    } else if (mediaCount > 0) {
+        message =
+            tr("The deleted note(s) had <strong>%n image(s)</strong> that "
+               "are not used in any other note.\n\nDo you want to delete "
+               "those files as well?",
+               "", mediaCount);
+    } else {
+        message =
+            tr("The deleted note(s) had <strong>%n attachment(s)</strong> "
+               "that are not used in any other note.\n\nDo you want to "
+               "delete those files as well?",
+               "", attachmentCount);
+    }
+
+    // Build a detail list of files
+    QStringList fileListItems;
+    for (const QString &fileName : orphanedMediaFiles) {
+        fileListItems.append(QStringLiteral("media/") + fileName);
+    }
+    for (const QString &fileName : orphanedAttachmentFiles) {
+        fileListItems.append(QStringLiteral("attachments/") + fileName);
+    }
+
+    message += QStringLiteral("<br><br><ul><li>") +
+               fileListItems.join(QStringLiteral("</li><li>")) + QStringLiteral("</li></ul>");
+
+    if (Utils::Gui::question(_mainWindow, tr("Delete orphaned images and attachments"), message,
+                             QStringLiteral("delete-orphaned-media-on-note-removal")) ==
+        QMessageBox::Yes) {
+        int deletedCount = 0;
+
+        for (const QString &fileName : orphanedMediaFiles) {
+            const QString filePath = mediaPath + QDir::separator() + fileName;
+            if (QFile::remove(filePath)) {
+                deletedCount++;
+                qDebug() << "Removed orphaned media file:" << filePath;
+            } else {
+                qWarning() << "Could not remove orphaned media file:" << filePath;
+            }
+        }
+
+        for (const QString &fileName : orphanedAttachmentFiles) {
+            const QString filePath = attachmentsPath + QDir::separator() + fileName;
+            if (QFile::remove(filePath)) {
+                deletedCount++;
+                qDebug() << "Removed orphaned attachment file:" << filePath;
+            } else {
+                qWarning() << "Could not remove orphaned attachment file:" << filePath;
+            }
+        }
+
+        _mainWindow->showStatusBarMessage(tr("Removed %n orphaned file(s)", "", deletedCount),
+                                          QStringLiteral("🗑"), 5000);
+    }
 }

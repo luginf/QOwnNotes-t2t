@@ -1590,6 +1590,14 @@
 <translation type="unfinished">Copy</translation>
 </message>
 <message>
+<source>Copy image file path</source>
+<translation type="unfinished">Copy image file path</translation>
+</message>
+<message>
+<source>Copy image to clipboard</source>
+<translation type="unfinished">Copy image to clipboard</translation>
+</message>
+<message>
 <source>Copy link location</source>
 <translation type="unfinished">Copy link location</translation>
 </message>
@@ -2518,6 +2526,10 @@
 <translation type="unfinished">Open the #qownnotes IRC (Kiwi) channel, you have to stay online to get a response</translation>
 </message>
 <message>
+<source>Use softwrap in note editor</source>
+<translation type="unfinished">Use softwrap in note editor</translation>
+</message>
+<message>
 <source>Cycle text case</source>
 <translation>מחזור מקרה טקסט</translation>
 </message>
@@ -2881,10 +2893,6 @@
 <message>
 <source>Insert headline from note filename</source>
 <translation>הכנס כותרת משם קובץ הערה</translation>
-</message>
-<message>
-<source>Use softwrap in note editor and preview</source>
-<translation>Use softwrap in note editor and preview</translation>
 </message>
 <message>
 <source>Show status bar</source>
@@ -3432,6 +3440,13 @@ If the trash is enabled on your ownCloud server you should be able to restore th
 </message>
 </context>
 <context>
+<name>McpService</name>
+<message>
+<source>MCP server listening on port %1</source>
+<translation type="unfinished">MCP server listening on port %1</translation>
+</message>
+</context>
+<context>
 <name>MediaInsertionManager</name>
 <message>
 <source>File extension</source>
@@ -3644,6 +3659,10 @@ If the trash is enabled on your ownCloud server you should be able to restore th
 <translation type="unfinished">Search or create card</translation>
 </message>
 <message>
+<source>Select the board and stack to work with</source>
+<translation type="unfinished">Select the board and stack to work with</translation>
+</message>
+<message>
 <source>Create card and insert link into current note</source>
 <translation type="unfinished">Create card and insert link into current note</translation>
 </message>
@@ -3688,8 +3707,12 @@ If the trash is enabled on your ownCloud server you should be able to restore th
 <translation type="unfinished">Reload from server</translation>
 </message>
 <message>
-<source>Reload cards from server</source>
-<translation type="unfinished">Reload cards from server</translation>
+<source>Reload boards, stacks and cards from server</source>
+<translation type="unfinished">Reload boards, stacks and cards from server</translation>
+</message>
+<message>
+<source>%1 / %2</source>
+<translation type="unfinished">%1 / %2</translation>
 </message>
 <message>
 <source>No due date</source>
@@ -6158,6 +6181,10 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <translation type="unfinished">Color modes</translation>
 </message>
 <message>
+<source>MCP server</source>
+<translation type="unfinished">MCP server</translation>
+</message>
+<message>
 <source>Be aware that the ownCloud notes app doesn't support subfolders!</source>
 <translation>שימו לב שאפליקציית הערות ownCloud אינה תומכת בתיקיות משנה!
 </translation>
@@ -6174,10 +6201,6 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <message>
 <source>Login to Nextcloud to grant access</source>
 <translation type="unfinished">Login to Nextcloud to grant access</translation>
-</message>
-<message>
-<source>Stack:</source>
-<translation type="unfinished">Stack:</translation>
 </message>
 <message>
 <source>Todo settings</source>
@@ -6316,6 +6339,10 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <translation>פונג'אבי</translation>
 </message>
 <message>
+<source>Open newly created notes in a new tab</source>
+<translation type="unfinished">Open newly created notes in a new tab</translation>
+</message>
+<message>
 <source>Ignored:</source>
 <translation type="unfinished">Ignored:</translation>
 </message>
@@ -6334,6 +6361,18 @@ Just test yourself if you get sync conflicts and set a higher value if so.</sour
 <message>
 <source>Reset ignored words</source>
 <translation type="unfinished">Reset ignored words</translation>
+</message>
+<message>
+<source>Enable MCP server for AI agent access to notes</source>
+<translation type="unfinished">Enable MCP server for AI agent access to notes</translation>
+</message>
+<message>
+<source>Server port:</source>
+<translation type="unfinished">Server port:</translation>
+</message>
+<message>
+<source>Reset the MCP server port</source>
+<translation type="unfinished">Reset the MCP server port</translation>
 </message>
 <message>
 <source>Persian</source>
@@ -7956,14 +7995,6 @@ Connection error message: </source>
 <message>
 <source>The integrity of the disk database is not valid!</source>
 <translation type="unfinished">The integrity of the disk database is not valid!</translation>
-</message>
-<message>
-<source>Board Id: %1</source>
-<translation type="unfinished">Board Id: %1</translation>
-</message>
-<message>
-<source>Stack Id: %1</source>
-<translation type="unfinished">Stack Id: %1</translation>
 </message>
 <message>
 <source>API test result for %1 (%2)</source>

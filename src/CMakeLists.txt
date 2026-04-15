@@ -271,9 +271,9 @@ set(SOURCE_FILES
     dialogs/websockettokendialog.cpp
     dialogs/websockettokendialog.h
     dialogs/websockettokendialog.ui
-    dialogs/workspacedialog.cpp
-    dialogs/workspacedialog.h
-    dialogs/workspacedialog.ui
+    dialogs/layoutdialog.cpp
+    dialogs/layoutdialog.h
+    dialogs/layoutdialog.ui
     dialogs/imagedialog.cpp
     dialogs/imagedialog.h
     dialogs/imagedialog.ui
@@ -462,9 +462,9 @@ set(SOURCE_FILES
     widgets/notetreewidgetitem.ui
     widgets/notefilepathlabel.cpp
     widgets/notefilepathlabel.h
-    widgets/layoutwidget.cpp
-    widgets/layoutwidget.h
-    widgets/layoutwidget.ui
+    widgets/layoutpresetwidget.cpp
+    widgets/layoutpresetwidget.h
+    widgets/layoutpresetwidget.ui
     widgets/colormodesettingswidget.cpp
     widgets/colormodesettingswidget.h
     widgets/colormodesettingswidget.ui
@@ -490,8 +490,8 @@ set(SOURCE_FILES
     managers/notetabmanager.h
     managers/aitoolbarmanager.cpp
     managers/aitoolbarmanager.h
-    managers/workspacemanager.cpp
-    managers/workspacemanager.h
+    managers/layoutmanager.cpp
+    managers/layoutmanager.h
     managers/tagmanager.cpp
     managers/tagmanager.h
     managers/noteoperationsmanager.cpp

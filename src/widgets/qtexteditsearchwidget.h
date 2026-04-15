@@ -15,6 +15,7 @@
 #pragma once
 
 #include <QTextEdit>
+#include <QTimer>
 #include <QWidget>
 
 namespace Ui {
@@ -35,6 +36,7 @@ class QTextEditSearchWidget : public QWidget {
 
    private:
     Ui::QTextEditSearchWidget *ui;
+    QTimer _debounceTimer;
 
    protected:
     QTextEdit *_textEdit;

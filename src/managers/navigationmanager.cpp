@@ -47,9 +47,10 @@ NavigationManager::NavigationManager(MainWindow *mainWindow, Ui::MainWindow *ui,
 void NavigationManager::startNavigationParser() {
     const QTextCursor cursor = _mainWindow->activeNoteTextEdit()->textCursor();
     const int navigationSelectionPosition = NavigationWidget::headingPositionForCursor(cursor);
+    const int noteId = _mainWindow->currentNote.getId();
 
     _ui->navigationWidget->parse(_mainWindow->activeNoteTextEdit()->document(),
-                                 navigationSelectionPosition);
+                                 navigationSelectionPosition, noteId);
 
     updateFileNavigationTab();
     updateBacklinkNavigationTab();
