@@ -242,11 +242,12 @@ QVector<Node> NavigationWidget::parseDocument(const QTextDocument *const documen
         // Trim the heading text, in case there are trailing carriage return characters leaking in
         // Windows
         QString text = block.text().remove(re).trimmed();
-        // Strip txt2tags heading markers: "= Title =" → "Title"
-        static const QRegularExpression txt2tagsRe(QStringLiteral("^=+ +(.+?) +=+\\s*$"));
-        const QRegularExpressionMatch t2tMatch = txt2tagsRe.match(text);
-        if (t2tMatch.hasMatch()) {
-            text = t2tMatch.captured(1);
+        // Strip symmetric non-word delimiter heading markers, e.g. "= Title =" or "== Title =="
+        // This allows scripts to define headings with symmetric delimiters via addHighlightingRule.
+        static const QRegularExpression symRe(QStringLiteral("^([^\\w\\s]+)\\s+(.+?)\\s+\\1\\s*$"));
+        const QRegularExpressionMatch symMatch = symRe.match(text);
+        if (symMatch.hasMatch()) {
+            text = symMatch.captured(2);
         }
 
         if (text.isEmpty()) {
